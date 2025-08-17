@@ -1,0 +1,216 @@
+/* File: public/css/custom-style.css */
+
+/* 1. Definisi Variabel Warna dan Font */
+:root {
+    --primary-font: 'Montserrat', sans-serif;
+    --heading-font: 'Playfair Display', serif;
+    
+    --color-black: #222222; 
+    --color-white: #FFFFFF;
+    --color-red: #A4161A;   /* Merah marun yang elegan */
+    --color-gold: #D4AF37;  /* Emas yang mewah */
+    --color-light-gray: #f8f9fa;
+}
+
+/* 2. Gaya Dasar untuk Body */
+body {
+    font-family: var(--primary-font);
+    background-color: var(--color-light-gray);
+    color: var(--color-black);
+}
+
+/* 3. Gaya untuk Judul (Headings) */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
+    font-family: var(--heading-font);
+    font-weight: 700;
+    color: var(--color-black);
+}
+
+/* 4. Kustomisasi Navbar (DIKEMBALIKAN KE HITAM) */
+.navbar {
+    background-color: var(--color-black) !important; /* Diubah kembali ke hitam */
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+}
+.navbar-brand {
+    font-family: var(--heading-font);
+    font-size: 1.8rem;
+    color: var(--color-gold) !important; /* Diubah kembali ke gold */
+    font-weight: 800;
+    transition: color 0.3s ease;
+}
+.navbar-brand:hover {
+    color: var(--color-white) !important;
+}
+.nav-link {
+    color: var(--color-white) !important;
+    font-weight: 500;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+    position: relative;
+    padding-bottom: 8px;
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--color-gold);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.4s ease;
+}
+.nav-link:hover::after, .nav-link.active::after {
+    transform: scaleX(1);
+}
+.nav-link:hover, .nav-link.active {
+    color: var(--color-gold) !important;
+}
+
+/* 5. Gaya Tombol (Button) Kustom (DIKEMBALIKAN KE MERAH) */
+.btn-custom {
+    background-color: var(--color-red); /* Diubah kembali ke merah */
+    color: var(--color-white); /* Diubah kembali ke putih */
+    font-family: var(--primary-font);
+    font-weight: 700;
+    padding: 12px 30px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 2px solid var(--color-red);
+    transition: all 0.3s ease;
+}
+.btn-custom:hover {
+    background-color: transparent;
+    color: var(--color-red); /* Teks menjadi merah saat di-hover */
+    border-color: var(--color-red);
+}
+
+/* 6. Gaya Kartu (Card) untuk Kamar */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); 
+    transition: all 0.4s ease;
+    overflow: hidden; 
+}
+.card:hover {
+    transform: translateY(-10px); 
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+}
+.card-title {
+    color: var(--color-gold); /* Judul kartu diubah kembali ke gold */
+}
+.card-img-top {
+    height: 250px;
+    object-fit: cover; 
+    transition: transform 0.4s ease;
+}
+.card:hover .card-img-top {
+    transform: scale(1.05);
+}
+.card-body {
+    padding: 2rem;
+}
+.card-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-black);
+}
+.card .btn-custom {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s ease;
+}
+.card:hover .btn-custom {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 7. Hero Section di Homepage */
+.hero-section {
+    position: relative;
+    padding: 10rem 0;
+    color: var(--color-white);
+    background-size: cover;
+    background-position: center;
+}
+.hero-section::before { 
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+.hero-section .container {
+    position: relative; 
+    z-index: 2;
+}
+.hero-section h1 {
+    font-size: 4.5rem;
+    color: var(--color-white);
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+.hero-section .lead {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* 8. Section Styling */
+.section-title {
+    font-size: 2.8rem;
+    color: var(--color-black);
+    margin-bottom: 1rem;
+    position: relative;
+    padding-bottom: 1rem;
+}
+.section-title::after { 
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: var(--color-gold);
+}
+
+/* 9. Footer (DIKEMBALIKAN KE HITAM) */
+.footer {
+    background-color: var(--color-black); /* Diubah kembali ke hitam */
+    color: rgba(255, 255, 255, 0.7);
+    padding: 3rem 0;
+}
+
+/* 10. Main Content Spacing */
+/*main {
+    padding-top: 5rem;     
+    padding-bottom: 10rem; /* Memberi jarak 5rem (sekitar 80px) ke footer */
+}*/
+
+/* 11. Hero Booking Form */
+.hero-booking-form {
+    background-color: rgba(0, 0, 0, 0.5); 
+    backdrop-filter: blur(5px); 
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.hero-booking-form .form-label {
+    color: var(--color-white);
+    font-weight: 500;
+    margin-bottom: .5rem;
+}
+.hero-booking-form .d-grid {
+    align-self: flex-end;
+}
+
+.page-content-wrapper {
+    padding-top: 10rem;  /* Jarak atas yang lebih besar untuk halaman internal */
+    padding-bottom: 5rem; /* Jarak bawah ke footer */
+}
