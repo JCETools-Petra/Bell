@@ -9,9 +9,10 @@
         @php
             $navItems = [
                 ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'active' => 'admin.dashboard'],
-                ['label' => 'Bookings', 'route' => 'admin.bookings.index', 'active' => 'admin.bookings.*'], // <-- TAMBAHKAN BARIS INI
+                ['label' => 'Bookings', 'route' => 'admin.bookings.index', 'active' => 'admin.bookings.*'],
                 ['label' => 'Rooms', 'route' => 'admin.rooms.index', 'active' => 'admin.rooms.*'],
                 ['label' => 'MICE', 'route' => 'admin.mice.index', 'active' => 'admin.mice.*'],
+                ['label' => 'Restaurants', 'route' => 'admin.restaurants.index', 'active' => 'admin.restaurants.*'], // <-- TAMBAHKAN BARIS INI
                 ['label' => 'Homepage Settings', 'route' => 'admin.homepage.edit', 'active' => 'admin.homepage.*'],
             ];
         @endphp

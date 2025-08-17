@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('seo_title', 'Bell Hotel Merauke')</title>
+    
+    {{-- Favicon --}}
+    @if(isset($settings['favicon_path']))
+        <link rel="icon" href="{{ asset('storage/' . $settings['favicon_path']) }}" type="image/x-icon">
+    @endif
+    
+    {{-- Website Title dari settings --}}
+    <title>@yield('seo_title', $settings['website_title'] ?? 'Bell Hotel Merauke')</title>
+    
     <meta name="description" content="@yield('meta_description', 'Bell Hotel Merauke adalah hotel modern yang berlokasi strategis di pusat Kota Merauke.')">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +27,13 @@
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">Bell Hotel</a>
+            <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
+                {{-- Logo dari settings --}}
+                @if(isset($settings['logo_path']))
+                    <img src="{{ asset('storage/' . $settings['logo_path']) }}" alt="{{ $settings['website_title'] ?? 'Bell Hotel Logo' }}" style="height: 40px; margin-right: 10px;">
+                @endif
+                {{ $settings['website_title'] ?? 'Bell Hotel' }}
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -33,6 +47,10 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('mice.*') ? 'active' : '' }}" href="{{ route('mice.index') }}">Mice</a>
+                    </li>
+                     {{-- Tambahkan link untuk Restaurant --}}
+                     <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('restaurants.*') ? 'active' : '' }}" href="{{ route('restaurants.index') }}">Restaurants</a>
                     </li>
                      @auth
                         <li class="nav-item">

@@ -214,3 +214,34 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
     padding-top: 10rem;  /* Jarak atas yang lebih besar untuk halaman internal */
     padding-bottom: 5rem; /* Jarak bawah ke footer */
 }
+
+.logo-container {
+    position: relative;
+    display: inline-block;
+    padding: 10px; /* Jarak agar efek ledakan tidak terlalu menempel pada logo */
+}
+
+.logo-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150%; /* Mengatur ukuran efek ledakan */
+    height: 150%; /* Mengatur ukuran efek ledakan */
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.5) 10%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    z-index: -1;
+}
+
+.logo-container:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.logo-image {
+    display: block;
+    height: 40px; /* Sesuaikan ukuran logo sesuai kebutuhan */
+}
