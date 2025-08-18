@@ -6,13 +6,30 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{-- Notifikasi Sukses --}}
             @if (session('success'))
                 <div class="mb-4 p-4 bg-green-100 text-green-700 border border-green-300 rounded-md">
                     {{ session('success') }}
                 </div>
             @endif
-            
+
+            {{-- ========================================================== --}}
+            {{-- TAMBAHKAN BLOK KODE DI BAWAH INI UNTUK MENAMPILKAN ERROR --}}
+            {{-- ========================================================== --}}
+            @if ($errors->any())
+                <div class="mb-4 p-4 bg-red-100 text-red-700 border border-red-300 rounded-md">
+                    <p class="font-bold">Oops! Ada beberapa kesalahan:</p>
+                    <ul class="list-disc list-inside mt-2">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            {{-- ========================================================== --}}
+            {{-- AKHIR DARI BLOK KODE YANG DITAMBAHKAN --}}
+            {{-- ========================================================== --}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <form action="{{ route('admin.homepage.update') }}" method="POST" enctype="multipart/form-data">
@@ -26,6 +43,13 @@
                                 <label for="website_title" class="block text-sm font-medium text-gray-700">Website Title</label>
                                 <input type="text" name="website_title" id="website_title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ $settings['website_title'] ?? '' }}">
                             </div>
+                            <div class="bg-gray-50 p-3 rounded-md">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="show_logo_text" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm" {{ ($settings['show_logo_text'] ?? '1') == '1' ? 'checked' : '' }}>
+                                    <span class="ml-2 text-sm text-gray-800 font-semibold">Tampilkan Teks di Samping Logo</span>
+                                </label>
+                                <p class="text-xs text-gray-500 ml-6">Jika dicentang, tulisan "Bell Hotel" akan muncul di samping logo pada navbar.</p>
+                            </div>
                             <div class="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0">
                                 <div>
                                     <label for="logo_path" class="block text-sm font-medium text-gray-700">Logo</label>
@@ -36,6 +60,14 @@
                                             <img src="{{ asset('storage/' . $settings['logo_path']) }}" alt="Current Logo" class="mt-2 rounded-md h-16 w-auto object-contain border p-1">
                                         </div>
                                     @endif
+                                </div>
+                                 <div>
+                                    <label for="logo_height" class="block text-sm font-medium text-gray-700">Ukuran Tinggi Logo (pixel)</label>
+                                    <input type="number" name="logo_height" id="logo_height"
+                                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                           value="{{ $settings['logo_height'] ?? '40' }}"
+                                           placeholder="Contoh: 40">
+                                    <p class="text-xs text-gray-500 mt-1">Atur tinggi logo. Lebar akan menyesuaikan otomatis.</p>
                                 </div>
                                 <div>
                                     <label for="favicon_path" class="block text-sm font-medium text-gray-700">Favicon</label>

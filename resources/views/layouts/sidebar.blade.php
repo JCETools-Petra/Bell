@@ -14,6 +14,8 @@
                 ['label' => 'MICE', 'route' => 'admin.mice.index', 'active' => 'admin.mice.*'],
                 ['label' => 'Restaurants', 'route' => 'admin.restaurants.index', 'active' => 'admin.restaurants.*'], // <-- TAMBAHKAN BARIS INI
                 ['label' => 'Homepage Settings', 'route' => 'admin.homepage.edit', 'active' => 'admin.homepage.*'],
+                ['label' => 'Contact Settings', 'route' => 'admin.contact.edit', 'active' => 'admin.contact.*'],
+                ['label' => 'Mice Inquiries', 'route' => 'admin.mice-inquiries.index', 'active' => 'admin.mice-inquiries.*'],
             ];
         @endphp
 

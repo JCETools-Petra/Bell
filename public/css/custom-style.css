@@ -221,27 +221,60 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
     padding: 10px; /* Jarak agar efek ledakan tidak terlalu menempel pada logo */
 }
 
-.logo-container::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 150%; /* Mengatur ukuran efek ledakan */
-    height: 150%; /* Mengatur ukuran efek ledakan */
-    background: radial-gradient(circle, rgba(255, 215, 0, 0.5) 10%, transparent 70%);
-    border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    z-index: -1;
+/* public/css/custom-style.css */
+
+/* Efek Sorotan Emas untuk Logo */
+.highlighted-logo {
+  /* Filter drop-shadow sangat baik untuk logo transparan (PNG) 
+    karena bayangan akan mengikuti bentuk logo, bukan kotaknya.
+  */
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7)) 
+          drop-shadow(0 0 15px rgba(255, 223, 0, 0.5));
+
+  /* Sebagai alternatif atau tambahan jika logo Anda tidak transparan,
+    Anda bisa menggunakan box-shadow. Hapus komentar di bawah jika ingin mencoba.
+  */
+  /*
+  border-radius: 50%; 
+  box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.7),
+              0 0 15px 5px rgba(255, 223, 0, 0.5),
+              0 0 25px 10px rgba(255, 245, 0, 0.3);
+  */
+
+  /* Menambahkan transisi agar efek muncul perlahan saat hover (opsional) */
+  transition: all 0.3s ease-in-out;
 }
 
-.logo-container:hover::before {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
+/* Membuat efek lebih intens saat kursor mouse di atas logo (opsional) */
+.highlighted-logo:hover {
+  filter: drop-shadow(0 0 12px rgba(255, 223, 0, 0.9)) 
+          drop-shadow(0 0 25px rgba(255, 245, 0, 0.7));
+  transform: scale(1.05); /* Sedikit memperbesar logo saat disentuh */
 }
 
-.logo-image {
-    display: block;
-    height: 40px; /* Sesuaikan ukuran logo sesuai kebutuhan */
+/* Mengubah warna latar belakang dan teks untuk semua tombol paginasi */
+.pagination .page-link {
+    background-color: #f8f9fa !important; /* Latar belakang abu-abu terang */
+    color: #343a40 !important;           /* Teks berwarna gelap */
+    border-color: #dee2e6 !important;     /* Garis tepi abu-abu */
+}
+
+/* Mengubah warna saat kursor mouse berada di atas tombol */
+.pagination .page-link:hover {
+    background-color: #e9ecef !important; /* Latar belakang sedikit lebih gelap saat disentuh */
+    color: #000 !important;              /* Teks menjadi hitam */
+}
+
+/* Mengubah warna untuk halaman yang sedang aktif */
+.pagination .page-item.active .page-link {
+    background-color: #A4161A !important; /* Latar belakang merah (sesuai brand Anda) */
+    border-color: #A4161A !important;
+    color: #fff !important;              /* Teks menjadi putih */
+}
+
+/* Mengubah warna untuk tombol yang dinonaktifkan */
+.pagination .page-item.disabled .page-link {
+    background-color: #e9ecef !important;
+    color: #6c757d !important;
+    border-color: #dee2e6 !important;
 }
