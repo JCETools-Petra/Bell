@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\Auth\CustomResetPasswordNotification;
+use App\Models\Affiliate;
 
 class User extends Authenticatable
 {
@@ -22,6 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'role',
     ];
 
     /**
@@ -58,5 +61,9 @@ class User extends Authenticatable
     public function routeNotificationForWhatsApp()
     {
         return $this->phone; // Ganti 'phone' dengan nama kolom nomor telepon Anda
+    }
+    public function affiliate()
+    {
+        return $this->hasOne(Affiliate::class);
     }
 }

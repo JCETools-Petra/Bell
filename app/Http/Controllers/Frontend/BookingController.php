@@ -8,6 +8,9 @@ use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
+use App\Models\Affiliate;
+use App\Models\Commission;
+use Illuminate\Support\Facades\Session;
 
 class BookingController extends Controller
 {
@@ -36,7 +39,6 @@ class BookingController extends Controller
             'num_rooms' => $validated['num_rooms'],
         ]);
 
-        // Ambil nama kamar
         $room = Room::find($validated['room_id']);
 
         // Format nomor telepon untuk link WhatsApp
@@ -71,27 +73,19 @@ class BookingController extends Controller
     
     /**
      * Memformat nomor telepon untuk tautan WhatsApp.
-     * Menerima format lokal (08...) dan internasional (+xx...)
-     *
-     * @param string $phoneNumber
-     * @return string
      */
     private function formatPhoneNumberForWhatsapp($phoneNumber)
     {
-        // 1. Hapus semua karakter non-numerik kecuali '+' di awal
         $phoneNumber = preg_replace('/[^0-9+]/', '', $phoneNumber);
         
-        // 2. Jika nomor dimulai dengan '+', hapus '+' dan biarkan sisanya (sudah berformat internasional)
         if (str_starts_with($phoneNumber, '+')) {
             return substr($phoneNumber, 1);
         }
         
-        // 3. Jika nomor dimulai dengan '0', ganti dengan '62' (asumsi nomor lokal Indonesia)
         if (str_starts_with($phoneNumber, '0')) {
             return '62' . substr($phoneNumber, 1);
         }
         
-        // 4. Untuk semua kasus lain (sudah berformat internasional seperti '628...' atau '1...'), biarkan apa adanya
         return $phoneNumber;
     }
 }

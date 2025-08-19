@@ -1,75 +1,80 @@
 <?php
 
-namespace App\Http\Controllers\Admin; // <-- Pastikan namespace-nya 'Admin'
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use App\Models\Commission;
+use Illuminate\Support\Facades\Gate;
 
-class BookingController extends Controller // <-- Pastikan nama class-nya benar
+class BookingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $bookings = Booking::with('room')->latest()->paginate(15);
+        $bookings = Booking::with(['room', 'affiliate.user'])->latest()->paginate(15); // Muat juga data affiliate
         return view('admin.bookings.index', compact('bookings'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return redirect()->route('admin.bookings.index');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         return redirect()->route('admin.bookings.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Booking $booking)
     {
-        // Anda bisa membuat view 'show' nanti jika diperlukan
-        // return view('admin.bookings.show', compact('booking'));
         return redirect()->route('admin.bookings.index');
-
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Booking $booking)
     {
         return redirect()->route('admin.bookings.index');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Booking $booking)
     {
         $request->validate([
             'status' => 'required|in:pending,confirmed,cancelled',
         ]);
 
-        $booking->status = $request->status;
+        $newStatus = $request->status;
+        $booking->status = $newStatus;
         $booking->save();
+
+        // Cek jika status diubah menjadi "confirmed" DAN booking ini memiliki affiliate
+        if ($newStatus === 'confirmed' && $booking->affiliate_id) {
+            // Cek untuk memastikan komisi belum pernah dibuat untuk booking ini
+            $existingCommission = Commission::where('booking_id', $booking->id)->first();
+
+            if (!$existingCommission) {
+                $affiliate = $booking->affiliate;
+                $room = $booking->room;
+
+                if ($affiliate && $room) {
+                    $commissionAmount = ($room->price * $booking->num_rooms) * ($affiliate->commission_rate / 100);
+
+                    Commission::create([
+                        'affiliate_id' => $affiliate->id,
+                        'booking_id' => $booking->id,
+                        'amount' => $commissionAmount,
+                        'status' => 'unpaid',
+                    ]);
+                }
+            }
+        }
+        // Jika status diubah menjadi "cancelled", hapus komisi yang mungkin sudah ada
+        elseif ($newStatus === 'cancelled') {
+            Commission::where('booking_id', $booking->id)->delete();
+        }
 
         return back()->with('success', 'Booking status updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Booking $booking)
     {
         $booking->delete();

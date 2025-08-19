@@ -23,7 +23,15 @@
                         <h5 class="card-title h3">{{ $room->name }}</h5>
                         <p class="card-price mb-3">Rp {{ number_format($room->price, 0, ',', '.') }} / night</p>
                         <p class="card-text">{{ Str::limit($room->description, 100) }}</p>
-                        <a href="{{ route('rooms.show', $room->slug) }}" class="btn btn-custom mt-auto">View Details</a>
+
+                        {{-- ========================================================== --}}
+                        {{-- UBAH BARIS DI BAWAH INI --}}
+                        {{-- ========================================================== --}}
+                        <a href="{{ route('rooms.show', ['slug' => $room->slug, 'checkin' => $searchParams['checkin'] ?? '', 'checkout' => $searchParams['checkout'] ?? '', 'guests' => $searchParams['guests'] ?? 1, 'rooms' => $searchParams['rooms'] ?? 1]) }}" class="btn btn-custom mt-auto">
+                            View Details
+                        </a>
+                        {{-- ========================================================== --}}
+
                     </div>
                 </div>
             </div>

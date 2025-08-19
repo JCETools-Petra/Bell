@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Providers\RouteServiceProvider; // <-- Tambahkan import ini
 
 class AuthenticatedSessionController extends Controller
 {
@@ -28,8 +29,16 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Langsung arahkan ke route admin.dashboard
-        return redirect()->route('admin.dashboard');
+        $user = Auth::user();
+
+        // Cek jika pengguna punya relasi affiliate dan statusnya aktif
+        if ($user->affiliate && $user->affiliate->status == 'active') {
+            // Jika affiliate aktif, arahkan ke dashboard affiliate
+            return redirect()->intended(route('affiliate.dashboard'));
+        }
+
+        // Untuk semua pengguna lain (termasuk admin), arahkan ke tujuan HOME default
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**

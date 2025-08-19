@@ -37,7 +37,37 @@
                                     <input type="email" name="contact_email" id="contact_email" class="mt-1 block w-full rounded-md" value="{{ $settings['contact_email'] ?? '' }}">
                                 </div>
                             </div>
+                            <hr class="my-6">
+                                <h4 class="text-lg font-semibold">Social Media Links</h4>
 
+                                {{-- Instagram --}}
+                                <div class="mt-4">
+                                    <label for="contact_instagram" class="block text-sm font-medium text-gray-700">Instagram URL</label>
+                                    <input type="text" name="contact_instagram" id="contact_instagram" class="mt-1 block w-full rounded-md" value="{{ $settings['contact_instagram'] ?? '' }}" placeholder="https://instagram.com/username">
+                                </div>
+
+                                {{-- Facebook --}}
+                                <div class="mt-4">
+                                    <label for="contact_facebook" class="block text-sm font-medium text-gray-700">Facebook URL</label>
+                                    <input type="text" name="contact_facebook" id="contact_facebook" class="mt-1 block w-full rounded-md" value="{{ $settings['contact_facebook'] ?? '' }}" placeholder="https://facebook.com/username">
+                                </div>
+
+                                {{-- LinkedIn --}}
+                                <div class="mt-4">
+                                    <label for="contact_linkedin" class="block text-sm font-medium text-gray-700">LinkedIn URL</label>
+                                    <input type="text" name="contact_linkedin" id="contact_linkedin" class="mt-1 block w-full rounded-md" value="{{ $settings['contact_linkedin'] ?? '' }}" placeholder="https://linkedin.com/in/username">
+                                </div>
+                                {{-- YouTube --}}
+                                <div class="mt-4">
+                                    <label for="contact_youtube" class="block text-sm font-medium text-gray-700">YouTube URL</label>
+                                    <input type="text" name="contact_youtube" id="contact_youtube" class="mt-1 block w-full rounded-md" value="{{ $settings['contact_youtube'] ?? '' }}" placeholder="https://youtube.com/channel/yourchannel">
+                                </div>
+
+                                {{-- TikTok --}}
+                                <div class="mt-4">
+                                    <label for="contact_tiktok" class="block text-sm font-medium text-gray-700">TikTok URL</label>
+                                    <input type="text" name="contact_tiktok" id="contact_tiktok" class="mt-1 block w-full rounded-md" value="{{ $settings['contact_tiktok'] ?? '' }}" placeholder="https://tiktok.com/@yourusername">
+                                </div>
                             {{-- Google Maps Embed --}}
                             <div>
                                 <label for="contact_maps_embed" class="block text-sm font-medium">Kode Semat (Embed) Google Maps</label>

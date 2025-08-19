@@ -10,9 +10,24 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        //
+    ->withMiddleware(function (Middleware $middleware) {
+    
+    $middleware->appendToGroup('web', [
+            \App\Http\Middleware\AffiliateMiddleware::class,
+        ]);
+
+        $middleware->alias([
+            'affiliate.active' => \App\Http\Middleware\EnsureUserIsActiveAffiliate::class,
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
+        ]);
+
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withProviders([ // <-- Tambahkan bagian withProviders
+        App\Providers\AppServiceProvider::class,
+        App\Providers\AuthServiceProvider::class,
+        App\Providers\ViewServiceProvider::class,
+        App\Providers\NotificationServiceProvider::class,
+    ])
+    ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

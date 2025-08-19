@@ -8,6 +8,7 @@ use App\Models\HomepageSetting;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\Channels\WhatsAppChannel;
+use App\Models\ContactSetting;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Biarkan kosong
     }
 
     /**
@@ -24,9 +25,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Kode View Composer Anda sudah benar, tidak perlu diubah.
-        View::composer(['layouts.app', 'layouts.frontend'], function ($view) {
-            $settings = Cache::remember('homepage_settings', now()->addMinutes(60), function () {
+        View::composer('*', function ($view) {
+            // Ambil pengaturan homepage
+            $homepageSettings = Cache::remember('homepage_settings', now()->addMinutes(60), function () {
                 try {
                     return HomepageSetting::pluck('value', 'key')->all();
                 } catch (\Exception $e) {
@@ -34,12 +35,26 @@ class AppServiceProvider extends ServiceProvider
                 }
             });
 
+            // Ambil pengaturan kontak
+            $contactSettings = Cache::remember('contact_settings', now()->addMinutes(60), function () {
+                try {
+                    return ContactSetting::pluck('value', 'key')->all();
+                } catch (\Exception $e) {
+                    return [];
+                }
+            });
+
+            // Gabungkan kedua pengaturan menjadi satu array '$settings'
+            $settings = array_merge($homepageSettings, $contactSettings);
+
+            // Kirim array yang sudah digabung ke semua view
             $view->with('settings', $settings);
         });
 
-        // Daftarkan channel notifikasi WhatsApp kustom
+        // 2. Mendaftarkan channel notifikasi WhatsApp kustom
+        //    Ini memberitahu Laravel cara mengirim notifikasi via WhatsApp.
         Notification::extend('whatsapp', function ($app) {
-            return new WhatsAppChannel();
+            return new \App\Notifications\Channels\WhatsAppChannel();
         });
     }
 }

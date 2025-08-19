@@ -24,6 +24,14 @@ class ContactSettingController extends Controller
             'contact_maps_embed' => 'nullable|string',
             'contact_seo_title' => 'nullable|string|max:255',
             'contact_seo_description' => 'nullable|string|max:160',
+            // ==========================================================
+            // TAMBAHKAN VALIDASI BARU DI SINI
+            // ==========================================================
+            'contact_instagram' => 'nullable|url',
+            'contact_facebook' => 'nullable|url',
+            'contact_linkedin' => 'nullable|url',
+            'contact_youtube' => 'nullable|url',
+            'contact_tiktok' => 'nullable|url',
         ]);
 
         $settings = $request->except(['_token', '_method']);
@@ -32,7 +40,7 @@ class ContactSettingController extends Controller
             ContactSetting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
-        Cache::forget('contact_settings'); // Hapus cache agar frontend update
+        Cache::forget('contact_settings');
 
         return redirect()->back()->with('success', 'Contact settings updated successfully.');
     }

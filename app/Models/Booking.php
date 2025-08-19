@@ -4,12 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Commission;
+use App\Models\Affiliate;
 
 class Booking extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'affiliate_id',
+        'booking_source',
         'room_id',
         'guest_name',
         'guest_phone',
@@ -27,5 +31,14 @@ class Booking extends Model
     public function room()
     {
         return $this->belongsTo(Room::class);
+    }
+
+    public function commission()
+    {
+        return $this->hasOne(Commission::class);
+    }
+    public function affiliate()
+    {
+        return $this->belongsTo(Affiliate::class);
     }
 }
