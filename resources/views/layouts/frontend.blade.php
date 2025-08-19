@@ -23,15 +23,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <link rel="stylesheet" href="{{ asset('css/custom-style.css') }}?v={{ @filemtime(public_path('css/custom-style.css')) }}">
-    <style>
-    /* Fallback minimal: hanya aktif jika eksternal CSS gagal/ter-cache lama */
-    .floating-social-bar{position:fixed;top:50%;left:0;transform:translateY(-50%);z-index:1050;transition:left .3s ease}
-    .floating-social-bar.hidden{left:-60px}
-    .floating-social-bar ul{list-style:none;margin:0;padding:0}
-    .floating-social-bar ul li a{display:flex;align-items:center;justify-content:center;width:50px;height:50px;color:#fff;text-decoration:none;margin-bottom:2px;border-radius:0 10px 10px 0}
-    /* tombol toggle */
-    #toggle-social-bar{position:absolute;top:50%;right:-20px;transform:translateY(-50%);background:#111;color:#fff;border:none;border-radius:0 5px 5px 0;width:20px;height:40px;cursor:pointer;outline:none}
-    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -182,25 +173,5 @@
         @endif
     </ul>
 </div>
-
-
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const bar = document.querySelector('.floating-social-bar');
-        const toggleBtn = document.getElementById('toggle-social-bar');
-        const icon = toggleBtn.querySelector('i');
-
-        toggleBtn.addEventListener('click', function() {
-            bar.classList.toggle('hidden');
-            if (bar.classList.contains('hidden')) {
-                icon.classList.remove('fa-chevron-left');
-                icon.classList.add('fa-chevron-right');
-            } else {
-                icon.classList.remove('fa-chevron-right');
-                icon.classList.add('fa-chevron-left');
-            }
-        });
-    });
-    </script>
 </body>
 </html>
