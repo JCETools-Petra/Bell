@@ -1,4 +1,3 @@
 @props(['disabled' => false])
 
-{{-- Semua kelas "dark:..." dihapus dari sini --}}
-<input @disabled($disabled) {{ $attributes->merge(['class' => 'border-gray-300 focus:border-red-500 focus:ring-red-500 rounded-md shadow-sm']) }}>
+<input {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'border-gray-300 focus:border-brand-gold focus:ring-brand-gold rounded-md shadow-sm']) !!}>

@@ -5,8 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-// Pastikan nama class-nya juga diubah
-class AffiliatesTableSeeder extends Seeder
+// PASTIKAN NAMA CLASS INI BENAR
+class AffiliatesTableSeeder extends Seeder 
 {
     public function run(): void
     {
@@ -34,7 +34,5 @@ class AffiliatesTableSeeder extends Seeder
                 'updated_at' => '2025-08-18 00:04:29',
             ],
         ]);
-
-        // BAGIAN KOMISI DIHAPUS DARI SINI
     }
 }

@@ -11,8 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-    
-    $middleware->appendToGroup('web', [
+        
+        // ==========================================================
+        // TAMBAHKAN KODE ANDA DI SINI
+        // ==========================================================
+        $middleware->validateCsrfTokens(except: [
+            'api/midtrans/callback', // Pengecualian untuk webhook Midtrans
+        ]);
+        // ==========================================================
+
+        $middleware->appendToGroup('web', [
             \App\Http\Middleware\AffiliateMiddleware::class,
         ]);
 
@@ -22,7 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
     })
-    ->withProviders([ // <-- Tambahkan bagian withProviders
+    ->withProviders([ // <-- Bagian ini tetap sama
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\ViewServiceProvider::class,

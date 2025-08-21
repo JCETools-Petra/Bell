@@ -4,30 +4,26 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\MiceRoom;
-use Illuminate\Http\Request;
-use App\Models\HomepageSetting; 
 
 class MiceController extends Controller
 {
+    /**
+     * Display a listing of the MICE rooms.
+     */
     public function index()
     {
-        // 2. AMBIL DATA SETTINGS
-        $settings = HomepageSetting::pluck('value', 'key')->all();
-        
         $miceRooms = MiceRoom::where('is_available', true)->paginate(10);
-        
-        // 3. KIRIM DATA SETTINGS KE VIEW
-        return view('frontend.mice.index', compact('miceRooms', 'settings'));
+        return view('frontend.mice.index', compact('miceRooms'));
     }
 
+    /**
+     * Display the specified MICE room.
+     */
     public function show($slug)
     {
-        // 1. TAMBAHKAN BARIS INI untuk mengambil data settings
-        $settings = HomepageSetting::pluck('value', 'key')->all();
+        $miceRoom = MiceRoom::where('slug', $slug)->where('is_available', true)->firstOrFail();
 
-        $mice = MiceRoom::where('slug', $slug)->firstOrFail();
-        
-        // 2. TAMBAHKAN 'settings' untuk dikirim ke view
-        return view('frontend.mice.show', compact('mice', 'settings'));
+        // BENAR: Kirim data ke view dengan nama 'mice'
+        return view('frontend.mice.show', ['mice' => $miceRoom]);
     }
 }

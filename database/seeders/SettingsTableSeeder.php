@@ -17,6 +17,7 @@ class SettingsTableSeeder extends Seeder
             ['key' => 'hero_text_align', 'value' => 'text-center'],
             ['key' => 'hero_bg_image', 'value' => 'homepage/7P6miyMJ7Ygbnt8tO1vsUtcCqYnUrtCEO1rxfEVc.jpg'],
             ['key' => 'website_title', 'value' => 'Bell Hotel Merauke'],
+            ['key' => 'featured_display_option', 'value' => 'rooms,mice,restaurants'],
             ['key' => 'logo_path', 'value' => 'settings/qVa09dyFoKY7r7goKXdknbUIY7QEEo02KA7eKIid.png'],
             ['key' => 'favicon_path', 'value' => 'settings/23bkqNC2NPBHMAkbhoOljkCLrquQTAKjf8JmyT15.png'],
             ['key' => 'logo_height', 'value' => '50'],
@@ -30,8 +31,10 @@ class SettingsTableSeeder extends Seeder
             ['key' => 'contact_youtube', 'value' => 'https://www.youtube.com/@ghmhotel.merauke'],
             ['key' => 'contact_tiktok', 'value' => 'https://www.tiktok.com/@ghmhotel.merauke'],
             ['key' => 'terms_and_conditions', 'value' => '<h1>Terms and Conditions</h1><p>Please update this content from the admin panel.</p>'],
+            ['key' => 'contact_maps_embed', 'value' => null],
         ];
 
+        DB::table('settings')->truncate(); // Hapus data lama dulu
         DB::table('settings')->insert($settings);
     }
 }

@@ -26,6 +26,10 @@ use App\Http\Controllers\Admin\MiceInquiryController as AdminMiceInquiryControll
 use App\Http\Controllers\Admin\AffiliateController as AdminAffiliateController;
 use App\Http\Controllers\Admin\CommissionController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\PageController; 
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Api\MidtransCallbackController;
 
 // Affiliate Dashboard Controller
 use App\Http\Controllers\Affiliate\DashboardController as AffiliateDashboardController;
@@ -70,6 +74,12 @@ Route::post('/mice-inquiries', [MiceInquiryController::class, 'store'])->name('m
 Route::get('/affiliate/register', [AffiliateController::class, 'create'])->name('affiliate.register.create');
 Route::post('/affiliate/register', [AffiliateController::class, 'store'])->name('affiliate.register.store');
 
+Route::get('/terms-and-conditions', [PageController::class, 'terms'])->name('pages.terms');
+
+Route::get('/apa-itu-affiliate', [PageController::class, 'affiliateInfo'])->name('pages.affiliate_info');
+
+Route::post('/midtrans/callback', [MidtransCallbackController::class, 'callback']);
+
 // Sitemap
 Route::get('/sitemap.xml', function () {
     return SitemapGenerator::create(config('app.url'))->generate()->toResponse(request());
@@ -89,6 +99,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
     // Rute yang bisa diakses SEMUA STAF (Admin, Admin-Web, Accounting)
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Rute untuk ADMIN dan ACCOUNTING
     Route::middleware('role:admin,accounting')->group(function () {
@@ -110,14 +123,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::resource('affiliates', AdminAffiliateController::class)->only(['index', 'update']);
 
         // Settings
-        Route::get('homepage-settings', [HomepageSettingController::class, 'edit'])->name('homepage.edit');
-        Route::put('homepage-settings', [HomepageSettingController::class, 'update'])->name('homepage.update');
-        Route::get('contact-settings', [ContactSettingController::class, 'edit'])->name('contact.edit');
-        Route::put('contact-settings', [ContactSettingController::class, 'update'])->name('contact.update');
+        //Route::get('homepage-settings', [HomepageSettingController::class, 'edit'])->name('homepage.edit');
+        //Route::put('homepage-settings', [HomepageSettingController::class, 'update'])->name('homepage.update');
+        //Route::get('contact-settings', [ContactSettingController::class, 'edit'])->name('contact.edit');
+        //Route::put('contact-settings', [ContactSettingController::class, 'update'])->name('contact.update');
 
         // Utilities
         Route::delete('restaurants/images/{image}', [AdminRestaurantController::class, 'destroyImage'])->name('restaurants.image.destroy');
         Route::get('images/{image}/delete', [ImageController::class, 'destroy'])->name('images.destroy');
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
     });
 });
 

@@ -58,6 +58,21 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('contact.index') ? 'active' : '' }}" href="{{ route('contact.index') }}">Contact Us</a>
                     </li>
+                    
+                    {{-- ========================================================== --}}
+                    {{-- BAGIAN INI DIUBAH --}}
+                    {{-- ========================================================== --}}
+                   <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {{ request()->routeIs('pages.affiliate_info') || request()->routeIs('affiliate.register.create') ? 'active' : '' }}" href="#" id="navbarDropdownAffiliate" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Affiliate Program
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAffiliate">
+                            <li><a class="dropdown-item" href="{{ route('pages.affiliate_info') }}">Apa itu Affiliate?</a></li>
+                            <li><a class="dropdown-item" href="{{ route('affiliate.register.create') }}">Daftar Affiliate</a></li>
+                        </ul>
+                    </li>
+                    {{-- ========================================================== --}}
+
                     @auth
                         @if(Auth::user()->affiliate && Auth::user()->affiliate->status == 'active')
                              <li class="nav-item">
@@ -98,7 +113,13 @@
                 <a href="{{ route('home') }}" class="text-white-50 mx-2 text-decoration-none">Home</a>
                 <a href="{{ route('rooms.index') }}" class="text-white-50 mx-2 text-decoration-none">Rooms</a>
                 <a href="{{ route('contact.index') }}" class="text-white-50 mx-2 text-decoration-none">Contact Us</a>
-                <a href="{{ route('affiliate.register.create') }}" class="text-white-50 mx-2 text-decoration-none">Affiliate Program</a>
+                
+                {{-- ========================================================== --}}
+                {{-- BAGIAN INI DIUBAH --}}
+                {{-- ========================================================== --}}
+                <a href="{{ route('pages.terms') }}" class="text-white-50 mx-2 text-decoration-none">Terms & Conditions</a>
+                {{-- ========================================================== --}}
+
             </div>
             <p class="mb-0 text-white">&copy; {{ date('Y') }} {{ $settings['website_title'] ?? 'Bell Hotel Merauke' }}. All Rights Reserved.</p>
         </div>

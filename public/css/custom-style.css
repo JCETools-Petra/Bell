@@ -353,3 +353,37 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
 .floating-social-bar .linkedin a  { background-color: #0077b5; }
 .floating-social-bar .youtube a   { background-color: #FF0000; }
 .floating-social-bar .tiktok a    { background-color: #000000; }
+
+.preserve-format {
+    white-space: pre-wrap; /* Ini adalah properti kuncinya */
+    word-wrap: break-word;
+}
+
+/* Membuat dropdown muncul saat di-hover (hanya untuk layar besar) */
+@media (min-width: 992px) {
+    .navbar .nav-item.dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; /* Menghapus jarak atas default */
+    }
+}
+
+/* Mengubah warna dropdown agar sesuai tema navbar */
+.navbar .dropdown-menu {
+    background-color: var(--color-black); /* Warna latar hitam */
+    border: 1px solid var(--color-gold);   /* Garis tepi emas */
+    border-radius: 0.5rem;                 /* Sedikit lengkungan di sudut */
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+/* Mengubah warna teks link di dalam dropdown */
+.navbar .dropdown-menu .dropdown-item {
+    color: var(--color-white); /* Teks putih */
+    transition: all 0.2s ease-in-out;
+}
+
+/* Mengubah warna link saat kursor diarahkan ke atasnya */
+.navbar .dropdown-menu .dropdown-item:hover {
+    background-color: #333;      /* Latar sedikit lebih terang dari hitam */
+    color: var(--color-gold);    /* Teks menjadi emas */
+}

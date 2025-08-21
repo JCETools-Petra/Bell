@@ -3,23 +3,20 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\ContactSetting; // <-- UBAH MODEL INI
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache; // Gunakan Cache untuk performa
+// Kita tidak memerlukan 'use Cache' atau 'use App\Models\ContactSetting' lagi
 
 class ContactController extends Controller
 {
     /**
-     * Menampilkan halaman Contact Us.
+     * Menampilkan halaman kontak.
+     *
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-        // Ambil data dari cache atau database dari tabel yang benar
-        $settings = Cache::remember('contact_settings', 60, function () {
-            return ContactSetting::pluck('value', 'key')->all(); // <-- UBAH MODEL INI
-        });
-
-        // Tampilkan view dan kirim data settings ke dalamnya
-        return view('frontend.contact.index', compact('settings'));
+        // Tidak perlu mengambil data di sini.
+        // Variabel $settings sudah disediakan secara global untuk semua view
+        // oleh ViewServiceProvider. Cukup kembalikan view-nya saja.
+        return view('frontend.contact.index');
     }
 }

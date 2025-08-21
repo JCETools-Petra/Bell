@@ -11,59 +11,64 @@
         min-height: 450px;
         border: 0;
     }
+    .page-content-wrapper {
+        padding-top: 8rem;
+        padding-bottom: 5rem;
+    }
 </style>
 
-{{-- TAMBAHKAN DIV PEMBUNGKUS INI --}}
 <div class="page-content-wrapper"> 
     <div class="container my-5">
         <div class="text-center mb-5">
-            <h1 class="display-4">Contact Us</h1>
-            <p class="lead text-muted">We'd love to hear from you. Get in touch with us using the details below.</p>
+            <h1 class="section-title">Contact Us</h1>
+            <p class="lead text-muted">Kami senang mendengar dari Anda. Hubungi kami melalui detail di bawah ini.</p>
         </div>
 
         <div class="row g-5">
             <div class="col-lg-6">
-                <h3 class="mb-4">Our Address</h3>
-                <p style="white-space: pre-wrap;">{{ $settings['contact_address'] ?? 'Address not available.' }}</p>
-                
-                <h3 class="mt-5 mb-4">Contact Details</h3>
+                <div class="card p-4 h-100 shadow-sm">
+                    <h3 class="mb-4">Alamat Kami</h3>
+                    {{-- style="white-space: pre-wrap;" akan menjaga format baris baru dari alamat --}}
+                    <p style="white-space: pre-wrap;">{{ $settings['contact_address'] ?? 'Alamat tidak tersedia.' }}</p>
+                    
+                    <h3 class="mt-5 mb-4">Detail Kontak</h3>
                     <ul class="list-unstyled">
-                        <li class="mb-3">
-                            <strong>Phone:</strong>
-                            @if(!empty($settings['contact_phone']))
-                                @php
-                                    // Ambil nomor telepon asli yang diinput admin
-                                    $originalPhone = $settings['contact_phone'];
-                                    
-                                    // 1. Hapus semua karakter selain angka (spasi, tanda hubung, dll.)
-                                    $cleanedPhone = preg_replace('/[^0-9]/', '', $originalPhone);
-
-                                    // 2. Cek jika nomor diawali dengan '0'
-                                    if (substr($cleanedPhone, 0, 1) === '0') {
-                                        // Ganti '0' di depan dengan kode negara '62'
-                                        $waPhone = '62' . substr($cleanedPhone, 1);
-                                    } else {
-                                        // Jika sudah dalam format lain (misal: 628...), gunakan apa adanya
-                                        $waPhone = $cleanedPhone;
-                                    }
-                                @endphp
-                                {{-- Tampilkan nomor asli, tapi link-nya ke nomor yang sudah diformat --}}
-                                <a href="https://wa.me/{{ $waPhone }}" target="_blank" rel="noopener noreferrer">{{ $originalPhone }}</a>
-                            @else
-                                Phone not available.
-                            @endif
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="fas fa-phone fa-fw me-3"></i>
+                            <div>
+                                @if(!empty($settings['contact_phone']))
+                                    @php
+                                        $originalPhone = $settings['contact_phone'];
+                                        $cleanedPhone = preg_replace('/[^0-9]/', '', $originalPhone);
+                                        $waPhone = substr($cleanedPhone, 0, 1) === '0' ? '62' . substr($cleanedPhone, 1) : $cleanedPhone;
+                                    @endphp
+                                    {{-- Tampilkan nomor asli, tapi link-nya ke nomor WhatsApp --}}
+                                    <a href="https://wa.me/{{ $waPhone }}" target="_blank" rel="noopener noreferrer">{{ $originalPhone }}</a>
+                                @else
+                                    Telepon tidak tersedia.
+                                @endif
+                            </div>
                         </li>
-                        <li>
-                            <strong>Email:</strong> <a href="mailto:{{ $settings['contact_email'] ?? '' }}">{{ $settings['contact_email'] ?? 'Email not available.' }}</a>
+                        <li class="d-flex align-items-center">
+                             <i class="fas fa-envelope fa-fw me-3"></i>
+                             <div>
+                                <a href="mailto:{{ $settings['contact_email'] ?? '' }}">{{ $settings['contact_email'] ?? 'Email tidak tersedia.' }}</a>
+                            </div>
                         </li>
                     </ul>
-            </div>
-            <div class="col-lg-6">
-                <div class="contact-map shadow rounded overflow-hidden">
-                    {!! $settings['contact_maps_embed'] ?? '<p class="p-5 text-center">Map not available.</p>' !!}
                 </div>
+            </div>
+            <div class="contact-map shadow rounded overflow-hidden h-100">
+                @if(!empty($settings['contact_maps_embed']))
+                    {!! $settings['contact_maps_embed'] !!}
+                @else
+                    <div class="d-flex justify-content-center align-items-center h-100 bg-light">
+                        <p class="text-muted">Peta tidak tersedia.</p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
-</div> {{-- JANGAN LUPA TAG PENUTUP DIV --}}
+</div>
+
 @endsection

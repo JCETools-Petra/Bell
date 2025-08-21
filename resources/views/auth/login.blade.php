@@ -1,8 +1,4 @@
 <x-guest-layout>
-    @php
-        $settings = \App\Models\HomepageSetting::pluck('value', 'key')->all();
-    @endphp
-
     <div class="mb-4">
         <a href="/">
             @if(isset($settings['logo_path']) && $settings['logo_path'])

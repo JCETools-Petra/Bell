@@ -4,8 +4,9 @@
 
 @section('content')
 @php
-    $heroBg = isset($settings['hero_bg_image']) 
-              ? asset('storage/' . $settings['hero_bg_image']) 
+    // BENAR: Menggunakan kunci '_path' yang disimpan oleh controller
+    $heroBg = isset($settings['hero_image_path'])
+              ? asset('storage/' . $settings['hero_image_path'])
               : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop';
 @endphp
 
@@ -17,14 +18,14 @@
         ">
             {{ $settings['hero_title'] ?? 'Bell Hotel Merauke' }}
         </h1>
-        
+
         <p class="lead" style="
             font-size: {{ $settings['hero_subtitle_font_size'] ?? '1.5' }}rem;
             font-family: {!! $settings['hero_subtitle_font_family'] ?? 'var(--primary-font)' !!};
         ">
             {{ $settings['hero_subtitle'] ?? 'Elegance & Comfort in The Heart of The East.' }}
         </p>
-        
+
         <div class="hero-booking-form mt-4">
             <form action="{{ route('rooms.availability') }}" method="GET">
                 <div class="row g-2 align-items-center">
@@ -117,7 +118,7 @@
             </div>
         </section>
     @endif
-    
+
     @if(in_array('restaurants', $featuredOptions) && $featuredRestaurants->isNotEmpty())
         <section id="restaurants" class="py-5">
             <div class="container">
