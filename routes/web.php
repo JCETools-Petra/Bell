@@ -30,6 +30,10 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\PageController; 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Api\MidtransCallbackController;
+use Illuminate\Support\Facades\Log; // <-- Tambahkan ini di bagian atas file
+use Illuminate\Http\Request; 
+use App\Http\Controllers\Admin\MaintenanceController;
+use App\Http\Controllers\Admin\AffiliatePageController;
 
 // Affiliate Dashboard Controller
 use App\Http\Controllers\Affiliate\DashboardController as AffiliateDashboardController;
@@ -78,7 +82,13 @@ Route::get('/terms-and-conditions', [PageController::class, 'terms'])->name('pag
 
 Route::get('/apa-itu-affiliate', [PageController::class, 'affiliateInfo'])->name('pages.affiliate_info');
 
-Route::post('/midtrans/callback', [MidtransCallbackController::class, 'callback']);
+Route::post('/midtrans/callback', [MidtransCallbackController::class, 'callback'])->name('midtrans.callback');
+
+Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+// TAMBAHKAN ROUTE DI BAWAH INI
+Route::get('/booking/success/{booking}', [BookingController::class, 'success'])->name('booking.success');
+
+Route::get('/booking/success/{token}', [BookingController::class, 'success'])->name('booking.success');
 
 // Sitemap
 Route::get('/sitemap.xml', function () {
@@ -133,6 +143,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('images/{image}/delete', [ImageController::class, 'destroy'])->name('images.destroy');
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+        Route::get('/maintenance-settings', [MaintenanceController::class, 'index'])->name('maintenance.index');
+        Route::post('/maintenance-settings', [MaintenanceController::class, 'update'])->name('maintenance.update');
+        Route::get('/affiliate-page-settings', [AffiliatePageController::class, 'index'])->name('affiliate_page.index');
+        Route::put('/affiliate-page-settings', [AffiliatePageController::class, 'update'])->name('affiliate_page.update');
+    });
+    
+    Route::post('/midtrans/callback', function (Request $request) {
+        Log::info('MIDTRANS CALLBACK WAS HIT!');
+        Log::info($request->all());
+        return response()->json(['message' => 'Callback received and logged.']);
     });
 });
 

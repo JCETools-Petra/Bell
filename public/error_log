@@ -5,3 +5,11 @@ Stack trace:
 #2 /home/belg7925/public_html/public/index.php(14): require('/home/belg7925/...')
 #3 {main}
   thrown in /home/belg7925/public_html/vendor/composer/platform_check.php on line 22
+[21-Aug-2025 07:49:33 UTC] PHP Fatal error:  Cannot use Carbon\Carbon as Carbon because the name is already in use in /home/belg7925/public_html/app/Http/Controllers/Frontend/BookingController.php on line 14
+[21-Aug-2025 13:09:38 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Frontend\BookingController as BookingController because the name is already in use in /home/belg7925/public_html/routes/web.php on line 36
+[21-Aug-2025 13:09:47 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Frontend\BookingController as BookingController because the name is already in use in /home/belg7925/public_html/routes/web.php on line 36
+[21-Aug-2025 13:11:32 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Frontend\BookingController as BookingController because the name is already in use in /home/belg7925/public_html/routes/web.php on line 36
+[21-Aug-2025 13:12:17 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Frontend\BookingController as BookingController because the name is already in use in /home/belg7925/public_html/routes/web.php on line 36
+[21-Aug-2025 13:12:20 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Frontend\BookingController as BookingController because the name is already in use in /home/belg7925/public_html/routes/web.php on line 36
+[21-Aug-2025 13:12:20 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Frontend\BookingController as BookingController because the name is already in use in /home/belg7925/public_html/routes/web.php on line 36
+[21-Aug-2025 13:12:20 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Frontend\BookingController as BookingController because the name is already in use in /home/belg7925/public_html/routes/web.php on line 36

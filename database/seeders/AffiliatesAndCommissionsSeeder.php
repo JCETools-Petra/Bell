@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 // Pastikan nama class-nya juga diubah
-class AffiliatesTableSeeder extends Seeder
+class AffiliatesAndCommissionsSeeder extends Seeder
 {
     public function run(): void
     {

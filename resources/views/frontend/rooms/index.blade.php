@@ -5,7 +5,7 @@
 @section('content')
 <div class="page-content-wrapper">
     <div class="container">
-        <h1 class="section-title text-center mb-5">Our Rooms & Suites</h1>
+        <h1 class="section-title text-center mb-5">Our Rooms</h1>
         <div class="row">
             @forelse($rooms as $room)
                 <div class="col-md-6 col-lg-4 mb-4">

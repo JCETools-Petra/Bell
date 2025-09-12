@@ -8,12 +8,15 @@ class PageController extends Controller
 {
     public function terms()
     {
-        return view('frontend.pages.terms');
+        // Ambil data dari helper settings()
+        $termsContent = settings('terms_and_conditions', 'Konten belum diatur.');
+        return view('pages.terms', ['content' => $termsContent]);
     }
 
-    // TAMBAHKAN METODE BARU INI
     public function affiliateInfo()
     {
-        return view('frontend.pages.affiliate_info');
+        // Ambil data dari helper settings()
+        $affiliateContent = settings('affiliate_page_content', 'Konten belum diatur.');
+        return view('pages.affiliate_info', ['content' => $affiliateContent]);
     }
 }

@@ -22,6 +22,10 @@ class Booking extends Model
         'checkout_date',
         'num_rooms',
         'status',
+        'total_price',
+        'access_token',
+        'payment_method',// Tambahkan ini
+        'snap_token', 
     ];
 
     /**

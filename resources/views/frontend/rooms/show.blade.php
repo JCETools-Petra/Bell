@@ -104,11 +104,12 @@
             @csrf
             
             <input type="hidden" name="room_id" value="{{ $room->id }}">
+            <input type="hidden" id="room_price_modal" value="{{ $room->price }}">
 
             @if(request('checkin') && request('checkout'))
-                <input type="hidden" name="checkin" value="{{ request('checkin') }}">
-                <input type="hidden" name="checkout" value="{{ request('checkout') }}">
-                <input type="hidden" name="num_rooms" value="{{ request('rooms', 1) }}">
+                <input type="hidden" id="modal_checkin" name="checkin" value="{{ request('checkin') }}">
+                <input type="hidden" id="modal_checkout" name="checkout" value="{{ request('checkout') }}">
+                <input type="hidden" id="modal_num_rooms" name="num_rooms" value="{{ request('rooms', 1) }}">
                 <div class="alert alert-light border">
                     <h6 class="alert-heading">Your Selection</h6>
                     <p class="mb-1"><strong>Check-in:</strong> {{ request('checkin') }}</p>
@@ -120,11 +121,11 @@
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label for="modal_checkin" class="form-label">Check-in Date</label>
-                        <input type="text" class="form-control datepicker" id="modal_checkin" name="checkin" placeholder="Select Date" required>
+                        <input type="text" class="form-control" id="modal_checkin" name="checkin" placeholder="Select Date" required>
                     </div>
                     <div class="col-md-6">
                         <label for="modal_checkout" class="form-label">Check-out Date</label>
-                        <input type="text" class="form-control datepicker" id="modal_checkout" name="checkout" placeholder="Select Date" required>
+                        <input type="text" class="form-control" id="modal_checkout" name="checkout" placeholder="Select Date" required>
                     </div>
                     <div class="col-md-12">
                         <label for="modal_num_rooms" class="form-label">Number of Rooms</label>
@@ -148,16 +149,38 @@
                 <input type="tel" class="form-control" id="guest_phone" name="guest_phone" required>
             </div>
             
-            <div class="d-grid mt-4">
-                <button type="submit" class="btn btn-custom">Submit Booking Request</button>
+            {{-- Elemen untuk menampilkan total harga --}}
+            <div id="price-calculation-modal" class="mt-4 p-3 bg-light rounded" style="display: none;">
+                <h6 class="mb-0">Estimasi Total Biaya: <span id="total-price-modal" class="text-primary fw-bold">Rp 0</span></h6>
             </div>
-            <p class="text-muted small mt-3">*Anda akan dihubungi oleh Admin kami untuk verifikasi dan pembayaran.</p>
+
+            <div class="d-grid mt-4">
+                {{-- ========================================================== --}}
+                {{--         UBAH TOMBOL SUBMIT MENJADI KONDISIONAL           --}}
+                {{-- ========================================================== --}}
+                @if(settings('booking_method', 'direct') == 'direct')
+                    <button type="submit" class="btn btn-custom">Lanjutkan ke Pembayaran</button>
+                @else
+                    <button type="submit" class="btn btn-custom">Kirim Permintaan Booking</button>
+                @endif
+            </div>
+            
+            {{-- Ubah juga teks helper di bawah tombol --}}
+            @if(settings('booking_method', 'direct') == 'direct')
+                <p class="text-muted small mt-3">*Anda akan melanjutkan ke halaman pembayaran setelah mengisi formulir ini.</p>
+            @else
+                <p class="text-muted small mt-3">*Admin kami akan segera menghubungi Anda melalui WhatsApp untuk konfirmasi dan pembayaran.</p>
+            @endif
         </form>
       </div>
     </div>
   </div>
 </div>
 @endsection
+
+@push('styles')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+@endpush
 
 @push('scripts')
 @php
@@ -198,5 +221,99 @@
 @endphp
 <script type="application/ld+json">
 {!! json_encode($ld, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+
+{{-- Skrip untuk Datepicker dan Kalkulasi Harga --}}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        function initializePriceCalculator() {
+            const checkinInput = document.getElementById('modal_checkin');
+            const checkoutInput = document.getElementById('modal_checkout');
+            const numRoomsInput = document.getElementById('modal_num_rooms');
+            const roomPrice = parseFloat(document.getElementById('room_price_modal').value);
+            const priceDisplayContainer = document.getElementById('price-calculation-modal');
+            const totalPriceElement = document.getElementById('total-price-modal');
+
+            // Inisialisasi Date Picker
+            const today = new Date();
+            flatpickr(checkinInput, {
+                dateFormat: "d-m-Y",
+                minDate: today,
+                onChange: function(selectedDates, dateStr, instance) {
+                    const checkoutPicker = flatpickr.instance["#modal_checkout"];
+                    if (selectedDates.length > 0) {
+                        checkoutPicker.set('minDate', new Date(selectedDates[0]).fp_incr(1));
+                    }
+                    updatePrice();
+                }
+            });
+
+            flatpickr(checkoutInput, {
+                dateFormat: "d-m-Y",
+                onChange: function(selectedDates, dateStr, instance) {
+                    updatePrice();
+                }
+            });
+
+            // Tambahkan event listener ke input jumlah kamar
+            numRoomsInput.addEventListener('input', updatePrice);
+
+            // Fungsi untuk mengupdate harga
+            function updatePrice() {
+                const checkinDateStr = checkinInput.value;
+                const checkoutDateStr = checkoutInput.value;
+                const numRooms = parseInt(numRoomsInput.value) || 0;
+
+                if (checkinDateStr && checkoutDateStr && numRooms > 0) {
+                    const checkinDate = new Date(checkinDateStr.split('-').reverse().join('-'));
+                    const checkoutDate = new Date(checkoutDateStr.split('-').reverse().join('-'));
+
+                    if (checkoutDate > checkinDate) {
+                        const timeDiff = checkoutDate.getTime() - checkinDate.getTime();
+                        let durationInDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        
+                        if (durationInDays < 1) {
+                            durationInDays = 1;
+                        }
+
+                        const total = roomPrice * numRooms * durationInDays;
+
+                        totalPriceElement.textContent = new Intl.NumberFormat('id-ID', {
+                            style: 'currency',
+                            currency: 'IDR',
+                            minimumFractionDigits: 0
+                        }).format(total);
+
+                        priceDisplayContainer.style.display = 'block';
+                    } else {
+                        priceDisplayContainer.style.display = 'none';
+                    }
+                } else {
+                    priceDisplayContainer.style.display = 'none';
+                }
+            }
+            
+            // Panggil sekali saat inisialisasi jika ada nilai dari URL
+            updatePrice();
+        }
+
+        // Panggil fungsi inisialisasi
+        initializePriceCalculator();
+
+        // Jika modal ditutup, reset nilai datepicker agar tidak bentrok
+        const bookingModal = document.getElementById('bookingModal');
+        bookingModal.addEventListener('hidden.bs.modal', function (event) {
+            const checkinPicker = flatpickr.instance["#modal_checkin"];
+            const checkoutPicker = flatpickr.instance["#modal_checkout"];
+            if (checkinPicker) {
+                checkinPicker.clear();
+            }
+            if (checkoutPicker) {
+                checkoutPicker.clear();
+            }
+        });
+    });
 </script>
 @endpush

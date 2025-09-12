@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Setting; // Gunakan Model yang baru
+use App\Models\Setting;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 
@@ -15,8 +15,9 @@ class SettingController extends Controller
      */
     public function index()
     {
-        // Ambil semua data dari tabel settings dan ubah menjadi array
+        // Ambil semua pengaturan dalam bentuk [key => value]
         $settings = Setting::pluck('value', 'key')->all();
+
         return view('admin.settings.index', compact('settings'));
     }
 
@@ -25,18 +26,19 @@ class SettingController extends Controller
      */
     public function update(Request $request)
     {
-        // Validasi semua input yang mungkin ada
+        // 1) Validasi SEMUA input yang BUKAN checkbox
         $validatedData = $request->validate([
             // General
             'website_title' => 'required|string|max:255',
             'logo_height' => 'required|integer|min:20|max:100',
-            'show_logo_text' => 'sometimes|boolean',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,ico|max:2048',
+
             // Hero Section
             'hero_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'hero_title' => 'required|string|max:255',
             'hero_subtitle' => 'required|string',
+
             // Contact
             'contact_address' => 'nullable|string',
             'contact_phone' => 'nullable|string',
@@ -46,15 +48,25 @@ class SettingController extends Controller
             'contact_linkedin' => 'nullable|url',
             'contact_youtube' => 'nullable|url',
             'contact_tiktok' => 'nullable|url',
+            'contact_maps_embed' => 'nullable|string',
+
             // Legal
             'terms_and_conditions' => 'nullable|string',
-            'contact_maps_embed' => 'nullable|string',
+
+            // Midtrans (non-checkbox)
+            'midtrans_merchant_id' => 'required|string|max:255',
+            'midtrans_client_key' => 'required|string|max:255',
+            'midtrans_server_key' => 'required|string|max:255',
+
+            // WhatsApp Templates
+            'whatsapp_customer_message' => 'required|string',
+            'whatsapp_admin_message' => 'required|string',
+
+            // Booking Method
+            'booking_method' => 'required|in:direct,manual',
         ]);
 
-        // Proses input boolean (checkbox)
-        $validatedData['show_logo_text'] = $request->has('show_logo_text') ? '1' : '0';
-
-        // Proses file upload (logo, favicon, hero image)
+        // 2) Proses file upload (logo, favicon, hero image)
         $filesToUpload = ['logo', 'favicon', 'hero_image'];
         foreach ($filesToUpload as $fileKey) {
             if ($request->hasFile($fileKey)) {
@@ -63,24 +75,47 @@ class SettingController extends Controller
                 if ($oldPath) {
                     Storage::disk('public')->delete($oldPath);
                 }
-                
-                // Simpan file baru dan simpan path-nya
+                // Simpan file baru
                 $path = $request->file($fileKey)->store('settings', 'public');
+                // Catat path ke dalam data yang akan disimpan
                 $validatedData[$fileKey . '_path'] = $path;
             }
         }
 
-        // Hapus key file dari array agar tidak tersimpan sebagai setting biasa
+        // Singkirkan field file supaya tidak ikut disimpan sebagai string
         unset($validatedData['logo'], $validatedData['favicon'], $validatedData['hero_image']);
 
-        // Simpan setiap data ke database menggunakan metode updateOrCreate
+        // 3) Simpan semua data non-checkbox yang sudah divalidasi
         foreach ($validatedData as $key => $value) {
+            Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value ?? '']
+            );
+        }
+
+        // ==========================================================
+        // 4) Simpan semua CHECKBOX dengan $request->boolean()
+        //    (hidden input value="0" akan terbaca sebagai false)
+        // ==========================================================
+        $checkboxes = [
+            'show_logo_text',
+            'midtrans_is_production',
+        ];
+
+        foreach ($checkboxes as $key) {
+            $value = $request->boolean($key) ? '1' : '0';
             Setting::updateOrCreate(
                 ['key' => $key],
                 ['value' => $value]
             );
         }
+        // ==========================================================
+
+        // 5) Hapus cache & redirect
         Cache::forget('site_settings');
-        return redirect()->route('admin.settings.index')->with('success', 'Settings updated successfully.');
+
+        return redirect()
+            ->route('admin.settings.index')
+            ->with('success', 'Settings updated successfully.');
     }
 }
