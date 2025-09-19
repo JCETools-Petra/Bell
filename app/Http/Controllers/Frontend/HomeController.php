@@ -7,6 +7,7 @@ use App\Models\Setting;
 use App\Models\Room;
 use App\Models\MiceRoom;
 use App\Models\Restaurant;
+use App\Models\Banner;
 
 class HomeController extends Controller
 {
@@ -29,8 +30,10 @@ class HomeController extends Controller
         if (in_array('restaurants', $featuredOptions)) {
             $featuredRestaurants = Restaurant::latest()->take(3)->get();
         }
+        
+        $banners = Banner::where('is_active', true)->orderBy('order')->get();
 
         // PERBAIKI BARIS INI: Tambahkan 'featuredOptions' ke dalam compact()
-        return view('frontend.home', compact('featuredOptions', 'featuredRooms', 'featuredMice', 'featuredRestaurants'));
+        return view('frontend.home', compact('featuredOptions', 'featuredRooms', 'featuredMice', 'featuredRestaurants', 'banners'));
     }
 }

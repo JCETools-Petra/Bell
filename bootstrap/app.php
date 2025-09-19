@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php', // Pastikan rute API juga dimuat
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
@@ -14,17 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
         
         // Pengecualian untuk Maintenance Mode
         $middleware->preventRequestsDuringMaintenance($except = [
-            'admin/*',       // Izinkan akses ke semua URL admin
-            'login',         // Izinkan akses ke halaman login
-            'logout',        // Izinkan akses untuk logout
-            'public/login',  // Izinkan akses jika URL mengandung /public
-            'public/logout', // Izinkan akses jika URL mengandung /public
+            'admin/*',
+            'login',
+            'logout',
         ]);
         
         // Pengecualian untuk CSRF Token (Webhook Midtrans)
         $middleware->validateCsrfTokens(except: [
             'midtrans/callback',
-            'public/midtrans/callback',
         ]);
 
         // Middleware Grup
@@ -36,6 +34,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'affiliate.active' => \App\Http\Middleware\EnsureUserIsActiveAffiliate::class,
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+
+            // ==========================================================
+            // TAMBAHKAN BARIS INI UNTUK MEMPERBAIKI ERROR
+            // ==========================================================
+            'maintenance' => \App\Http\Middleware\MaintenanceMiddleware::class,
         ]);
 
     })

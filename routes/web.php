@@ -18,8 +18,6 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\RoomController as AdminRoomController;
 use App\Http\Controllers\Admin\MiceRoomController as AdminMiceRoomController;
 use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
-use App\Http\Controllers\Admin\HomepageSettingController;
-use App\Http\Controllers\Admin\ContactSettingController;
 use App\Http\Controllers\Admin\ImageController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\MiceInquiryController as AdminMiceInquiryController;
@@ -27,13 +25,13 @@ use App\Http\Controllers\Admin\AffiliateController as AdminAffiliateController;
 use App\Http\Controllers\Admin\CommissionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\PageController; 
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Api\MidtransCallbackController;
-use Illuminate\Support\Facades\Log; // <-- Tambahkan ini di bagian atas file
-use Illuminate\Http\Request; 
 use App\Http\Controllers\Admin\MaintenanceController;
 use App\Http\Controllers\Admin\AffiliatePageController;
+use App\Http\Controllers\Admin\BannerController as AdminBannerController;
+use App\Http\Controllers\Admin\PriceOverrideController as AdminPriceOverrideController;
 
 // Affiliate Dashboard Controller
 use App\Http\Controllers\Affiliate\DashboardController as AffiliateDashboardController;
@@ -44,11 +42,6 @@ use App\Http\Controllers\Affiliate\BookingController as AffiliateBookingControll
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
 // == FRONTEND ROUTES ==
@@ -71,44 +64,43 @@ Route::get('/restaurants/{slug}', [FrontendRestaurantController::class, 'show'])
 Route::get('/contact-us', [ContactController::class, 'index'])->name('contact.index');
 
 // Booking & Inquiries
+// PERBAIKAN: Menghapus definisi duplikat untuk 'bookings.store'. Cukup satu.
 Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
 Route::post('/mice-inquiries', [MiceInquiryController::class, 'store'])->name('mice.inquiries.store');
+
+// PERBAIKAN: Menyatukan rute 'success' yang duplikat menjadi satu definisi yang benar.
+Route::get('/booking/success/{booking:access_token}', [BookingController::class, 'success'])->name('booking.success');
+Route::get('/booking/payment/{booking:access_token}', [BookingController::class, 'payment'])->name('booking.payment');
 
 // Affiliate Registration
 Route::get('/affiliate/register', [AffiliateController::class, 'create'])->name('affiliate.register.create');
 Route::post('/affiliate/register', [AffiliateController::class, 'store'])->name('affiliate.register.store');
 
+// Static Pages
 Route::get('/terms-and-conditions', [PageController::class, 'terms'])->name('pages.terms');
-
 Route::get('/apa-itu-affiliate', [PageController::class, 'affiliateInfo'])->name('pages.affiliate_info');
 
+// Midtrans Callback
 Route::post('/midtrans/callback', [MidtransCallbackController::class, 'callback'])->name('midtrans.callback');
-
-Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
-// TAMBAHKAN ROUTE DI BAWAH INI
-Route::get('/booking/success/{booking}', [BookingController::class, 'success'])->name('booking.success');
-
-Route::get('/booking/success/{token}', [BookingController::class, 'success'])->name('booking.success');
 
 // Sitemap
 Route::get('/sitemap.xml', function () {
     return SitemapGenerator::create(config('app.url'))->generate()->toResponse(request());
 });
 
-
 // == BACKEND (ADMIN) & AFFILIATE DASHBOARD ROUTES ==
 
 // Affiliate Dashboard (membutuhkan login sebagai affiliate yang aktif)
-Route::middleware(['auth', 'affiliate.active'])->prefix('affiliate')->name('affiliate.')->group(function () {
+Route::middleware(['auth', 'verified', 'affiliate.active'])->prefix('affiliate')->name('affiliate.')->group(function () {
     Route::get('/dashboard', [AffiliateDashboardController::class, 'index'])->name('dashboard');
     Route::resource('bookings', AffiliateBookingController::class)->only(['create', 'store']);
 });
 
 // Admin Panel (membutuhkan login sebagai admin/pegawai terverifikasi)
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
-
-    // Rute yang bisa diakses SEMUA STAF (Admin, Admin-Web, Accounting)
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Profile routes for admin
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -131,16 +123,18 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::resource('bookings', AdminBookingController::class);
         Route::resource('mice-inquiries', AdminMiceInquiryController::class)->only(['index', 'destroy']);
         Route::resource('affiliates', AdminAffiliateController::class)->only(['index', 'update']);
+        Route::resource('banners', AdminBannerController::class);
 
-        // Settings
-        //Route::get('homepage-settings', [HomepageSettingController::class, 'edit'])->name('homepage.edit');
-        //Route::put('homepage-settings', [HomepageSettingController::class, 'update'])->name('homepage.update');
-        //Route::get('contact-settings', [ContactSettingController::class, 'edit'])->name('contact.edit');
-        //Route::put('contact-settings', [ContactSettingController::class, 'update'])->name('contact.update');
+        // Pengaturan Harga Khusus
+        Route::get('/price-overrides', [AdminPriceOverrideController::class, 'index'])->name('price-overrides.index');
+        Route::post('/price-overrides', [AdminPriceOverrideController::class, 'store'])->name('price-overrides.store');
+        Route::delete('/price-overrides/{priceOverride}', [AdminPriceOverrideController::class, 'destroy'])->name('price-overrides.destroy');
 
         // Utilities
         Route::delete('restaurants/images/{image}', [AdminRestaurantController::class, 'destroyImage'])->name('restaurants.image.destroy');
-        Route::get('images/{image}/delete', [ImageController::class, 'destroy'])->name('images.destroy');
+        Route::delete('images/{image}', [ImageController::class, 'destroy'])->name('images.destroy');
+        
+        // Halaman Pengaturan
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
         Route::get('/maintenance-settings', [MaintenanceController::class, 'index'])->name('maintenance.index');
@@ -148,14 +142,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('/affiliate-page-settings', [AffiliatePageController::class, 'index'])->name('affiliate_page.index');
         Route::put('/affiliate-page-settings', [AffiliatePageController::class, 'update'])->name('affiliate_page.update');
     });
-    
-    Route::post('/midtrans/callback', function (Request $request) {
-        Log::info('MIDTRANS CALLBACK WAS HIT!');
-        Log::info($request->all());
-        return response()->json(['message' => 'Callback received and logged.']);
-    });
 });
-
 
 // Route bawaan dari Laravel Breeze untuk autentikasi
 require __DIR__.'/auth.php';

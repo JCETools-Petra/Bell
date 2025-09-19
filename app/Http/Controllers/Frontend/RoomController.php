@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use App\Models\PriceOverride;
+use Carbon\Carbon; 
 
 class RoomController extends Controller
 {
@@ -22,14 +24,24 @@ class RoomController extends Controller
 
     public function checkAvailability(Request $request)
     {
-        // Ambil semua input dari form
         $searchParams = $request->all();
-
-        // TODO: Logika untuk memfilter kamar berdasarkan tanggal akan ditambahkan nanti.
-        // Untuk saat ini, kita tampilkan semua kamar yang tersedia.
         $rooms = Room::where('is_available', true)->get();
 
-        // Kirim data kamar dan parameter pencarian ke view
+        // 3. Tambahkan Logika untuk Mengambil Harga Dinamis
+        if (isset($searchParams['checkin'])) {
+            $checkinDate = Carbon::createFromFormat('d-m-Y', $searchParams['checkin'])->format('Y-m-d');
+            
+            foreach ($rooms as $room) {
+                $override = PriceOverride::where('room_id', $room->id)
+                                         ->where('date', $checkinDate)
+                                         ->first();
+                // Ganti harga kamar dengan harga override jika ada
+                if ($override) {
+                    $room->price = $override->price; 
+                }
+            }
+        }
+        // 4. Kirim data yang sudah diperbarui ke view
         return view('frontend.rooms.availability', compact('rooms', 'searchParams'));
     }
 }

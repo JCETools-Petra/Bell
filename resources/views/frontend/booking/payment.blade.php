@@ -1,51 +1,50 @@
 @extends('layouts.frontend')
 
+@section('title', 'Booking Payment')
+
 @section('content')
-<div class="container py-5" style="min-height: 60vh;">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-body text-center p-5">
-                    <h2 class="mb-3">Selesaikan Pembayaran Anda</h2>
-                    <p class="text-muted">Satu langkah lagi untuk mengonfirmasi pesanan Anda. Silakan klik tombol di bawah untuk melanjutkan ke pembayaran yang aman melalui Midtrans.</p>
-                    <hr class="my-4">
-                    
-                    <h5>Detail Booking ID: #{{ $booking->id }}</h5>
-                    <p>Total Tagihan: <strong>Rp {{ number_format($booking->total_price, 0, ',', '.') }}</strong></p>
-
-                    <button id="pay-button" class="btn btn-primary btn-lg mt-3">Bayar Sekarang</button>
-
-                    <p class="mt-4 text-sm text-muted">Anda akan diarahkan ke halaman konfirmasi setelah pembayaran berhasil.</p>
+<div class="page-content-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h1 class="h3">Selesaikan Booking Anda</h1>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="mt-4">
+                            Silakan klik tombol di bawah ini untuk melanjutkan ke pembayaran.
+                        </p>
+                        <div class="text-center mt-4">
+                            <button id="pay-button" class="btn btn-custom btn-lg">Bayar Sekarang</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@endsection
 
-{{-- ========================================================== --}}
-{{--         PERBAIKAN ADA DI BLOK SCRIPT DI BAWAH INI          --}}
-{{-- ========================================================== --}}
-
-{{-- Muat library Snap.js dari Midtrans secara dinamis --}}
+@push('scripts')
+{{-- Script untuk Midtrans tetap sama --}}
 <script src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
-
 <script type="text/javascript">
-    var payButton = document.getElementById('pay-button');
-    payButton.addEventListener('click', function () {
-        window.snap.pay('{{ $snapToken }}', {
+    document.getElementById('pay-button').onclick = function(){
+        snap.pay('{{ $booking->snap_token }}', {
             onSuccess: function(result){
-                window.location.href = '{{ route("booking.success", $booking->access_token) }}';
+                window.location.href = '{{ route('booking.success', ['booking' => $booking->access_token]) }}'
             },
             onPending: function(result){
-                alert("Menunggu pembayaran Anda!");
+                alert("waiting for your payment!"); console.log(result);
             },
             onError: function(result){
-                alert("Pembayaran gagal!");
+                alert("payment failed!"); console.log(result);
             },
             onClose: function(){
-                alert('Anda menutup jendela pembayaran sebelum selesai.');
+                alert('you closed the popup without finishing the payment');
             }
         });
-    });
+    };
 </script>
-@endsection
+@endpush

@@ -21,17 +21,17 @@
                     <img src="{{ $room->images->first() ? asset('storage/' . $room->images->first()->path) : 'https://via.placeholder.com/400x250' }}" class="card-img-top" alt="{{ $room->name }}">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title h3">{{ $room->name }}</h5>
-                        <p class="card-price mb-3">Rp {{ number_format($room->price, 0, ',', '.') }} / night</p>
+                        
+                        {{-- HARGA DENGAN ID UNIK --}}
+                        <p class="card-price mb-3 price-for-room-{{ $room->id }}">
+                            Rp {{ number_format($room->price, 0, ',', '.') }} / night
+                        </p>
+                        
                         <p class="card-text">{{ Str::limit($room->description, 100) }}</p>
 
-                        {{-- ========================================================== --}}
-                        {{-- UBAH BARIS DI BAWAH INI --}}
-                        {{-- ========================================================== --}}
                         <a href="{{ route('rooms.show', ['slug' => $room->slug, 'checkin' => $searchParams['checkin'] ?? '', 'checkout' => $searchParams['checkout'] ?? '', 'guests' => $searchParams['guests'] ?? 1, 'rooms' => $searchParams['rooms'] ?? 1]) }}" class="btn btn-custom mt-auto">
                             View Details
                         </a>
-                        {{-- ========================================================== --}}
-
                     </div>
                 </div>
             </div>

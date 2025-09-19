@@ -7,13 +7,9 @@
 
     <nav class="flex-1 space-y-1 py-4 px-2">
         
-        {{-- ========================================================== --}}
-        {{-- LOGIKA MENU BERDASARKAN PERAN (TETAP SAMA) --}}
-        {{-- ========================================================== --}}
-
         @if(Auth::user()->role == 'admin')
             <h6 class="px-4 pt-2 pb-1 text-xs font-semibold uppercase text-gray-400">General</h6>
-            <a href="{{ route('home') }}"class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('admin.bookings.*') ? 'bg-brand-gold text-brand-black' : 'hover:bg-gray-700 hover:text-white' }}">Lihat Website</a>
+            <a href="{{ route('home') }}"class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors hover:bg-gray-700 hover:text-white">Lihat Website</a>
             <a href="{{ route('admin.dashboard') }}" class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-brand-gold text-brand-black' : 'hover:bg-gray-700 hover:text-white' }}">Dashboard</a>
             <a href="{{ route('admin.maintenance.index') }}" class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('admin.maintenance.*') ? 'bg-brand-gold text-brand-black' : 'hover:bg-gray-700 hover:text-white' }}">Maintenance Mode</a>
             <a href="{{ route('admin.affiliate_page.index') }}" class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('admin.affiliate_page.*') ? 'bg-brand-gold text-brand-black' : 'hover:bg-gray-700 hover:text-white' }}">Halaman Affiliate</a>
@@ -27,6 +23,9 @@
 
             <hr class="border-gray-700 my-2">
             <h6 class="px-4 pt-2 pb-1 text-xs font-semibold uppercase text-gray-400">Content Management</h6>
+            <a href="{{ route('admin.banners.index') }}" class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('admin.banners.*') ? 'bg-brand-gold text-brand-black' : 'hover:bg-gray-700 hover:text-white' }}">Banners</a>
+            {{-- PENAMBAHAN LINK CUSTOM PRICES --}}
+            <a href="{{ route('admin.price-overrides.index') }}" class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('admin.price-overrides.*') ? 'bg-brand-gold text-brand-black' : 'hover:bg-gray-700 hover:text-white' }}">Custom Prices</a>
             <a href="{{ route('admin.rooms.index') }}" class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('admin.rooms.*') ? 'bg-brand-gold text-brand-black' : 'hover:bg-gray-700 hover:text-white' }}">Rooms</a>
             <a href="{{ route('admin.mice.index') }}" class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('admin.mice.*') ? 'bg-brand-gold text-brand-black' : 'hover:bg-gray-700 hover:text-white' }}">MICE</a>
             <a href="{{ route('admin.restaurants.index') }}" class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('admin.restaurants.*') ? 'bg-brand-gold text-brand-black' : 'hover:bg-gray-700 hover:text-white' }}">Restaurants</a>
@@ -45,17 +44,12 @@
                 Commissions
             </a>
         @endif
-        {{-- Akhir dari logika menu --}}
     </nav>
     
-    {{-- ========================================================== --}}
-    {{-- BAGIAN INFO PENGGUNA (DIUBAH DI SINI) --}}
-    {{-- ========================================================== --}}
     <div class="border-t border-gray-700 p-4">
         <div class="font-semibold text-white">{{ Auth::user()->name }}</div>
         <div class="text-xs text-gray-400">{{ Auth::user()->email }}</div>
         
-        {{-- TAMBAHKAN LINK PROFIL DI SINI --}}
         <a href="{{ route('profile.edit') }}" class="w-full text-left flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors hover:bg-gray-700 hover:text-white mt-3">
             Edit Profile
         </a>

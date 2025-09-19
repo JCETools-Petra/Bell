@@ -54,6 +54,41 @@
     </div>
 </section>
 
+@if($banners->isNotEmpty())
+<section class="banner-section py-5">
+    <div class="container">
+        <div id="homepageBanner" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-inner" style="border-radius: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+                @foreach($banners as $banner)
+                    <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                        @if($banner->link_url)
+                            <a href="{{ $banner->link_url }}" target="_blank" rel="noopener">
+                        @endif
+
+                        <img src="{{ asset('storage/' . $banner->image_path) }}" class="d-block w-100" alt="Banner Image">
+
+                        @if($banner->link_url)
+                            </a>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+
+            @if($banners->count() > 1)
+            <button class="carousel-control-prev" type="button" data-bs-target="#homepageBanner" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#homepageBanner" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+            @endif
+        </div>
+    </div>
+</section>
+@endif
+
 <div class="container" id="featured-content">
     @if(isset($settings['show_about_section']) && $settings['show_about_section'] == '1')
     <section class="about-section {{ $settings['about_text_align'] ?? 'text-center' }}">
