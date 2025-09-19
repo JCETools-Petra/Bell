@@ -31,33 +31,37 @@
 
                 @php
                     // Normalisasi nilai default dari $settings + dukung old()
-                    $websiteTitle   = old('website_title', $settings['website_title'] ?? '');
-                    $logoHeight     = old('logo_height', $settings['logo_height'] ?? '40');
-                    $showLogoText   = old('show_logo_text', $settings['show_logo_text'] ?? '1');
+                    $websiteTitle = old('website_title', $settings['website_title'] ?? '');
+                    $logoHeight   = old('logo_height', $settings['logo_height'] ?? '40');
+                    $showLogoText = old('show_logo_text', $settings['show_logo_text'] ?? '1');
 
-                    $heroTitle      = old('hero_title', $settings['hero_title'] ?? '');
-                    $heroSubtitle   = old('hero_subtitle', $settings['hero_subtitle'] ?? '');
+                    $heroTitle    = old('hero_title', $settings['hero_title'] ?? '');
+                    $heroSubtitle = old('hero_subtitle', $settings['hero_subtitle'] ?? '');
 
-                    $addr           = old('contact_address', $settings['contact_address'] ?? '');
-                    $mapsEmbed      = old('contact_maps_embed', $settings['contact_maps_embed'] ?? '');
-                    $phone          = old('contact_phone', $settings['contact_phone'] ?? '');
-                    $email          = old('contact_email', $settings['contact_email'] ?? '');
-                    $fb             = old('contact_facebook', $settings['contact_facebook'] ?? '');
-                    $ig             = old('contact_instagram', $settings['contact_instagram'] ?? '');
-                    $li             = old('contact_linkedin', $settings['contact_linkedin'] ?? '');
-                    $yt             = old('contact_youtube', $settings['contact_youtube'] ?? '');
-                    $tt             = old('contact_tiktok', $settings['contact_tiktok'] ?? '');
+                    $addr         = old('contact_address', $settings['contact_address'] ?? '');
+                    $mapsEmbed    = old('contact_maps_embed', $settings['contact_maps_embed'] ?? '');
+                    $phone        = old('contact_phone', $settings['contact_phone'] ?? '');
+                    $email        = old('contact_email', $settings['contact_email'] ?? '');
+                    $fb           = old('contact_facebook', $settings['contact_facebook'] ?? '');
+                    $ig           = old('contact_instagram', $settings['contact_instagram'] ?? '');
+                    $li           = old('contact_linkedin', $settings['contact_linkedin'] ?? '');
+                    $yt           = old('contact_youtube', $settings['contact_youtube'] ?? '');
+                    $tt           = old('contact_tiktok', $settings['contact_tiktok'] ?? '');
 
-                    $midMerchant    = old('midtrans_merchant_id', $settings['midtrans_merchant_id'] ?? '');
-                    $midClientKey   = old('midtrans_client_key', $settings['midtrans_client_key'] ?? '');
-                    $midServerKey   = old('midtrans_server_key', $settings['midtrans_server_key'] ?? '');
-                    $midIsProd      = old('midtrans_is_production', $settings['midtrans_is_production'] ?? '0');
+                    $midMerchant  = old('midtrans_merchant_id', $settings['midtrans_merchant_id'] ?? '');
+                    $midClientKey = old('midtrans_client_key', $settings['midtrans_client_key'] ?? '');
+                    $midServerKey = old('midtrans_server_key', $settings['midtrans_server_key'] ?? '');
+                    $midIsProd    = old('midtrans_is_production', $settings['midtrans_is_production'] ?? '0');
 
-                    $waCustMsg      = old('whatsapp_customer_message', $settings['whatsapp_customer_message'] ?? 'Terima kasih! Pembayaran untuk booking ID: {booking_id} telah kami terima. Kamar Anda telah berhasil dipesan. Kami tunggu kedatangan Anda di Bell Hotel Merauke.');
-                    $waAdminMsg     = old('whatsapp_admin_message', $settings['whatsapp_admin_message'] ?? "✅ *Konfirmasi Pembayaran Baru!*\n\n*Booking ID:* {booking_id}\n*Nama Tamu:* {guest_name}\n*Telepon:* {guest_phone}\n*Email:* {guest_email}\n*Check-in:* {checkin_date}\n*Check-out:* {checkout_date}");
+                    $waCustMsg    = old('whatsapp_customer_message', $settings['whatsapp_customer_message'] ?? 'Terima kasih! Pembayaran untuk booking ID: {booking_id} telah kami terima. Kamar Anda telah berhasil dipesan. Kami tunggu kedatangan Anda di Bell Hotel Merauke.');
+                    $waAdminMsg   = old('whatsapp_admin_message', $settings['whatsapp_admin_message'] ?? "✅ *Konfirmasi Pembayaran Baru!*\n\n*Booking ID:* {booking_id}\n*Nama Tamu:* {guest_name}\n*Telepon:* {guest_phone}\n*Email:* {guest_email}\n*Check-in:* {checkin_date}\n*Check-out:* {checkout_date}");
 
-                    // KUNCI UTAMA: gunakan old()+$settings, bukan helper settings() di view
-                    $currentMethod  = old('booking_method', $settings['booking_method'] ?? 'direct');
+                    $currentMethod = old('booking_method', $settings['booking_method'] ?? 'direct');
+
+                    // Variabel untuk Running Text
+                    $runningTextEnabled = old('running_text_enabled', $settings['running_text_enabled'] ?? '0');
+                    $runningTextContent = old('running_text_content', $settings['running_text_content'] ?? '');
+                    $runningTextUrl     = old('running_text_url', $settings['running_text_url'] ?? '');
                 @endphp
 
                 {{-- General Settings --}}
@@ -87,12 +91,33 @@
                             @endif
                         </div>
                         <div class="md:col-span-2">
-                            {{-- Hidden input memastikan nilai "0" terkirim saat unchecked --}}
                             <input type="hidden" name="show_logo_text" value="0">
                             <label for="show_logo_text" class="flex items-center">
                                 <input type="checkbox" name="show_logo_text" id="show_logo_text" value="1" {{ (string)$showLogoText === '1' ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
                                 <span class="ml-2 text-sm text-gray-600">Show Website Title next to Logo</span>
                             </label>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Running Text Announcement --}}
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">Running Text Announcement</h3>
+                    <div class="mb-4">
+                        <input type="hidden" name="running_text_enabled" value="0">
+                        <label for="running_text_enabled" class="flex items-center">
+                            <input type="checkbox" name="running_text_enabled" id="running_text_enabled" value="1" {{ (string)$runningTextEnabled === '1' ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                            <span class="ml-2 text-sm text-gray-600">Aktifkan Running Text</span>
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="running_text_content" class="block font-medium text-sm text-gray-700">Teks yang Ditampilkan</label>
+                            <input type="text" name="running_text_content" id="running_text_content" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $runningTextContent }}">
+                        </div>
+                        <div>
+                            <label for="running_text_url" class="block font-medium text-sm text-gray-700">Link URL (jika diklik)</label>
+                            <input type="url" name="running_text_url" id="running_text_url" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $runningTextUrl }}" placeholder="https://contoh.com/promo">
                         </div>
                     </div>
                 </div>
@@ -214,7 +239,6 @@
                             <input type="text" name="midtrans_server_key" id="midtrans_server_key" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $midServerKey }}" required>
                         </div>
                         <div>
-                            {{-- Hidden input memastikan nilai "0" terkirim saat unchecked --}}
                             <input type="hidden" name="midtrans_is_production" value="0">
                             <label for="midtrans_is_production" class="flex items-center">
                                 <input type="checkbox" name="midtrans_is_production" id="midtrans_is_production" value="1" {{ (string)$midIsProd === '1' ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">

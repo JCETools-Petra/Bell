@@ -59,10 +59,7 @@
                         <a class="nav-link {{ request()->routeIs('contact.index') ? 'active' : '' }}" href="{{ route('contact.index') }}">Contact Us</a>
                     </li>
                     
-                    {{-- ========================================================== --}}
-                    {{-- BAGIAN INI DIUBAH --}}
-                    {{-- ========================================================== --}}
-                   <li class="nav-item dropdown">
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle {{ request()->routeIs('pages.affiliate_info') || request()->routeIs('affiliate.register.create') ? 'active' : '' }}" href="#" id="navbarDropdownAffiliate" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Affiliate Program
                         </a>
@@ -71,7 +68,6 @@
                             <li><a class="dropdown-item" href="{{ route('affiliate.register.create') }}">Daftar Affiliate</a></li>
                         </ul>
                     </li>
-                    {{-- ========================================================== --}}
 
                     @auth
                         @if(Auth::user()->affiliate && Auth::user()->affiliate->status == 'active')
@@ -103,6 +99,18 @@
         </div>
     </nav>
 
+    @if(isset($settings['running_text_enabled']) && $settings['running_text_enabled'] == '1' && !empty($settings['running_text_content']))
+    <div class="running-text-container">
+        @if(!empty($settings['running_text_url']))
+            <a href="{{ $settings['running_text_url'] }}" class="running-text-link" target="_blank" rel="noopener">
+                <p class="running-text-content">{{ $settings['running_text_content'] }}</p>
+            </a>
+        @else
+            <p class="running-text-content">{{ $settings['running_text_content'] }}</p>
+        @endif
+    </div>
+    @endif
+
     <main>
         @yield('content')
     </main>
@@ -113,13 +121,7 @@
                 <a href="{{ route('home') }}" class="text-white-50 mx-2 text-decoration-none">Home</a>
                 <a href="{{ route('rooms.index') }}" class="text-white-50 mx-2 text-decoration-none">Rooms</a>
                 <a href="{{ route('contact.index') }}" class="text-white-50 mx-2 text-decoration-none">Contact Us</a>
-                
-                {{-- ========================================================== --}}
-                {{-- BAGIAN INI DIUBAH --}}
-                {{-- ========================================================== --}}
                 <a href="{{ route('pages.terms') }}" class="text-white-50 mx-2 text-decoration-none">Terms & Conditions</a>
-                {{-- ========================================================== --}}
-
             </div>
             <p class="mb-0 text-white">&copy; {{ date('Y') }} {{ $settings['website_title'] ?? 'Bell Hotel Merauke' }}. All Rights Reserved.</p>
         </div>

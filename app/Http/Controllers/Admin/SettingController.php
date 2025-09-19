@@ -64,6 +64,8 @@ class SettingController extends Controller
 
             // Booking Method
             'booking_method' => 'required|in:direct,manual',
+            'running_text_content' => 'nullable|string|max:255',
+            'running_text_url' => 'nullable|url|max:255',
         ]);
 
         // 2) Proses file upload (logo, favicon, hero image)
@@ -100,6 +102,7 @@ class SettingController extends Controller
         $checkboxes = [
             'show_logo_text',
             'midtrans_is_production',
+            'running_text_enabled',
         ];
 
         foreach ($checkboxes as $key) {

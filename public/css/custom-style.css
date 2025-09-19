@@ -387,3 +387,69 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
     background-color: #333;      /* Latar sedikit lebih terang dari hitam */
     color: var(--color-gold);    /* Teks menjadi emas */
 }
+
+
+/* =================================================================== */
+/* Running Text (Marquee) - MODERN STYLE                               */
+/* =================================================================== */
+
+.running-text-container {
+    /* Menggunakan warna hitam pekat agar menyatu dengan navbar */
+    background-color: var(--color-black);
+    color: var(--color-white); /* Teks putih agar kontras */
+    padding: 10px 0;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    position: fixed;
+    top: 80px; /* TURUN SELEBAR TINGGI NAVBAR */
+    left: 0;
+    z-index: 1029; /* Tepat di bawah z-index navbar */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.running-text-link {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+}
+
+.running-text-link:hover {
+    color: var(--color-gold);
+}
+
+.running-text-content {
+    display: inline-block;
+    padding-left: 100%;
+    margin-bottom: 0;
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    animation: marquee 25s linear infinite;
+}
+
+.running-text-container:hover .running-text-content {
+    animation-play-state: paused;
+}
+
+/* =================================================================== */
+/* Penyesuaian Layout Utama                                            */
+/* =================================================================== */
+
+/* Beri ruang di atas body seukuran tinggi navbar */
+body {
+    padding-top: 80px; /* Sesuaikan angka ini dengan tinggi navbar Anda */
+}
+
+/* Beri ruang DI ATAS main seukuran tinggi running text */
+main {
+    padding-top: 55px; /* Sesuaikan angka ini dengan tinggi running text + sedikit margin */
+}
+
+/* Animasi Marquee (Tetap sama) */
+@keyframes marquee {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
