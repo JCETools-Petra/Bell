@@ -223,7 +223,7 @@
             config.onDayCreate = function(dObj, dStr, fp, dayElem) {
                 const date = dayElem.dateObj;
                 const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-                
+
                 if (fp.prices && fp.prices[dateString]) {
                     const priceInfo = fp.prices[dateString];
                     const priceElement = document.createElement('div');
@@ -233,7 +233,9 @@
                     if (priceInfo.is_special) {
                         priceElement.classList.add('special-price');
                     }
-                    dayElem.appendChild(priceElement);
+                    if (fp.input.id.indexOf("checkin") !== -1) {
+                        dayElem.appendChild(priceElement);
+                    }
                 }
             };
         }
