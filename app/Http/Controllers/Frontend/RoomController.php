@@ -16,9 +16,26 @@ class RoomController extends Controller
         return view('frontend.rooms.index', compact('rooms'));
     }
 
-    public function show($slug)
+    public function show(Request $request, $slug)
     {
         $room = Room::where('slug', $slug)->firstOrFail();
+
+        // Cek apakah ada parameter 'checkin' di URL
+        if ($request->has('checkin')) {
+            // Ambil tanggal check-in dan format ke Y-m-d
+            $checkinDate = Carbon::createFromFormat('d-m-Y', $request->checkin)->format('Y-m-d');
+            
+            // Cari harga khusus untuk kamar ini pada tanggal tersebut
+            $override = PriceOverride::where('room_id', $room->id)
+                                     ->where('date', $checkinDate)
+                                     ->first();
+            
+            // Jika ditemukan harga khusus, timpa harga standar kamar
+            if ($override) {
+                $room->price = $override->price; 
+            }
+        }
+
         return view('frontend.rooms.show', compact('room'));
     }
 
