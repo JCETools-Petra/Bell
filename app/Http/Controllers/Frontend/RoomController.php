@@ -6,8 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use App\Models\PriceOverride;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon; 
 
 class RoomController extends Controller
 {
@@ -20,31 +19,22 @@ class RoomController extends Controller
     public function show(Request $request, $slug)
     {
         $room = Room::where('slug', $slug)->firstOrFail();
-        $currentPrice = $room->getOriginal('price'); // Ambil harga asli dari database
 
-        // Cek harga khusus (override) jika ada tanggal checkin
+        // Cek apakah ada parameter 'checkin' di URL
         if ($request->has('checkin')) {
-            try {
-                $checkinDate = Carbon::createFromFormat('d-m-Y', $request->checkin)->format('Y-m-d');
-                $override = $room->priceOverrides()->where('date', $checkinDate)->first();
-                if ($override) {
-                    $currentPrice = $override->price;
-                }
-            } catch (\Exception $e) {
-                // Abaikan jika format tanggal salah
+            // Ambil tanggal check-in dan format ke Y-m-d
+            $checkinDate = Carbon::createFromFormat('d-m-Y', $request->checkin)->format('Y-m-d');
+            
+            // Cari harga khusus untuk kamar ini pada tanggal tersebut
+            $override = PriceOverride::where('room_id', $room->id)
+                                     ->where('date', $checkinDate)
+                                     ->first();
+            
+            // Jika ditemukan harga khusus, timpa harga standar kamar
+            if ($override) {
+                $room->price = $override->price; 
             }
         }
-
-        // Terapkan diskon jika user adalah admin atau afiliasi
-        if (Auth::check() && in_array(Auth::user()->role, ['admin', 'affiliate'])) {
-            if ($room->discount_percentage > 0) {
-                $discountAmount = $currentPrice * ($room->discount_percentage / 100);
-                $currentPrice -= $discountAmount;
-            }
-        }
-
-        // Set harga final untuk ditampilkan di view
-        $room->price = $currentPrice;
 
         return view('frontend.rooms.show', compact('room'));
     }
@@ -54,38 +44,21 @@ class RoomController extends Controller
         $searchParams = $request->all();
         $rooms = Room::where('is_available', true)->get();
 
-        $checkinDate = null;
-        if (isset($searchParams['checkin']) && !empty($searchParams['checkin'])) {
-            try {
-                $checkinDate = Carbon::createFromFormat('d-m-Y', $searchParams['checkin'])->format('Y-m-d');
-            } catch (\Exception $e) {
-                $checkinDate = null;
-            }
-        }
-
-        $isAffiliateOrAdmin = Auth::check() && in_array(Auth::user()->role, ['admin', 'affiliate']);
-
-        foreach ($rooms as $room) {
-            $currentPrice = $room->getOriginal('price'); // Mulai dengan harga asli dari database
-
-            // Cek harga khusus (override) jika ada tanggal checkin yang valid
-            if ($checkinDate) {
-                $override = $room->priceOverrides()->where('date', $checkinDate)->first();
+        // 3. Tambahkan Logika untuk Mengambil Harga Dinamis
+        if (isset($searchParams['checkin'])) {
+            $checkinDate = Carbon::createFromFormat('d-m-Y', $searchParams['checkin'])->format('Y-m-d');
+            
+            foreach ($rooms as $room) {
+                $override = PriceOverride::where('room_id', $room->id)
+                                         ->where('date', $checkinDate)
+                                         ->first();
+                // Ganti harga kamar dengan harga override jika ada
                 if ($override) {
-                    $currentPrice = $override->price;
+                    $room->price = $override->price; 
                 }
             }
-
-            // Terapkan diskon untuk afiliasi/admin
-            if ($isAffiliateOrAdmin && $room->discount_percentage > 0) {
-                $discountAmount = $currentPrice * ($room->discount_percentage / 100);
-                $currentPrice -= $discountAmount;
-            }
-
-            // Set harga final untuk ditampilkan di view
-            $room->price = $currentPrice;
         }
-        
+        // 4. Kirim data yang sudah diperbarui ke view
         return view('frontend.rooms.availability', compact('rooms', 'searchParams'));
     }
 }

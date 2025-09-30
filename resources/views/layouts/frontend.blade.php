@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    
     @if(isset($settings['favicon_path']))
         <link rel="icon" href="{{ asset('storage/' . $settings['favicon_path']) }}" type="image/x-icon">
     @endif
@@ -15,34 +14,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700;800&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <link rel="stylesheet" href="{{ asset('css/custom-style.css') }}?v={{ filemtime(public_path('css/custom-style.css')) }}">
-
-    {{-- Style untuk kalender Flatpickr --}}
-    <style>
-        .flatpickr-day { position: relative; }
-        .day-price {
-            display: block;
-            font-size: 0.65rem;
-            color: #28a745;
-            font-weight: bold;
-            position: absolute;
-            bottom: 2px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-        }
-        .flatpickr-day.selected .day-price, .flatpickr-day:hover .day-price {
-            color: #fff;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="{{ asset('css/custom-style.css') }}?v={{ @filemtime(public_path('css/custom-style.css')) }}">
     @stack('styles')
 </head>
-<body class="{{ request()->routeIs('home') ? 'homepage' : '' }}">
+<body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
@@ -196,72 +176,85 @@
         </ul>
     </div>
     
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     
-    {{-- @stack('scripts') sekarang berada di posisi yang benar --}}
     @stack('scripts')
 
-    {{-- Skrip Global untuk Flatpickr --}}
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        let pricesCache = {}; // Cache untuk menyimpan data harga
-
-        // Fungsi async untuk mengambil harga dari API
         async function getPricesForMonth(year, month) {
-            const cacheKey = `${year}-${month}`;
-            if (pricesCache[cacheKey]) {
-                return pricesCache[cacheKey]; // Ambil dari cache jika ada
-            }
             try {
-                // PERBAIKAN: Menggunakan URL API yang benar
-                const response = await fetch(`{{ route('api.room-prices.month') }}?year=${year}&month=${month + 1}`);
+                const response = await fetch(`/api/monthly-room-prices?year=${year}&month=${month + 1}`);
                 if (!response.ok) return {};
-                const data = await response.json();
-                pricesCache[cacheKey] = data; // Simpan ke cache
-                return data;
+                return await response.json();
             } catch (error) {
                 console.error('Error fetching monthly prices:', error);
                 return {};
             }
         }
 
-        // Konfigurasi Flatpickr
-        const fpConfig = {
+        // ==========================================================
+        // LOGIKA BARU YANG LEBIH ANDAL: Cek URL Halaman
+        // ==========================================================
+        const isOnPaymentPage = window.location.pathname.includes('/booking/payment');
+
+        let config = {
             dateFormat: "d-m-Y",
-            minDate: "today",
-            // Event yang berjalan saat kalender siap
-            onReady: async function(selectedDates, dateStr, instance) {
-                const prices = await getPricesForMonth(instance.currentYear, instance.currentMonth);
+            minDate: "today"
+        };
+
+        // Hanya tambahkan fungsi harga jika BUKAN di halaman pembayaran
+        if (!isOnPaymentPage) {
+            config.onReady = async function(selectedDates, dateStr, instance) {
+                const year = instance.currentYear;
+                const month = instance.currentMonth;
+                const prices = await getPricesForMonth(year, month);
+                instance.prices = prices; 
+                instance.redraw();
+            };
+            config.onMonthChange = async function(selectedDates, dateStr, instance) {
+                const year = instance.currentYear;
+                const month = instance.currentMonth;
+                const prices = await getPricesForMonth(year, month);
                 instance.prices = prices;
                 instance.redraw();
-            },
-            // Event yang berjalan saat bulan diganti
-            onMonthChange: async function(selectedDates, dateStr, instance) {
-                const prices = await getPricesForMonth(instance.currentYear, instance.currentMonth);
-                instance.prices = prices;
-                instance.redraw();
-            },
-            // Event yang berjalan untuk setiap tanggal yang digambar
-            onDayCreate: function(dObj, dStr, fp, dayElem) {
+            };
+            config.onDayCreate = function(dObj, dStr, fp, dayElem) {
                 const date = dayElem.dateObj;
                 const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
-                // Cek hanya untuk kalender checkin dan jika harga ada
-                if (fp.input.id === 'checkin' && fp.prices && fp.prices[dateString]) {
+                if (fp.prices && fp.prices[dateString]) {
                     const priceInfo = fp.prices[dateString];
-                    const priceElement = document.createElement('span');
-                    priceElement.className = 'day-price';
-                    priceElement.textContent = `${parseInt(priceInfo.price / 1000)}K`;
-                    dayElem.appendChild(priceElement);
-                }
-            }
-        };
+                    const priceElement = document.createElement('div');
+                    priceElement.className = 'flatpickr-price-info';
+                    priceElement.textContent = `${parseInt(priceInfo.price / 1000)}k`;
 
-        // Terapkan konfigurasi ke semua elemen dengan class .datepicker
-        flatpickr(".datepicker", fpConfig);
+                    if (priceInfo.is_special) {
+                        priceElement.classList.add('special-price');
+                    }
+                    if (fp.input.id.indexOf("checkin") !== -1) {
+                        dayElem.appendChild(priceElement);
+                    }
+                }
+            };
+        }
+        
+        // Terapkan konfigurasi ke semua datepicker
+        flatpickr(".datepicker", config);
     });
     </script>
-    </body>
+    
+    <style>
+        /* CSS untuk kalender tetap sama */
+        .flatpickr-calendar { font-family: var(--primary-font) !important; width: auto !important; box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important; border-radius: 8px !important; }
+        .flatpickr-day { position: relative; font-family: var(--primary-font); height: 38px; line-height: 24px; }
+        .flatpickr-day .flatpickr-price-info { font-size: 0.65rem; color: #28a745; position: absolute; bottom: 2px; left: 0; width: 100%; text-align: center; font-weight: bold; line-height: 1; }
+        .flatpickr-day .flatpickr-price-info.special-price { color: #dc3545; }
+        .flatpickr-weekday { font-family: var(--primary-font) !important; font-weight: 500 !important; color: #6c757d !important; }
+        .flatpickr-months .flatpickr-month { height: 40px; }
+        .flatpickr-current-month { font-size: 1.2rem !important; padding-top: 5px; }
+        span.flatpickr-weekday, .numInputWrapper, .flatpickr-current-month .numInput { font-family: var(--primary-font) !important; }
+    </style>
+</body>
 </html>
