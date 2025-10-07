@@ -116,10 +116,37 @@
         <section class="featured-section">
             <h2 class="section-title text-center mb-5">Featured Rooms</h2>
             <div class="row justify-content-center">
+    
                 @foreach($featuredRooms as $room)
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card h-100">
-                            <img src="{{ $room->images->first() ? asset('storage/' . $room->images->first()->path) : 'https://via.placeholder.com/400x250' }}" class="card-img-top" alt="{{ $room->name }}">
+                            @if ($room->images->isNotEmpty())
+                                {{-- ======================= AWAL PERBAIKAN ======================= --}}
+                                {{-- Mengaktifkan auto-play dengan data-bs-ride="carousel" dan interval 4 detik --}}
+                                <div id="roomSlider{{ $room->id }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+                                {{-- ======================== AKHIR PERBAIKAN ======================= --}}
+                                    <div class="carousel-inner">
+                                        @foreach($room->images as $image)
+                                            <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                                <img src="{{ asset('storage/' . $image->path) }}" class="d-block w-100 card-img-top" alt="{{ $room->name }}">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    @if($room->images->count() > 1)
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#roomSlider{{ $room->id }}" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#roomSlider{{ $room->id }}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    @endif
+                                </div>
+                            @else
+                                <img src="https://via.placeholder.com/400x250" class="card-img-top" alt="{{ $room->name }}">
+                            @endif
+                            
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title h3">{{ $room->name }}</h5>
                                 <p class="card-price mb-3">Rp {{ number_format($room->price, 0, ',', '.') }} / night</p>
@@ -129,9 +156,11 @@
                         </div>
                     </div>
                 @endforeach
+                
             </div>
         </section>
     @endif
+
 
     @if(in_array('mice', $featuredOptions) && $featuredMice->isNotEmpty())
         <section class="featured-section">
@@ -140,7 +169,32 @@
                 @foreach($featuredMice as $mice)
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card h-100">
-                            <img src="{{ $mice->images->first() ? asset('storage/' . $mice->images->first()->path) : 'https://via.placeholder.com/400x250' }}" class="card-img-top" alt="{{ $mice->name }}">
+                            {{-- STRUKTUR SLIDER DITERAPKAN DI SINI --}}
+                            @if ($mice->images->isNotEmpty())
+                                <div id="miceSlider{{ $mice->id }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4500">
+                                    <div class="carousel-inner">
+                                        @foreach($mice->images as $image)
+                                            <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                                <img src="{{ asset('storage/' . $image->path) }}" class="d-block w-100 card-img-top" alt="{{ $mice->name }}">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    @if($mice->images->count() > 1)
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#miceSlider{{ $mice->id }}" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#miceSlider{{ $mice->id }}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    @endif
+                                </div>
+                            @else
+                                <img src="https://via.placeholder.com/400x250" class="card-img-top" alt="{{ $mice->name }}">
+                            @endif
+                            
+                            {{-- Bagian deskripsi, dll. tetap sama --}}
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title h3">{{ $mice->name }}</h5>
                                 <p class="card-price mb-3">Capacity up to <strong>{{ $mice->capacity_theatre ?? $mice->capacity_classroom }} persons</strong></p>
@@ -154,42 +208,125 @@
         </section>
     @endif
 
-    @if(in_array('restaurants', $featuredOptions) && $featuredRestaurants->isNotEmpty())
+    {{-- GANTI SELURUH BAGIAN @if(in_array('restaurants', ...)) DENGAN KODE DI BAWAH INI --}}
+
+   @if(in_array('restaurants', $featuredOptions) && $featuredRestaurantImages->isNotEmpty())
         <section id="restaurants" class="py-5">
             <div class="container">
-                <h2 class="section-title text-center mb-4">Our Restaurants</h2>
-                <div class="row">
-                    @php
-                        $restaurantsCount = count($featuredRestaurants);
-                    @endphp
-                    @forelse ($featuredRestaurants as $restaurant)
-                        <div class="
-                            @if ($restaurantsCount === 1)
-                                col-md-6 offset-md-3
-                            @else
-                                col-lg-4 col-md-6
-                            @endif
-                            mb-4">
-                            <div class="card h-100">
-                                @if ($restaurant->images->isNotEmpty())
-                                    <img class="card-img-top" src="{{ asset('storage/' . $restaurant->images->first()->path) }}" alt="{{ $restaurant->name }}">
-                                @else
-                                    <img class="card-img-top" src="https://via.placeholder.com/400x250?text=No+Image" alt="{{ $restaurant->name }}">
-                                @endif
-                                <div class="card-body">
-                                    <h4 class="card-title">{{ $restaurant->name }}</h4>
-                                    <p class="card-text">{{ $restaurant->description }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="col-12 text-center">
-                            <p>No restaurants found.</p>
-                        </div>
-                    @endforelse
+                <h2 class="section-title text-center mb-5">Our Restaurants</h2>
+            </div>
+
+            {{-- Struktur HTML untuk Slider --}}
+            <div class="slider">
+                <div class="slide-track">
+                    
+                    {{-- Loop pertama untuk menampilkan set gambar asli --}}
+                    @foreach($featuredRestaurantImages as $image)
+                    <div class="slide">
+                        {{-- Pastikan relasi restaurant ada untuk menghindari error --}}
+                        @if($image->restaurant)
+                        <a href="{{ route('restaurants.show', $image->restaurant->slug) }}">
+                            <img src="{{ asset('storage/' . $image->path) }}" alt="{{ $image->restaurant->name }}">
+                        </a>
+                        @endif
+                    </div>
+                    @endforeach
+
+                    {{-- Loop kedua untuk duplikasi gambar (kunci dari efek continuous) --}}
+                    @foreach($featuredRestaurantImages as $image)
+                    <div class="slide">
+                        @if($image->restaurant)
+                        <a href="{{ route('restaurants.show', $image->restaurant->slug) }}">
+                            <img src="{{ asset('storage/' . $image->path) }}" alt="{{ $image->restaurant->name }}">
+                        </a>
+                        @endif
+                    </div>
+                    @endforeach
+
                 </div>
             </div>
         </section>
     @endif
 </div>
 @endsection
+
+{{-- TAMBAHKAN BLOK SCRIPT INI DI BAGIAN PALING BAWAH FILE --}}
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof flatpickr === "undefined") {
+        console.error("Flatpickr is not loaded.");
+        return;
+    }
+    let pricesCache = {};
+    async function getPricesForMonth(year, month) {
+        const cacheKey = `${year}-${month}`;
+        if (pricesCache[cacheKey]) return pricesCache[cacheKey];
+        try {
+            const response = await fetch(`{{ route('api.room-prices.month') }}?year=${year}&month=${month + 1}`);
+            if (!response.ok) return {};
+            const data = await response.json();
+            pricesCache[cacheKey] = data;
+            return data;
+        } catch (error) {
+            console.error('Error fetching monthly prices:', error);
+            return {};
+        }
+    }
+    const fpConfig = {
+        dateFormat: "d-m-Y",
+        minDate: "today",
+        onReady: async function(selectedDates, dateStr, instance) {
+            const prices = await getPricesForMonth(instance.currentYear, instance.currentMonth);
+            instance.prices = prices;
+            instance.redraw();
+        },
+        onMonthChange: async function(selectedDates, dateStr, instance) {
+            const prices = await getPricesForMonth(instance.currentYear, instance.currentMonth);
+            instance.prices = prices;
+            instance.redraw();
+        },
+        onDayCreate: function(dObj, dStr, fp, dayElem) {
+            const date = dayElem.dateObj;
+            const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            if (fp.input.id === 'checkin' && fp.prices && fp.prices[dateString]) {
+                const priceInfo = fp.prices[dateString];
+                const priceElement = document.createElement('span');
+                priceElement.className = 'day-price';
+                priceElement.textContent = `${parseInt(priceInfo.price / 1000)}K`;
+                dayElem.appendChild(priceElement);
+            }
+        }
+    };
+    flatpickr(".datepicker", fpConfig);
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const slideTrack = document.querySelector('.slider .slide-track');
+
+    if (slideTrack) {
+        const slideCount = slideTrack.children.length / 2;
+        if (slideCount > 0) {
+            const slideWidth = 400; // Lebar satu slide dari CSS
+            const trackWidth = slideWidth * slideCount * 2;
+            const animationDistance = -(slideWidth * slideCount);
+            const animationDuration = slideCount * 5; // Durasi dinamis
+
+            const styleElement = document.createElement('style');
+            styleElement.innerHTML = `
+                .slide-track {
+                    width: ${trackWidth}px;
+                    animation: scroll-dynamic ${animationDuration}s linear infinite;
+                }
+                @keyframes scroll-dynamic {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(${animationDistance}px); }
+                }
+            `;
+            document.head.appendChild(styleElement);
+        }
+    }
+});
+</script>
+@endpush

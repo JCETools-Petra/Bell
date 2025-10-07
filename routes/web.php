@@ -36,7 +36,7 @@ use App\Http\Controllers\Admin\PriceOverrideController as AdminPriceOverrideCont
 // Affiliate Dashboard Controller
 use App\Http\Controllers\Affiliate\DashboardController as AffiliateDashboardController;
 use App\Http\Controllers\Affiliate\BookingController as AffiliateBookingController;
-
+use App\Http\Controllers\Api\RoomPriceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,23 +52,16 @@ Route::get('/rooms', [FrontendRoomController::class, 'index'])->name('rooms.inde
 Route::get('/rooms/availability', [FrontendRoomController::class, 'checkAvailability'])->name('rooms.availability');
 Route::get('/rooms/{slug}', [FrontendRoomController::class, 'show'])->name('rooms.show');
 
-// MICE
+// MICE & Restaurants, etc.
 Route::get('/mice', [FrontendMiceController::class, 'index'])->name('mice.index');
 Route::get('/mice/{slug}', [FrontendMiceController::class, 'show'])->name('mice.show');
-
-// Restaurants
 Route::get('/restaurants', [FrontendRestaurantController::class, 'index'])->name('restaurants.index');
 Route::get('/restaurants/{slug}', [FrontendRestaurantController::class, 'show'])->name('restaurants.show');
-
-// Contact Us
 Route::get('/contact-us', [ContactController::class, 'index'])->name('contact.index');
 
 // Booking & Inquiries
-// PERBAIKAN: Menghapus definisi duplikat untuk 'bookings.store'. Cukup satu.
 Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
 Route::post('/mice-inquiries', [MiceInquiryController::class, 'store'])->name('mice.inquiries.store');
-
-// PERBAIKAN: Menyatukan rute 'success' yang duplikat menjadi satu definisi yang benar.
 Route::get('/booking/success/{booking:access_token}', [BookingController::class, 'success'])->name('booking.success');
 Route::get('/booking/payment/{booking:access_token}', [BookingController::class, 'payment'])->name('booking.payment');
 
@@ -80,42 +73,40 @@ Route::post('/affiliate/register', [AffiliateController::class, 'store'])->name(
 Route::get('/terms-and-conditions', [PageController::class, 'terms'])->name('pages.terms');
 Route::get('/apa-itu-affiliate', [PageController::class, 'affiliateInfo'])->name('pages.affiliate_info');
 
-// Midtrans Callback
+// Midtrans & Sitemap
 Route::post('/midtrans/callback', [MidtransCallbackController::class, 'callback'])->name('midtrans.callback');
-
-// Sitemap
 Route::get('/sitemap.xml', function () {
     return SitemapGenerator::create(config('app.url'))->generate()->toResponse(request());
 });
 
-// == BACKEND (ADMIN) & AFFILIATE DASHBOARD ROUTES ==
 
-// Affiliate Dashboard (membutuhkan login sebagai affiliate yang aktif)
+// ======================= AWAL PERBAIKAN =======================
+// API route untuk kalender (dibuat publik, di luar middleware 'auth')
+Route::prefix('api')->group(function () {
+    Route::get('/room-prices/month', [RoomPriceController::class, 'getPricesForMonth'])->name('api.room-prices.month');
+});
+// ======================== AKHIR PERBAIKAN =======================
+
+
+// == BACKEND (ADMIN) & AFFILIATE DASHBOARD ROUTES ==
 Route::middleware(['auth', 'verified', 'affiliate.active'])->prefix('affiliate')->name('affiliate.')->group(function () {
     Route::get('/dashboard', [AffiliateDashboardController::class, 'index'])->name('dashboard');
     Route::resource('bookings', AffiliateBookingController::class)->only(['create', 'store']);
 });
 
-// Admin Panel (membutuhkan login sebagai admin/pegawai terverifikasi)
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    // ... (Semua route admin Anda tetap sama)
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-
-    // Profile routes for admin
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Rute untuk ADMIN dan ACCOUNTING
     Route::middleware('role:admin,accounting')->group(function () {
         Route::get('/commissions', [CommissionController::class, 'index'])->name('commissions.index');
         Route::get('/commissions/{affiliate}', [CommissionController::class, 'show'])->name('commissions.show');
         Route::post('/commissions/{affiliate}/pay', [CommissionController::class, 'markAsPaid'])->name('commissions.pay');
-        Route::resource('commissions', CommissionController::class)->only(['create', 'store']); // Untuk form manual
+        Route::resource('commissions', CommissionController::class)->only(['create', 'store']);
     });
-
-    // Rute yang HANYA BISA DIAKSES OLEH SUPER ADMIN
     Route::middleware('role:admin')->group(function () {
-        // CRUDs
         Route::resource('rooms', AdminRoomController::class);
         Route::resource('mice', AdminMiceRoomController::class);
         Route::resource('restaurants', AdminRestaurantController::class);
@@ -124,17 +115,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::resource('mice-inquiries', AdminMiceInquiryController::class)->only(['index', 'destroy']);
         Route::resource('affiliates', AdminAffiliateController::class)->only(['index', 'update']);
         Route::resource('banners', AdminBannerController::class);
-
-        // Pengaturan Harga Khusus
         Route::get('/price-overrides', [AdminPriceOverrideController::class, 'index'])->name('price-overrides.index');
         Route::post('/price-overrides', [AdminPriceOverrideController::class, 'store'])->name('price-overrides.store');
         Route::delete('/price-overrides/{priceOverride}', [AdminPriceOverrideController::class, 'destroy'])->name('price-overrides.destroy');
-
-        // Utilities
         Route::delete('restaurants/images/{image}', [AdminRestaurantController::class, 'destroyImage'])->name('restaurants.image.destroy');
         Route::delete('images/{image}', [ImageController::class, 'destroy'])->name('images.destroy');
-        
-        // Halaman Pengaturan
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
         Route::get('/maintenance-settings', [MaintenanceController::class, 'index'])->name('maintenance.index');
@@ -144,5 +129,5 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     });
 });
 
-// Route bawaan dari Laravel Breeze untuk autentikasi
+// Route bawaan dari Laravel Breeze
 require __DIR__.'/auth.php';

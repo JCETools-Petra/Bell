@@ -2,12 +2,15 @@
 
 @section('seo_title', 'Create New Booking')
 
+{{-- Tidak ada lagi @push('styles') untuk kalender --}}
+
 @section('content')
 <div class="page-content-wrapper">
     <div class="container my-5">
+        {{-- Mengubah layout agar form berada di tengah --}}
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow-sm">
+            <div class="col-lg-8">
+                <div class="card shadow-sm h-100">
                     <div class="card-header bg-dark text-white">
                         <h4 class="mb-0">Create Booking for Customer</h4>
                     </div>
@@ -26,26 +29,26 @@
                             @csrf
                             <div class="row">
                                 <div class="col-md-12 mb-3">
-                                    <label for="room_id" class="form-label">Pilih Kamar</label>
+                                    <label for="room_id" class="form-label fw-bold">Pilih Kamar</label>
                                     <select name="room_id" id="room_id" class="form-select" required>
                                         <option value="">-- Pilih Kamar --</option>
                                         @foreach($rooms as $room)
-                                            <option value="{{ $room->id }}" {{ old('room_id') == $room->id ? 'selected' : '' }}>
-                                                {{ $room->name }} (Rp {{ number_format($room->price) }})
+                                            <option value="{{ $room->id }}" data-price="{{ $room->price }}" {{ old('room_id') == $room->id ? 'selected' : '' }}>
+                                                {{ $room->name }} (Rp {{ number_format($room->price, 0, ',', '.') }})
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="checkin" class="form-label">Check-in</label>
-                                    <input type="text" name="checkin" class="form-control datepicker" value="{{ old('checkin') }}" required>
+                                    <label for="checkin" class="form-label fw-bold">Check-in</label>
+                                    <input type="text" name="checkin" id="checkin" class="form-control datepicker" value="{{ old('checkin', request('checkin')) }}" required autocomplete="off">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="checkout" class="form-label">Check-out</label>
-                                    <input type="text" name="checkout" class="form-control datepicker" value="{{ old('checkout') }}" required>
+                                    <label for="checkout" class="form-label fw-bold">Check-out</label>
+                                    <input type="text" name="checkout" id="checkout" class="form-control datepicker" value="{{ old('checkout', request('checkout')) }}" required autocomplete="off">
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label for="num_rooms" class="form-label">Jumlah Kamar</label>
+                                    <label for="num_rooms" class="form-label fw-bold">Jumlah Kamar</label>
                                     <input type="number" name="num_rooms" class="form-control" value="{{ old('num_rooms', 1) }}" min="1" required>
                                 </div>
 
@@ -53,15 +56,15 @@
                                 
                                 <h5 class="mb-3">Data Tamu</h5>
                                 <div class="col-md-12 mb-3">
-                                    <label for="guest_name" class="form-label">Nama Lengkap Tamu</label>
+                                    <label for="guest_name" class="form-label fw-bold">Nama Lengkap Tamu</label>
                                     <input type="text" name="guest_name" class="form-control" value="{{ old('guest_name') }}" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="guest_phone" class="form-label">Nomor Telepon Tamu</label>
+                                    <label for="guest_phone" class="form-label fw-bold">Nomor Telepon Tamu</label>
                                     <input type="tel" name="guest_phone" class="form-control" value="{{ old('guest_phone') }}" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="guest_email" class="form-label">Email Tamu (Opsional)</label>
+                                    <label for="guest_email" class="form-label fw-bold">Email Tamu (Opsional)</label>
                                     <input type="email" name="guest_email" class="form-control" value="{{ old('guest_email') }}">
                                 </div>
                                 <div class="col-md-12 mt-3">

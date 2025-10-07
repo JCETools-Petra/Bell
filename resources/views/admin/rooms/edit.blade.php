@@ -24,6 +24,12 @@
                         </div>
 
                         <div class="mb-4">
+                            <label for="discount_percentage" class="block text-sm font-medium text-gray-700">Affiliate Discount (%)</label>
+                            <input type="number" name="discount_percentage" id="discount_percentage" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('discount_percentage', $room->discount_percentage) }}" min="0" max="100" step="0.01">
+                             <p class="text-xs text-gray-500 mt-1">Diskon dalam persen untuk afiliasi (isi 0 jika tidak ada diskon).</p>
+                        </div>
+
+                        <div class="mb-4">
                             <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                             <textarea name="description" id="description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>{{ old('description', $room->description) }}</textarea>
                         </div>
