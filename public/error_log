@@ -13,3 +13,5 @@ Stack trace:
 [21-Aug-2025 13:12:20 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Frontend\BookingController as BookingController because the name is already in use in /home/belg7925/public_html/routes/web.php on line 36
 [21-Aug-2025 13:12:20 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Frontend\BookingController as BookingController because the name is already in use in /home/belg7925/public_html/routes/web.php on line 36
 [21-Aug-2025 13:12:20 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Frontend\BookingController as BookingController because the name is already in use in /home/belg7925/public_html/routes/web.php on line 36
+[30-Sep-2025 06:02:07 UTC] PHP Fatal error:  Cannot use Illuminate\Support\Facades\Auth as Auth because the name is already in use in /home/belg7925/public_html/app/Http/Controllers/Frontend/BookingController.php on line 17
+[30-Sep-2025 06:02:51 UTC] PHP Fatal error:  Cannot use Illuminate\Support\Facades\Auth as Auth because the name is already in use in /home/belg7925/public_html/app/Http/Controllers/Frontend/BookingController.php on line 17

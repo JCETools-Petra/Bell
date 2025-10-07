@@ -1,41 +1,78 @@
-/* File: public/css/custom-style.css */
+/* =================================================================== */
+/* File: public/css/custom-style.css                                   */
+/* Deskripsi: File styling utama untuk tema frontend.                  */
+/* =================================================================== */
 
-/* 1. Definisi Variabel Warna dan Font */
+
+/* =================================================================== */
+/* BAGIAN 1: DEFINISI VARIABEL GLOBAL (WARNA & FONT)
+/* =================================================================== */
 :root {
     --primary-font: 'Montserrat', sans-serif;
     --heading-font: 'Playfair Display', serif;
     
     --color-black: #222222; 
     --color-white: #FFFFFF;
-    --color-red: #A4161A;   /* Merah marun yang elegan */
-    --color-gold: #D4AF37;  /* Emas yang mewah */
+    --color-red: #A4161A;   /* Merah marun elegan */
+    --color-gold: #D4AF37;  /* Emas mewah */
     --color-light-gray: #f8f9fa;
 }
 
-/* 2. Gaya Dasar untuk Body */
+
+/* =================================================================== */
+/* BAGIAN 2: GAYA DASAR & TIPOGRAFI
+/* =================================================================== */
 body {
     font-family: var(--primary-font);
     background-color: var(--color-light-gray);
     color: var(--color-black);
+    padding-top: 135px; /* Jarak aman untuk Navbar + Running Text */
 }
 
-/* 3. Gaya untuk Judul (Headings) */
+/* KHUSUS Homepage: Hapus jarak atas karena ada Hero Section */
+body.homepage {
+    padding-top: 0;
+}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
     font-family: var(--heading-font);
     font-weight: 700;
     color: var(--color-black);
 }
 
-/* 4. Kustomisasi Navbar (DIKEMBALIKAN KE HITAM) */
+.section-title {
+    font-size: 2.8rem;
+    color: var(--color-black);
+    margin-bottom: 1rem;
+    position: relative;
+    padding-bottom: 1rem;
+}
+.section-title::after { 
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: var(--color-gold);
+}
+
+
+/* =================================================================== */
+/* BAGIAN 3: NAVIGASI (NAVBAR, DROPDOWN, RUNNING TEXT)
+/* =================================================================== */
+
+/* --- Navbar Utama --- */
 .navbar {
-    background-color: var(--color-black) !important; /* Diubah kembali ke hitam */
+    background-color: var(--color-black) !important;
     padding: 1rem 0;
     transition: all 0.3s ease;
 }
 .navbar-brand {
     font-family: var(--heading-font);
     font-size: 1.8rem;
-    color: var(--color-gold) !important; /* Diubah kembali ke gold */
+    color: var(--color-gold) !important;
     font-weight: 800;
     transition: color 0.3s ease;
 }
@@ -69,10 +106,76 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
     color: var(--color-gold) !important;
 }
 
-/* 5. Gaya Tombol (Button) Kustom (DIKEMBALIKAN KE MERAH) */
+/* --- Dropdown di Navbar --- */
+@media (min-width: 992px) {
+    .navbar .nav-item.dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0;
+    }
+}
+.navbar .dropdown-menu {
+    background-color: var(--color-black);
+    border: 1px solid var(--color-gold);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0;
+}
+.navbar .dropdown-menu .dropdown-item {
+    color: var(--color-white);
+    transition: all 0.2s ease-in-out;
+}
+.navbar .dropdown-menu .dropdown-item:hover {
+    background-color: #333;
+    color: var(--color-gold);
+}
+
+/* --- Running Text (Marquee) --- */
+.running-text-container {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    padding: 10px 0;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    position: fixed;
+    top: 80px; /* Posisi di bawah navbar */
+    left: 0;
+    z-index: 1029;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.running-text-link {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+}
+.running-text-link:hover {
+    color: var(--color-gold);
+}
+.running-text-content {
+    display: inline-block;
+    padding-left: 100%;
+    margin: 0;
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    animation: marquee 25s linear infinite;
+}
+.running-text-container:hover .running-text-content {
+    animation-play-state: paused;
+}
+@keyframes marquee {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+
+/* =================================================================== */
+/* BAGIAN 4: KOMPONEN UI (TOMBOL, KARTU, PAGINASI)
+/* =================================================================== */
+
+/* --- Tombol Kustom --- */
 .btn-custom {
-    background-color: var(--color-red); /* Diubah kembali ke merah */
-    color: var(--color-white); /* Diubah kembali ke putih */
+    background-color: var(--color-red);
+    color: var(--color-white);
     font-family: var(--primary-font);
     font-weight: 700;
     padding: 12px 30px;
@@ -83,12 +186,12 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
     transition: all 0.3s ease;
 }
 .btn-custom:hover {
-    background-color: transparent;
-    color: var(--color-red); /* Teks menjadi merah saat di-hover */
-    border-color: var(--color-red);
+    background-color: #831012; /* Merah lebih gelap saat hover */
+    border-color: #831012;
+    color: var(--color-white);
 }
 
-/* 6. Gaya Kartu (Card) untuk Kamar */
+/* --- Kartu (Card) --- */
 .card {
     border: none;
     border-radius: 10px;
@@ -101,7 +204,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
 }
 .card-title {
-    color: var(--color-gold); /* Judul kartu diubah kembali ke gold */
+    color: var(--color-gold);
 }
 .card-img-top {
     height: 250px;
@@ -119,17 +222,34 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
     font-weight: 700;
     color: var(--color-black);
 }
-.card .btn-custom {
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.4s ease;
+
+/* --- Paginasi --- */
+.pagination .page-link {
+    background-color: #f8f9fa !important;
+    color: #343a40 !important;
+    border-color: #dee2e6 !important;
 }
-.card:hover .btn-custom {
-    opacity: 1;
-    transform: translateY(0);
+.pagination .page-link:hover {
+    background-color: #e9ecef !important;
+    color: #000 !important;
+}
+.pagination .page-item.active .page-link {
+    background-color: var(--color-red) !important;
+    border-color: var(--color-red) !important;
+    color: #fff !important;
+}
+.pagination .page-item.disabled .page-link {
+    background-color: #e9ecef !important;
+    color: #6c757d !important;
+    border-color: #dee2e6 !important;
 }
 
-/* 7. Hero Section di Homepage */
+
+/* =================================================================== */
+/* BAGIAN 5: GAYA SPESIFIK HALAMAN & SLIDER
+/* =================================================================== */
+
+/* --- Hero Section (Homepage) --- */
 .hero-section {
     position: relative;
     padding: 10rem 0;
@@ -161,39 +281,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
     color: rgba(255, 255, 255, 0.9);
 }
 
-/* 8. Section Styling */
-.section-title {
-    font-size: 2.8rem;
-    color: var(--color-black);
-    margin-bottom: 1rem;
-    position: relative;
-    padding-bottom: 1rem;
-}
-.section-title::after { 
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 3px;
-    background-color: var(--color-gold);
-}
-
-/* 9. Footer (DIKEMBALIKAN KE HITAM) */
-.footer {
-    background-color: var(--color-black); /* Diubah kembali ke hitam */
-    color: rgba(255, 255, 255, 0.7);
-    padding: 3rem 0;
-}
-
-/* 10. Main Content Spacing */
-/*main {
-    padding-top: 5rem;     
-    padding-bottom: 10rem; /* Memberi jarak 5rem (sekitar 80px) ke footer */
-}*/
-
-/* 11. Hero Booking Form */
+/* --- Form Booking di Hero Section --- */
 .hero-booking-form {
     background-color: rgba(0, 0, 0, 0.5); 
     backdrop-filter: blur(5px); 
@@ -210,246 +298,217 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
     align-self: flex-end;
 }
 
-.page-content-wrapper {
-    padding-top: 10rem;  /* Jarak atas yang lebih besar untuk halaman internal */
-    padding-bottom: 5rem; /* Jarak bawah ke footer */
-}
+/* =================================================================== */
+/* ===         STYLE SLIDER GAMBAR DI KARTU KAMAR (FIXED)          === */
+/* =================================================================== */
 
-.logo-container {
+.card .carousel {
     position: relative;
-    display: inline-block;
-    padding: 10px; /* Jarak agar efek ledakan tidak terlalu menempel pada logo */
+    /* Atur tinggi slider agar sama dengan tinggi gambar yang kita inginkan */
+    height: 250px; 
 }
 
-/* public/css/custom-style.css */
+.card .carousel-inner,
+.card .carousel-item {
+    height: 100%; /* Pastikan inner container mengisi tinggi parent */
+    border-radius: 10px 10px 0 0;
+}
 
-/* Efek Sorotan Emas untuk Logo */
+/* PERBAIKAN UTAMA: Paksa gambar untuk mengisi container-nya */
+.card .carousel-item img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover; /* Ini akan memotong gambar (bukan merusaknya) agar pas */
+    border-radius: 10px 10px 0 0;
+}
+
+/* Style untuk panah navigasi (tetap sama) */
+.card .carousel-control-prev,
+.card .carousel-control-next {
+    width: 25%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card:hover .carousel-control-prev,
+.card:hover .carousel-control-next {
+    opacity: 0.7;
+}
+
+.card .carousel-control-prev-icon,
+.card .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    padding: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-size: 60%;
+}
+
+/* --- Slider Restoran (Continuous Marquee) --- */
+/* PENTING: Animasi (@keyframes) dan lebar (width) untuk slider ini 
+   dihasilkan secara dinamis oleh JavaScript di home.blade.php
+   agar dapat menyesuaikan dengan jumlah gambar. */
+.slider {
+    background: white;
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .125);
+    height: 250px;
+    margin: auto;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+.slider::before,
+.slider::after {
+    background: linear-gradient(to right, rgba(248, 249, 250, 1) 0%, rgba(248, 249, 250, 0) 100%);
+    content: "";
+    height: 100%;
+    position: absolute;
+    width: 200px;
+    z-index: 2;
+}
+.slider::before { left: 0; top: 0; }
+.slider::after { right: 0; top: 0; transform: rotateZ(180deg); }
+
+.slide-track {
+    display: flex; /* Animasi dan lebar diatur oleh JS */
+}
+.slide-track:hover {
+    animation-play-state: paused;
+}
+.slide {
+    height: 250px;
+    width: 400px;
+    padding: 15px;
+}
+.slide a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* --- Halaman Detail Restoran --- */
+.restaurant-gallery .main-image-container {
+    border-radius: 10px;
+    overflow: hidden;
+}
+.restaurant-gallery .main-image-container img {
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    object-fit: cover;
+}
+.thumbnail-images-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+}
+.thumbnail-item img {
+    cursor: pointer;
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+.thumbnail-item img:hover {
+    opacity: 1;
+}
+.thumbnail-item img.active {
+    opacity: 1;
+    border-color: var(--color-red);
+    box-shadow: 0 0 10px rgba(164, 22, 26, 0.5);
+}
+.restaurant-details .display-5 {
+    font-family: var(--heading-font);
+    color: var(--color-black);
+}
+.restaurant-description {
+    font-family: var(--primary-font);
+    line-height: 1.8;
+    color: #555;
+}
+
+
+/* =================================================================== */
+/* BAGIAN 6: WIDGET & UTILITAS
+/* =================================================================== */
+
+/* --- Efek Logo --- */
 .highlighted-logo {
-  /* Filter drop-shadow sangat baik untuk logo transparan (PNG) 
-    karena bayangan akan mengikuti bentuk logo, bukan kotaknya.
-  */
-  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7)) 
-          drop-shadow(0 0 15px rgba(255, 223, 0, 0.5));
-
-  /* Sebagai alternatif atau tambahan jika logo Anda tidak transparan,
-    Anda bisa menggunakan box-shadow. Hapus komentar di bawah jika ingin mencoba.
-  */
-  /*
-  border-radius: 50%; 
-  box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.7),
-              0 0 15px 5px rgba(255, 223, 0, 0.5),
-              0 0 25px 10px rgba(255, 245, 0, 0.3);
-  */
-
-  /* Menambahkan transisi agar efek muncul perlahan saat hover (opsional) */
-  transition: all 0.3s ease-in-out;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7)) 
+            drop-shadow(0 0 15px rgba(255, 223, 0, 0.5));
+    transition: all 0.3s ease-in-out;
 }
-
-/* Membuat efek lebih intens saat kursor mouse di atas logo (opsional) */
 .highlighted-logo:hover {
-  filter: drop-shadow(0 0 12px rgba(255, 223, 0, 0.9)) 
-          drop-shadow(0 0 25px rgba(255, 245, 0, 0.7));
-  transform: scale(1.05); /* Sedikit memperbesar logo saat disentuh */
+    filter: drop-shadow(0 0 12px rgba(255, 223, 0, 0.9)) 
+            drop-shadow(0 0 25px rgba(255, 245, 0, 0.7));
+    transform: scale(1.05);
 }
 
-/* Mengubah warna latar belakang dan teks untuk semua tombol paginasi */
-.pagination .page-link {
-    background-color: #f8f9fa !important; /* Latar belakang abu-abu terang */
-    color: #343a40 !important;           /* Teks berwarna gelap */
-    border-color: #dee2e6 !important;     /* Garis tepi abu-abu */
-}
-
-/* Mengubah warna saat kursor mouse berada di atas tombol */
-.pagination .page-link:hover {
-    background-color: #e9ecef !important; /* Latar belakang sedikit lebih gelap saat disentuh */
-    color: #000 !important;              /* Teks menjadi hitam */
-}
-
-/* Mengubah warna untuk halaman yang sedang aktif */
-.pagination .page-item.active .page-link {
-    background-color: #A4161A !important; /* Latar belakang merah (sesuai brand Anda) */
-    border-color: #A4161A !important;
-    color: #fff !important;              /* Teks menjadi putih */
-}
-
-/* Mengubah warna untuk tombol yang dinonaktifkan */
-.pagination .page-item.disabled .page-link {
-    background-color: #e9ecef !important;
-    color: #6c757d !important;
-    border-color: #dee2e6 !important;
-}
-
-/* public/css/custom-style.css */
-
-/* =================================================================== */
-/* Floating Social Media Bar                                           */
-/* =================================================================== */
-
-/* Floating social bar: hidden by default, slides in on hover */
+/* --- Floating Social Media Bar --- */
 .floating-social-bar{
-  position: fixed;
-  top: 50%;
-  left: -50px;              /* geser keluar PAS selebar bar */
-  width: 50px;              /* lebar area ikon */
-  transform: translateY(-50%);
-  z-index: 1050;
-  transition: left .28s ease-in-out;
+    position: fixed;
+    top: 50%;
+    left: -50px;
+    width: 50px;
+    transform: translateY(-50%);
+    z-index: 1050;
+    transition: left .28s ease-in-out;
 }
-
-/* Saat kursor berada di bar atau tab -> muncul */
 .floating-social-bar:hover{ left: 0; }
-
-/* List & item */
 .floating-social-bar ul{
-  list-style: none;
-  margin: 0;
-  padding: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 .floating-social-bar ul li a{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  color: #fff;
-  text-decoration: none;
-  margin-bottom: 2px;
-  border-radius: 0 10px 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    color: #fff;
+    text-decoration: none;
+    margin-bottom: 2px;
+    border-radius: 0 10px 10px 0;
 }
-
-/* Tab “Social Media” yang selalu nongol di tepi kiri */
 .floating-social-bar .social-tab{
-  position: absolute;
-  left: 100%;               /* tepat di tepi bar (50px dari kiri bar) */
-  top: 50%;
-  transform: translateY(-50%);
-  background: #111;
-  color: #fff;
-  padding: 10px 12px;
-  border-radius: 0 8px 8px 0;
-  font: 600 12px/1.1 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  cursor: default;
-  user-select: none;
-  /* Biar ramping dan tetap kebaca di sisi kiri */
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  letter-spacing: 1px;
-  /* bayangan tipis */
-  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #111;
+    color: #fff;
+    padding: 10px 12px;
+    border-radius: 0 8px 8px 0;
+    font: 600 12px/1.1 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    cursor: default;
+    user-select: none;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
 }
-
-/* (opsional) Sedikit lebih dekat di mobile */
-@media (max-width: 991.98px){
-  .floating-social-bar{ left: -50px; } /* tetap -50px agar tab tetap terlihat */
-}
-
-/* Warna Khas Masing-masing Social Media */
 .floating-social-bar .facebook a { background-color: #3b5998; }
 .floating-social-bar .instagram a {
-  background: #d6249f;
-  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
 }
 .floating-social-bar .whatsapp a { background-color: #25D366; }
 .floating-social-bar .linkedin a  { background-color: #0077b5; }
 .floating-social-bar .youtube a   { background-color: #FF0000; }
 .floating-social-bar .tiktok a    { background-color: #000000; }
 
+/* --- Utility Class --- */
 .preserve-format {
-    white-space: pre-wrap; /* Ini adalah properti kuncinya */
+    white-space: pre-wrap;
     word-wrap: break-word;
-}
-
-/* Membuat dropdown muncul saat di-hover (hanya untuk layar besar) */
-@media (min-width: 992px) {
-    .navbar .nav-item.dropdown:hover .dropdown-menu {
-        display: block;
-        margin-top: 0; /* Menghapus jarak atas default */
-    }
-}
-
-/* Mengubah warna dropdown agar sesuai tema navbar */
-.navbar .dropdown-menu {
-    background-color: var(--color-black); /* Warna latar hitam */
-    border: 1px solid var(--color-gold);   /* Garis tepi emas */
-    border-radius: 0.5rem;                 /* Sedikit lengkungan di sudut */
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-}
-
-/* Mengubah warna teks link di dalam dropdown */
-.navbar .dropdown-menu .dropdown-item {
-    color: var(--color-white); /* Teks putih */
-    transition: all 0.2s ease-in-out;
-}
-
-/* Mengubah warna link saat kursor diarahkan ke atasnya */
-.navbar .dropdown-menu .dropdown-item:hover {
-    background-color: #333;      /* Latar sedikit lebih terang dari hitam */
-    color: var(--color-gold);    /* Teks menjadi emas */
-}
-
-
-/* =================================================================== */
-/* Running Text (Marquee) - MODERN STYLE                               */
-/* =================================================================== */
-
-.running-text-container {
-    /* Menggunakan warna hitam pekat agar menyatu dengan navbar */
-    background-color: var(--color-black);
-    color: var(--color-white); /* Teks putih agar kontras */
-    padding: 10px 0;
-    width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    position: fixed;
-    top: 80px; /* TURUN SELEBAR TINGGI NAVBAR */
-    left: 0;
-    z-index: 1029; /* Tepat di bawah z-index navbar */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-}
-
-.running-text-link {
-    text-decoration: none;
-    color: inherit;
-    transition: color 0.3s ease;
-}
-
-.running-text-link:hover {
-    color: var(--color-gold);
-}
-
-.running-text-content {
-    display: inline-block;
-    padding-left: 100%;
-    margin-bottom: 0;
-    font-weight: 500;
-    font-size: 0.95rem;
-    letter-spacing: 0.5px;
-    animation: marquee 25s linear infinite;
-}
-
-.running-text-container:hover .running-text-content {
-    animation-play-state: paused;
-}
-
-/* =================================================================== */
-/* Penyesuaian Layout Utama                                            */
-/* =================================================================== */
-
-/* Beri ruang di atas body seukuran tinggi navbar */
-body {
-    padding-top: 80px; /* Sesuaikan angka ini dengan tinggi navbar Anda */
-}
-
-/* Beri ruang DI ATAS main seukuran tinggi running text */
-main {
-    padding-top: 55px; /* Sesuaikan angka ini dengan tinggi running text + sedikit margin */
-}
-
-/* Animasi Marquee (Tetap sama) */
-@keyframes marquee {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
 }
