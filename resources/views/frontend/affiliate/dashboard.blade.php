@@ -5,15 +5,13 @@
 @section('content')
 <div class="page-content-wrapper">
     <div class="container my-5">
-        
-        {{-- ========================================================== --}}
-        {{-- PERUBAHAN ADA DI BLOK DI BAWAH INI --}}
-        {{-- ========================================================== --}}
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
             <h1 class="display-5">Affiliate Dashboard</h1>
-            <a href="{{ route('affiliate.bookings.create') }}" class="btn btn-primary">Create New Booking</a>
+            <div class="ms-auto">
+                <a href="{{ route('affiliate.bookings.create') }}" class="btn btn-primary mb-2 mb-md-0">Create New Booking</a>
+                <a href="{{ route('affiliate.mice-kit.index') }}" class="btn btn-info mb-2 mb-md-0">Digital MICE Kit</a>
+            </div>
         </div>
-        {{-- ========================================================== --}}
 
         {{-- Affiliate Link --}}
         <div class="card mb-4 shadow-sm">
