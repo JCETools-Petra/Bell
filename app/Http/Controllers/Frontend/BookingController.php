@@ -10,18 +10,16 @@ use Carbon\Carbon;
 use Midtrans\Config;
 use Midtrans\Snap;
 use Illuminate\Support\Str;
-use App\Helpers\FonnteApi; // <-- Pastikan ini di-import
-use Illuminate\Support\Facades\Log; // <-- Import Log untuk debugging
+use App\Helpers\FonnteApi;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Commission;
 
 class BookingController extends Controller
 {
     public function store(Request $request)
     {
-        Log::info('Settings update hit', [
-        'booking_method_input' => $request->input('booking_method'),
-    ]);
-        // 1. Validasi (Tetap sama)
-        $request->validate([
+        $validated = $request->validate([
             'room_id' => 'required|exists:rooms,id',
             'guest_name' => 'required|string|max:255',
             'guest_phone' => 'required|string|max:20',
@@ -31,87 +29,116 @@ class BookingController extends Controller
             'num_rooms' => 'required|integer|min:1',
         ]);
 
-        $room = Room::findOrFail($request->room_id);
+        $room = Room::findOrFail($validated['room_id']);
+        $checkinDate = Carbon::createFromFormat('d-m-Y', $validated['checkin']);
+        $checkoutDate = Carbon::createFromFormat('d-m-Y', $validated['checkout']);
+        
+        // --- AWAL LOGIKA HARGA BARU ---
+        $totalPrice = 0;
+        
+        // Cek apakah pengguna yang login adalah afiliasi
+        $isAffiliate = Auth::check() && Auth::user()->role === 'affiliate';
+        $discountPercentage = $isAffiliate ? $room->discount_percentage : 0;
 
-        // 2. Kalkulasi harga (PERBAIKAN LOGIKA)
-        $checkinDate = Carbon::createFromFormat('d-m-Y', $request->checkin);
-        $checkoutDate = Carbon::createFromFormat('d-m-Y', $request->checkout);
-        // Menggunakan metode diff()->days untuk hasil yang selalu positif dan akurat
-        $durationInDays = $checkinDate->diff($checkoutDate)->days;
-        if ($durationInDays < 1) {
-            $durationInDays = 1; // Pastikan minimal menginap 1 malam
+        // Hitung harga per malam, terapkan override dan diskon
+        for ($date = $checkinDate->copy(); $date->lt($checkoutDate); $date->addDay()) {
+            $override = $room->priceOverrides()->where('date', $date->format('Y-m-d'))->first();
+            $nightlyPrice = $override ? $override->price : $room->price;
+
+            // Terapkan diskon jika ada
+            if ($discountPercentage > 0) {
+                $discountAmount = $nightlyPrice * ($discountPercentage / 100);
+                $nightlyPrice -= $discountAmount;
+            }
+            $totalPrice += $nightlyPrice;
         }
-        $totalPrice = $room->price * $request->num_rooms * $durationInDays;
 
-        // 3. Simpan data booking (Tetap sama)
+        $finalPrice = $totalPrice * $validated['num_rooms'];
+        // --- AKHIR LOGIKA HARGA BARU ---
+
         $booking = Booking::create([
-            'room_id' => $request->room_id,
-            'guest_name' => $request->guest_name,
-            'guest_phone' => $request->guest_phone,
-            'guest_email' => $request->guest_email,
+            'room_id' => $validated['room_id'],
+            'guest_name' => $validated['guest_name'],
+            'guest_phone' => $validated['guest_phone'],
+            'guest_email' => $validated['guest_email'],
             'checkin_date' => $checkinDate->format('Y-m-d'),
             'checkout_date' => $checkoutDate->format('Y-m-d'),
-            'num_rooms' => $request->num_rooms,
-            'total_price' => $totalPrice,
+            'num_rooms' => $validated['num_rooms'],
+            'total_price' => $finalPrice, // Gunakan harga final yang sudah benar
             'status' => 'pending',
-            'access_token' => Str::uuid()->toString(),
+            'access_token' => Str::random(32),
+            // Simpan affiliate_id jika yang booking adalah afiliasi
+            'affiliate_id' => $isAffiliate ? Auth::user()->affiliate->id : null,
         ]);
 
-        // Logika Percabangan Metode Booking
+        // Arahkan ke pembayaran (logika lama tetap sama)
         if (settings('booking_method', 'direct') == 'direct') {
-            
-            // Konfigurasi Midtrans
+            return redirect()->route('booking.payment', ['booking' => $booking->access_token]);
+        } else {
+            // (Optional) Kirim notifikasi WhatsApp jika metode manual
+            // $this->sendAdminBookingNotification($booking);
+            return redirect()->back()->with('success', 'Permintaan booking Anda telah berhasil dikirim!');
+        }
+    }
+
+    /**
+     * Menampilkan halaman pembayaran (METHOD YANG HILANG).
+     */
+    public function payment(Booking $booking)
+    {
+        if ($booking->status !== 'pending') {
+            return redirect()->route('home')->with('error', 'This booking has already been processed.');
+        }
+
+        $snapToken = null;
+        try {
             Config::$serverKey = config('midtrans.server_key');
             Config::$isProduction = config('midtrans.is_production');
             Config::$isSanitized = true;
             Config::$is3ds = true;
 
-            // ==========================================================
-            //         PERBAIKAN DAN PENYEDERHANAAN ITEM DETAILS
-            // ==========================================================
-            $midtrans_params = [
+            $guest_email = $booking->guest_email ?? 'guest@example.com';
+            $guest_phone = $booking->guest_phone ?? '081234567890';
+            $durationInDays = Carbon::parse($booking->checkin_date)->diff(Carbon::parse($booking->checkout_date))->days;
+
+            $params = [
                 'transaction_details' => [
                     'order_id' => 'BOOK-' . $booking->id . '-' . time(),
-                    'gross_amount' => $totalPrice, // Total harga keseluruhan
+                    'gross_amount' => round($booking->total_price),
                 ],
                 'customer_details' => [
                     'first_name' => $booking->guest_name,
-                    'email' => $booking->guest_email,
-                    'phone' => $booking->guest_phone,
+                    'email' => $guest_email,
+                    'phone' => $guest_phone,
                 ],
-                // Kita sederhanakan item_details menjadi satu paket booking.
-                // Ini lebih aman dan menghindari error kalkulasi.
                 'item_details' => [[
                     'id' => $booking->id,
-                    'price' => $totalPrice, // Harga adalah total harga itu sendiri
-                    'quantity' => 1,         // Kuantitas selalu 1 paket
+                    'price' => round($booking->total_price),
+                    'quantity' => 1,
                     'name' => "Booking {$booking->room->name} ({$booking->num_rooms} kamar, {$durationInDays} malam)",
                 ]],
-                'callbacks' => [
-                    'finish' => route('booking.success', $booking->access_token)
-                ]
             ];
-            // ==========================================================
 
-            $snapToken = Snap::getSnapToken($midtrans_params);
+            $snapToken = Snap::getSnapToken($params);
             $booking->snap_token = $snapToken;
             $booking->save();
 
-            return view('frontend.booking.payment', compact('snapToken', 'booking'));
-
-        } else {
-            // Alur Manual Booking (WhatsApp)
-            $this->sendAdminBookingNotification($booking);
-            return redirect()->back()->with('success', 'Permintaan booking Anda telah berhasil dikirim! Admin kami akan segera menghubungi Anda melalui WhatsApp.');
+        } catch (\Exception $e) {
+            Log::error('Midtrans Snap Token Error: ' . $e->getMessage());
+            if (Auth::check() && Auth::user()->role == 'affiliate') {
+                return redirect()->route('affiliate.dashboard')->with('error', 'Failed to create payment session. Please check your Midtrans configuration.');
+            }
+            return redirect()->route('home')->with('error', 'Sorry, we are unable to process the payment at this moment.');
         }
+
+        return view('frontend.booking.payment', compact('booking', 'snapToken'));
     }
-    
+
     /**
      * Menampilkan halaman sukses setelah pembayaran.
      */
-    public function success(string $token)
+    public function success(Booking $booking) // Diubah untuk menerima model Booking langsung dari route
     {
-        $booking = Booking::where('access_token', $token)->firstOrFail();
         return view('frontend.booking_success', compact('booking'));
     }
     
@@ -145,23 +172,5 @@ class BookingController extends Controller
         } catch (\Exception $e) {
             Log::error('Failed to send admin booking notification: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Memformat nomor telepon untuk tautan WhatsApp.
-     */
-    private function formatPhoneNumberForWhatsapp($phoneNumber)
-    {
-        $phoneNumber = preg_replace('/[^0-9+]/', '', $phoneNumber);
-        
-        if (str_starts_with($phoneNumber, '+')) {
-            return substr($phoneNumber, 1);
-        }
-        
-        if (str_starts_with($phoneNumber, '0')) {
-            return '62' . substr($phoneNumber, 1);
-        }
-        
-        return $phoneNumber;
     }
 }

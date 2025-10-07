@@ -8,9 +8,74 @@ use App\Models\Booking;
 use App\Helpers\FonnteApi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Models\Commission;
 
 class MidtransCallbackController extends Controller
 {
+    public function handle(Request $request)
+    {
+        // Konfigurasi Midtrans
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        
+        try {
+            $notification = new Notification();
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Invalid notification object.'], 500);
+        }
+        
+        $transactionStatus = $notification->transaction_status;
+        $orderId = explode('-', $notification->order_id)[0]; // Ambil ID booking asli
+        $fraudStatus = $notification->fraud_status;
+
+        $booking = Booking::find($orderId);
+
+        if (!$booking) {
+            return response()->json(['error' => 'Booking not found.'], 404);
+        }
+
+        // Jangan proses notifikasi yang sama dua kali
+        if ($booking->status === 'paid') {
+            return response()->json(['status' => 'ok', 'message' => 'Booking already paid.']);
+        }
+
+        // Logika pembaruan status booking
+        if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
+            if ($fraudStatus == 'accept') {
+                $booking->status = 'paid';
+                $booking->payment_status = 'paid';
+                $booking->save();
+
+                // ======================= AWAL PERUBAHAN =======================
+                // SETELAH BOOKING DIPASTIKAN LUNAS, BUAT KOMISI JIKA INI BOOKING AFILIASI
+                if ($booking->affiliate_id && $booking->affiliate) {
+                    
+                    // Cek lagi untuk memastikan komisi belum ada
+                    $existingCommission = Commission::where('booking_id', $booking->id)->first();
+
+                    if (!$existingCommission) {
+                        Commission::create([
+                            'booking_id' => $booking->id,
+                            'affiliate_id' => $booking->affiliate_id,
+                            'amount' => $booking->total_price * ($booking->affiliate->commission_rate / 100),
+                            'status' => 'unpaid', // Status 'unpaid' menunggu dibayarkan oleh admin
+                        ]);
+                    }
+                }
+                // ======================== AKHIR PERUBAHAN =======================
+            }
+        } else if ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
+            $booking->status = 'cancelled';
+            $booking->payment_status = 'failed';
+            $booking->save();
+        } else if ($transactionStatus == 'pending') {
+            $booking->payment_status = 'pending';
+            $booking->save();
+        }
+
+        return response()->json(['status' => 'ok']);
+    }
+    
     public function callback(Request $request)
     {
         // 1. Set Server Key & Log

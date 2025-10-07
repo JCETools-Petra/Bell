@@ -26,24 +26,23 @@ class RoomController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
+            'discount_percentage' => 'nullable|numeric|min:0|max:100', // TAMBAHKAN INI
             'description' => 'required|string',
             'facilities' => 'required|string',
             'is_available' => 'boolean',
-            'images' => 'nullable|array', // Validasi untuk array gambar
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048' // Validasi untuk setiap file
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         $validated['slug'] = Str::slug($request->name);
         $validated['is_available'] = $request->has('is_available');
         
-        // Buat room dulu tanpa gambar
         $room = Room::create($validated);
 
-        // Jika ada gambar yang diupload, proses satu per satu
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 $path = $file->store('rooms', 'public');
-                $room->images()->create(['path' => $path]); // Buat record gambar yang berelasi dengan room
+                $room->images()->create(['path' => $path]);
             }
         }
 
@@ -60,6 +59,7 @@ class RoomController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
+            'discount_percentage' => 'nullable|numeric|min:0|max:100', // TAMBAHKAN INI
             'description' => 'required|string',
             'facilities' => 'required|string',
             'is_available' => 'boolean',
@@ -72,7 +72,6 @@ class RoomController extends Controller
 
         $room->update($validated);
 
-        // Proses jika ada gambar baru yang diupload
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 $path = $file->store('rooms', 'public');

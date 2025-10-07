@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\PriceOverride;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class RoomPriceController extends Controller
 {
@@ -26,8 +27,19 @@ class RoomPriceController extends Controller
                                      ->where('date', $date)
                                      ->first();
             
+            $currentPrice = $override ? $override->price : $room->price;
+
+            // --- LOGIKA DISKON ---
+            if (Auth::check() && in_array(Auth::user()->role, ['admin', 'affiliate'])) {
+                if ($room->discount_percentage > 0) {
+                    $discountAmount = $currentPrice * ($room->discount_percentage / 100);
+                    $currentPrice -= $discountAmount;
+                }
+            }
+            // --- END LOGIKA DISKON ---
+
             $prices[$room->id] = [
-                'price' => $override ? $override->price : $room->price,
+                'price' => $currentPrice,
                 'is_special' => (bool)$override
             ];
         }
@@ -35,9 +47,6 @@ class RoomPriceController extends Controller
         return response()->json($prices);
     }
 
-    /**
-     * FUNGSI BARU: Mengambil harga harian HANYA UNTUK KAMAR SUPERIOR untuk sebulan penuh.
-     */
     public function getPricesForMonth(Request $request)
     {
         $request->validate([
@@ -48,16 +57,14 @@ class RoomPriceController extends Controller
         $year = $request->year;
         $month = $request->month;
 
-        // Mencari kamar 'Superior' secara spesifik
         $baseRoom = Room::where('name', 'Superior')->where('is_available', true)->first();
         
-        // Jika tidak ada kamar 'Superior', jangan tampilkan harga apapun
         if (!$baseRoom) {
             return response()->json([]);
         }
         $basePrice = $baseRoom->price;
+        $discountPercentage = $baseRoom->discount_percentage;
 
-        // Ambil semua harga khusus (override) untuk kamar Superior pada bulan yang diminta
         $overrides = PriceOverride::whereYear('date', $year)
                                   ->whereMonth('date', $month)
                                   ->where('room_id', $baseRoom->id)
@@ -65,13 +72,24 @@ class RoomPriceController extends Controller
 
         $prices = [];
         $daysInMonth = Carbon::create($year, $month)->daysInMonth;
+        
+        $isAffiliateOrAdmin = Auth::check() && in_array(Auth::user()->role, ['admin', 'affiliate']);
 
         for ($day = 1; $day <= $daysInMonth; $day++) {
             $date = Carbon::create($year, $month, $day)->format('Y-m-d');
             $isSpecial = $overrides->has($date);
             
+            $currentPrice = $isSpecial ? $overrides[$date] : $basePrice;
+
+            // --- LOGIKA DISKON ---
+            if ($isAffiliateOrAdmin && $discountPercentage > 0) {
+                $discountAmount = $currentPrice * ($discountPercentage / 100);
+                $currentPrice -= $discountAmount;
+            }
+            // --- END LOGIKA DISKON ---
+
             $prices[$date] = [
-                'price' => $isSpecial ? $overrides[$date] : $basePrice,
+                'price' => $currentPrice,
                 'is_special' => $isSpecial
             ];
         }
