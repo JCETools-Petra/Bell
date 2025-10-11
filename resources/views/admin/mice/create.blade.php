@@ -12,11 +12,11 @@
                     <form action="{{ route('admin.mice.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
+                        {{-- Nama, Dimensi, Ukuran --}}
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-medium text-gray-700">MICE Room Name</label>
                             <input type="text" name="name" id="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('name') }}" required>
                         </div>
-
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                             <div>
                                 <label for="dimension" class="block text-sm font-medium text-gray-700">Dimension (e.g., 15 x 16)</label>
@@ -29,64 +29,100 @@
                         </div>
 
                         <hr class="my-6">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Layout Capacities (Pax)</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-4">
-                            <div>
-                                <label for="capacity_classroom" class="block text-sm font-medium text-gray-700">Classroom</label>
-                                <input type="number" name="capacity_classroom" id="capacity_classroom" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('capacity_classroom') }}">
-                            </div>
-                            <div>
-                                <label for="capacity_theatre" class="block text-sm font-medium text-gray-700">Theatre</label>
-                                <input type="number" name="capacity_theatre" id="capacity_theatre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('capacity_theatre') }}">
-                            </div>
-                             <div>
-                                <label for="capacity_ushape" class="block text-sm font-medium text-gray-700">U-Shape</label>
-                                <input type="number" name="capacity_ushape" id="capacity_ushape" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('capacity_ushape') }}">
-                            </div>
-                             <div>
-                                <label for="capacity_round" class="block text-sm font-medium text-gray-700">Round Table</label>
-                                <input type="number" name="capacity_round" id="capacity_round" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('capacity_round') }}">
-                            </div>
-                             <div>
-                                <label for="capacity_board" class="block text-sm font-medium text-gray-700">Board Room</label>
-                                <input type="number" name="capacity_board" id="capacity_board" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('capacity_board') }}">
-                            </div>
+                        
+                        {{-- Spesifikasi Layout Dinamis --}}
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Layout Specifications</h3>
+                        <div id="specifications-container" class="space-y-4">
+                            {{-- Baris spesifikasi akan ditambahkan oleh JavaScript --}}
                         </div>
-
+                        <button type="button" id="add-specification" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Add Layout</button>
+                        
                         <hr class="my-6">
+                        
+                        {{-- Rate, Deskripsi, Fasilitas --}}
                         <div class="mb-4">
                             <label for="rate_details" class="block text-sm font-medium text-gray-700">Rate Details</label>
-                            <textarea name="rate_details" id="rate_details" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>{{ old('rate_details') }}</textarea>
+                            <textarea name="rate_details" id="rate_details" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">{{ old('rate_details') }}</textarea>
                         </div>
                         <div class="mb-4">
                             <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                            <textarea name="description" id="description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>{{ old('description') }}</textarea>
+                            <textarea name="description" id="description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">{{ old('description') }}</textarea>
                         </div>
                          <div class="mb-4">
                             <label for="facilities" class="block text-sm font-medium text-gray-700">Facilities (one per line)</label>
-                            <textarea name="facilities" id="facilities" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>{{ old('facilities') }}</textarea>
+                            <textarea name="facilities" id="facilities" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">{{ old('facilities') }}</textarea>
                         </div>
 
                         <hr class="my-6">
+                        
+                        {{-- Gambar-gambar Ruangan --}}
                         <div class="mb-4">
                             <label for="images" class="block text-sm font-medium text-gray-700">Upload Images</label>
                             <input type="file" name="images[]" id="images" class="mt-1 block w-full" multiple>
                         </div>
                         
                         <hr class="my-6">
+                        
+                        {{-- Status & Tombol Submit --}}
                         <div class="mb-4">
                             <label class="flex items-center">
                                 <input type="checkbox" name="is_available" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm" checked>
                                 <span class="ml-2 text-sm text-gray-600">Available for booking</span>
                             </label>
                         </div>
-
                         <div>
-                            <button type="submit" class="px-4 py-2 bg-brand-red text-white rounded-md hover:opacity-90 transition-opacity">Save MICE Room</button>
+                            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:opacity-90 transition-opacity">Save MICE Room</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.getElementById('specifications-container');
+        let specificationIndex = 0;
+
+        // Fungsi untuk menambah baris baru
+        function addSpecificationRow() {
+            const newRow = document.createElement('div');
+            newRow.className = 'grid grid-cols-1 md:grid-cols-10 gap-4 specification-row items-center';
+            newRow.innerHTML = `
+                <div class="md:col-span-3">
+                    <label class="text-sm font-medium text-gray-700">Layout Name</label>
+                    <input type="text" name="specifications[${specificationIndex}][key]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="e.g., Classroom">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-sm font-medium text-gray-700">Capacity (Pax)</label>
+                    <input type="text" name="specifications[${specificationIndex}][value]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="e.g., 150 Pax">
+                </div>
+                <div class="md:col-span-4">
+                    <label class="text-sm font-medium text-gray-700">Layout Image</label>
+                    <input type="file" name="specifications[${specificationIndex}][image]" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100">
+                </div>
+                <div class="md:col-span-1 pt-6">
+                    <button type="button" class="px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 remove-specification">Remove</button>
+                </div>
+            `;
+            container.appendChild(newRow);
+            specificationIndex++;
+        }
+
+        // Menambah baris saat tombol diklik
+        document.getElementById('add-specification').addEventListener('click', addSpecificationRow);
+
+        // Menghapus baris
+        container.addEventListener('click', function (e) {
+            if (e.target && e.target.classList.contains('remove-specification')) {
+                e.target.closest('.specification-row').remove();
+            }
+        });
+
+        // Tambah satu baris secara otomatis saat halaman dimuat
+        addSpecificationRow();
+    });
+    </script>
+    @endpush
 </x-app-layout>

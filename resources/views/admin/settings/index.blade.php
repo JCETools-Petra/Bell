@@ -12,6 +12,7 @@
             <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
+                {{-- Method spoofing for POST request --}}
 
                 @if(session('success'))
                     <div class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
@@ -63,7 +64,7 @@
                     $runningTextContent = old('running_text_content', $settings['running_text_content'] ?? '');
                     $runningTextUrl     = old('running_text_url', $settings['running_text_url'] ?? '');
                 @endphp
-
+                
                 {{-- General Settings --}}
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                     <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">General Settings</h3>
@@ -119,6 +120,38 @@
                             <label for="running_text_url" class="block font-medium text-sm text-gray-700">Link URL (jika diklik)</label>
                             <input type="url" name="running_text_url" id="running_text_url" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $runningTextUrl }}" placeholder="https://contoh.com/promo">
                         </div>
+                    </div>
+                </div>
+
+                {{-- MICE Layout Icons --}}
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">MICE Layout Icons</h3>
+                    <p class="text-sm text-gray-600 mb-6">Upload an icon for each MICE room layout. These icons will be displayed on all MICE detail pages.</p>
+                    
+                    @php
+                        $layout_icons = [
+                            'layout_icon_classroom' => 'Classroom Layout Icon',
+                            'layout_icon_theatre'   => 'Theatre Layout Icon',
+                            'layout_icon_ushape'    => 'U-Shape Layout Icon',
+                            'layout_icon_round'     => 'Round Table Layout Icon',
+                            'layout_icon_board'     => 'Board Room Layout Icon',
+                        ];
+                    @endphp
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach ($layout_icons as $key => $label)
+                        <div class="border p-4 rounded-md">
+                            <label for="{{ $key }}" class="block text-sm font-medium text-gray-700">{{ $label }}</label>
+                            <input type="file" name="{{ $key }}" id="{{ $key }}" class="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"/>
+                            
+                            @if(isset($settings[$key]) && $settings[$key])
+                            <div class="mt-4">
+                                <p class="text-xs text-gray-500 mb-1">Current Icon:</p>
+                                <img src="{{ asset('storage/' . $settings[$key]) }}" class="rounded-md h-20 w-20 object-contain border p-1">
+                            </div>
+                            @endif
+                        </div>
+                        @endforeach
                     </div>
                 </div>
 
@@ -227,16 +260,16 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="midtrans_merchant_id" class="block font-medium text-sm text-gray-700">Merchant ID</label>
-                                <input type="text" name="midtrans_merchant_id" id="midtrans_merchant_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $midMerchant }}" required>
+                                <input type="text" name="midtrans_merchant_id" id="midtrans_merchant_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $midMerchant }}">
                             </div>
                             <div>
                                 <label for="midtrans_client_key" class="block font-medium text-sm text-gray-700">Client Key</label>
-                                <input type="text" name="midtrans_client_key" id="midtrans_client_key" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $midClientKey }}" required>
+                                <input type="text" name="midtrans_client_key" id="midtrans_client_key" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $midClientKey }}">
                             </div>
                         </div>
                         <div>
                             <label for="midtrans_server_key" class="block font-medium text-sm text-gray-700">Server Key</label>
-                            <input type="text" name="midtrans_server_key" id="midtrans_server_key" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $midServerKey }}" required>
+                            <input type="text" name="midtrans_server_key" id="midtrans_server_key" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $midServerKey }}">
                         </div>
                         <div>
                             <input type="hidden" name="midtrans_is_production" value="0">
@@ -248,7 +281,35 @@
                         </div>
                     </div>
                 </div>
-
+                <div>
+                    <label for="fonnte_api_key" class="block font-medium text-sm text-gray-700">Fonnte API Key (Token)</label>
+                    <input type="text" name="fonnte_api_key" id="fonnte_api_key" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ old('fonnte_api_key', $settings['fonnte_api_key'] ?? '') }}" placeholder="Masukkan token Fonnte Anda di sini">
+                </div>
+                {{-- Pengaturan Notifikasi WhatsApp (Pay at Hotel) --}}
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">Notifikasi WhatsApp (Pay at Hotel)</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="whatsapp_admin_receiver" class="block font-medium text-sm text-gray-700">Nomor WA Admin Utama</label>
+                            <input type="text" name="whatsapp_admin_receiver" id="whatsapp_admin_receiver" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ old('whatsapp_admin_receiver', $settings['whatsapp_admin_receiver'] ?? '') }}" placeholder="Contoh: 081234567890">
+                        </div>
+                        <div>
+                            <label for="whatsapp_supervisor_receivers" class="block font-medium text-sm text-gray-700">Nomor WA Supervisor Tambahan (pisahkan dengan koma)</label>
+                            <input type="text" name="whatsapp_supervisor_receivers" id="whatsapp_supervisor_receivers" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ old('whatsapp_supervisor_receivers', $settings['whatsapp_supervisor_receivers'] ?? '') }}" placeholder="Contoh: 0812..., 0813...">
+                        </div>
+                        <div>
+                            <label for="whatsapp_pay_at_hotel_admin_template" class="block font-medium text-sm text-gray-700">Template Pesan ke Admin/Supervisor</label>
+                            <textarea name="whatsapp_pay_at_hotel_admin_template" id="whatsapp_pay_at_hotel_admin_template" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" rows="6">{{ old('whatsapp_pay_at_hotel_admin_template', $settings['whatsapp_pay_at_hotel_admin_template'] ?? "🔔 *Booking Baru - Bayar di Hotel*\n\nSeorang tamu telah melakukan reservasi melalui afiliasi dan akan membayar di hotel.\n\n*Booking ID:* {booking_id}\n*Afiliasi:* {affiliate_name}\n\n*Detail Tamu:*\n*Nama:* {guest_name}\n*Telepon:* {guest_phone}\n*Email:* {guest_email}\n\n*Detail Menginap:*\n*Kamar:* {room_name}\n*Check-in:* {checkin_date}\n*Check-out:* {checkout_date}\n*Total Biaya:* {total_price}") }}</textarea>
+                        </div>
+                        <div>
+                            <label for="whatsapp_pay_at_hotel_customer_template" class="block font-medium text-sm text-gray-700">Template Pesan ke Customer</label>
+                            <textarea name="whatsapp_pay_at_hotel_customer_template" id="whatsapp_pay_at_hotel_customer_template" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" rows="4">{{ old('whatsapp_pay_at_hotel_customer_template', $settings['whatsapp_pay_at_hotel_customer_template'] ?? "Terima kasih, {guest_name}!\n\nBooking Anda di Bell Hotel Merauke dengan ID #{booking_id} telah kami konfirmasi.\n\nSilakan lakukan pembayaran saat Anda tiba di hotel. Kami tunggu kedatangan Anda!") }}</textarea>
+                        </div>
+                        <p class="mt-2 text-xs text-gray-500">
+                            Variabel yang tersedia: <code>{booking_id}</code>, <code>{affiliate_name}</code>, <code>{guest_name}</code>, <code>{guest_phone}</code>, <code>{guest_email}</code>, <code>{room_name}</code>, <code>{checkin_date}</code>, <code>{checkout_date}</code>, <code>{total_price}</code>
+                        </p>
+                    </div>
+                </div>
                 {{-- Pengaturan Notifikasi WhatsApp --}}
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                     <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">Pengaturan Notifikasi WhatsApp</h3>
@@ -287,16 +348,16 @@
             </form>
         </div>
     </div>
-</x-app-layout>
 
-@push('scripts')
-    {{-- CKEditor 5 --}}
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            ClassicEditor
-                .create( document.querySelector( '#terms_and_conditions_editor' ) )
-                .catch( error => { console.error( error ); } );
-        });
-    </script>
-@endpush
+    @push('scripts')
+        {{-- CKEditor 5 --}}
+        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                ClassicEditor
+                    .create( document.querySelector( '#terms_and_conditions_editor' ) )
+                    .catch( error => { console.error( error ); } );
+            });
+        </script>
+    @endpush
+</x-app-layout>

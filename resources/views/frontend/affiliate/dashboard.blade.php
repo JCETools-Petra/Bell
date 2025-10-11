@@ -53,43 +53,73 @@
             </div>
         </div>
 
-        {{-- Commission History --}}
         <h3 class="mt-5 mb-4">Commission History</h3>
-        <div class="card">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead>
-                        <tr>
-                            <th>Booking ID</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($commissions as $commission)
+            <div class="card shadow-sm">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-light">
                             <tr>
-                                <td>#{{ $commission->booking_id }}</td>
-                                <td>Rp {{ number_format($commission->amount, 0, ',', '.') }}</td>
-                                <td>
-                                    <span class="badge {{ $commission->status == 'paid' ? 'bg-success' : 'bg-warning' }}">
-                                        {{ ucfirst($commission->status) }}
-                                    </span>
-                                </td>
-                                <td>{{ $commission->created_at->format('d M Y') }}</td>
+                                <th scope="col" class="py-3 px-4">Detail</th>
+                                <th scope="col" class="py-3 px-4">Commission</th>
+                                <th scope="col" class="py-3 px-4">Status</th>
+                                <th scope="col" class="py-3 px-4">Date</th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center py-4">No commissions yet.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse ($commissions as $commission)
+                                <tr>
+                                    <td class="py-3 px-4">
+                                        @if ($commission->booking_id)
+                                            {{-- Tampilan untuk komisi dari booking kamar --}}
+                                            <div class="fw-bold text-dark">
+                                                Booking ID #{{ $commission->booking_id }}
+                                            </div>
+                                            @if($commission->booking && $commission->booking->room)
+                                                <small class="text-muted">{{ $commission->booking->room->name }}</small>
+                                            @endif
+                                        @else
+                                            {{-- Tampilan untuk komisi MICE --}}
+                                            @php
+                                                $notesLines = explode("\n", $commission->notes ?? '');
+                                                $eventName = str_replace('MICE Event: ', '', $notesLines[0] ?? 'MICE Event');
+                                                $roomName = str_replace('Room: ', '', $notesLines[1] ?? '');
+                                            @endphp
+                                            <div class="fw-bold text-dark">
+                                                {{ $eventName }}
+                                            </div>
+                                            <small class="text-muted">{{ $roomName }}</small>
+                                        @endif
+                                    </td>
+                                    <td class="py-3 px-4 fw-bold text-success">
+                                        Rp {{ number_format($commission->commission_amount, 0, ',', '.') }}
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        @if ($commission->status == 'paid')
+                                            <span class="badge bg-success-soft text-success">
+                                                {{ ucfirst($commission->status) }}
+                                            </span>
+                                        @else
+                                            <span class="badge bg-warning-soft text-warning">
+                                                {{ ucfirst($commission->status) }}
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="py-3 px-4 text-muted">
+                                        {{ $commission->created_at->format('d M Y') }}
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center py-4">No commissions yet.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-        <div class="mt-4 d-flex justify-content-center">
-            {{ $commissions->links() }}
-        </div>
+            <div class="mt-4 d-flex justify-content-center">
+                {{ $commissions->links() }}
+            </div>
     </div>
 </div>
 

@@ -32,36 +32,101 @@ class MiceRoomController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
-            'dimension' => 'nullable|string|max:255',
-            'size_sqm' => 'nullable|string|max:255',
-            'rate_details' => 'required|string',
-            'capacity_classroom' => 'nullable|integer',
-            'capacity_theatre' => 'nullable|integer',
-            'capacity_ushape' => 'nullable|integer',
-            'capacity_round' => 'nullable|integer',
-            'capacity_board' => 'nullable|integer',
+            'slug' => 'required|string|max:255|unique:mice_rooms',
             'description' => 'required|string',
-            'facilities' => 'required|string',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_available' => 'boolean',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'specifications.*.key' => 'nullable|string',
+            'specifications.*.value' => 'nullable|string',
+            'specifications.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $validated['slug'] = Str::slug($request->name);
-        $validated['is_available'] = $request->has('is_available');
+        $miceRoom = new MiceRoom($request->only('name', 'slug', 'description', 'meta_title', 'meta_description'));
 
-        $mice = MiceRoom::create($validated);
+        $specifications = [];
+        if ($request->input('specifications')) {
+            foreach ($request->input('specifications') as $index => $specificationData) {
+                if (!empty($specificationData['key']) && !empty($specificationData['value'])) {
+                    $newSpecification = [
+                        'key' => $specificationData['key'],
+                        'value' => $specificationData['value'],
+                        'image' => null,
+                    ];
+
+                    if ($request->hasFile("specifications.{$index}.image")) {
+                        $path = $request->file("specifications.{$index}.image")->store('mice/specifications', 'public');
+                        $newSpecification['image'] = Storage::url($path);
+                    }
+
+                    $specifications[] = $newSpecification;
+                }
+            }
+        }
+        $miceRoom->specifications = json_encode($specifications);
+        $miceRoom->save();
 
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                $path = $file->store('mice', 'public');
-                $mice->images()->create(['path' => $path]);
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('public/mice');
+                $miceRoom->images()->create(['path' => Storage::url($path)]);
             }
         }
 
-        return redirect()->route('admin.mice.index')->with('success', 'MICE Room created successfully.');
+        return redirect()->route('admin.mice.index')->with('success', 'MICE room created successfully.');
+    }
+
+    public function update(Request $request, MiceRoom $miceRoom)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:mice_rooms,slug,' . $miceRoom->id,
+            'description' => 'required|string',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'specifications.*.key' => 'nullable|string',
+            'specifications.*.value' => 'nullable|string',
+            'specifications.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $miceRoom->update($request->only('name', 'slug', 'description', 'meta_title', 'meta_description'));
+
+        $specifications = [];
+        if ($request->input('specifications')) {
+            foreach ($request->input('specifications') as $index => $specificationData) {
+                 if (!empty($specificationData['key']) && !empty($specificationData['value'])) {
+                    $newSpecification = [
+                        'key' => $specificationData['key'],
+                        'value' => $specificationData['value'],
+                        'image' => $specificationData['image_path'] ?? null, // hidden input with old image path
+                    ];
+
+                    if ($request->hasFile("specifications.{$index}.image")) {
+                        // Delete old image if it exists
+                        if ($newSpecification['image']) {
+                            $oldImagePath = str_replace('/storage/', '', $newSpecification['image']);
+                            Storage::disk('public')->delete($oldImagePath);
+                        }
+
+                        $path = $request->file("specifications.{$index}.image")->store('mice/specifications', 'public');
+                        $newSpecification['image'] = Storage::url($path);
+                    }
+
+                    $specifications[] = $newSpecification;
+                }
+            }
+        }
+
+        $miceRoom->specifications = json_encode($specifications);
+        $miceRoom->save();
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('public/mice');
+                $miceRoom->images()->create(['path' => Storage::url($path)]);
+            }
+        }
+
+        return redirect()->route('admin.mice.index')->with('success', 'MICE room updated successfully.');
     }
 
     /**
@@ -72,42 +137,6 @@ class MiceRoomController extends Controller
         return view('admin.mice.edit', ['miceRoom' => $mouse]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, MiceRoom $mouse)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'dimension' => 'nullable|string|max:255',
-            'size_sqm' => 'nullable|string|max:255',
-            'rate_details' => 'required|string',
-            'capacity_classroom' => 'nullable|integer',
-            'capacity_theatre' => 'nullable|integer',
-            'capacity_ushape' => 'nullable|integer',
-            'capacity_round' => 'nullable|integer',
-            'capacity_board' => 'nullable|integer',
-            'description' => 'required|string',
-            'facilities' => 'required|string',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_available' => 'boolean',
-        ]);
-
-        $validated['slug'] = Str::slug($request->name);
-        $validated['is_available'] = $request->has('is_available');
-
-        $mouse->update($validated);
-
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                $path = $file->store('mice', 'public');
-                $mouse->images()->create(['path' => $path]);
-            }
-        }
-
-        return redirect()->route('admin.mice.index')->with('success', 'MICE Room updated successfully.');
-    }
 
     /**
      * Remove the specified resource from storage.

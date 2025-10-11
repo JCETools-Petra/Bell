@@ -28,16 +28,29 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @forelse ($affiliates as $affiliate)
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap font-medium">{{ $affiliate->user->name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {{-- PERBAIKAN 1: Periksa apakah user ada --}}
+                                        @if ($affiliate->user)
+                                            <div class="font-medium text-gray-900">{{ $affiliate->user->name }}</div>
+                                            <div class="text-sm text-gray-500">{{ $affiliate->user->email }}</div>
+                                        @else
+                                            <div class="font-medium text-red-600">User Deleted</div>
+                                            <div class="text-sm text-gray-500">Affiliate ID: {{ $affiliate->id }}</div>
+                                        @endif
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap font-mono">{{ $affiliate->referral_code }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap font-semibold text-lg">
-                                        Rp {{ number_format($affiliate->unpaid_amount, 0, ',', '.') }}
+                                        {{-- PERBAIKAN 2: Beri nilai default 0 jika unpaid_amount null --}}
+                                        Rp {{ number_format($affiliate->unpaid_amount ?? 0, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <button 
                                             class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition disabled:opacity-50"
-                                            onclick="openCommissionModal({{ $affiliate->id }}, '{{ $affiliate->user->name }}')"
-                                            {{ $affiliate->unpaid_amount > 0 ? '' : 'disabled' }}>
+                                            {{-- PERBAIKAN 3: Periksa user sebelum memanggil onclick --}}
+                                            @if($affiliate->user)
+                                                onclick="openCommissionModal({{ $affiliate->id }}, '{{ addslashes($affiliate->user->name) }}')"
+                                            @endif
+                                            {{ ($affiliate->unpaid_amount ?? 0) > 0 ? '' : 'disabled' }}>
                                             View Details & Pay
                                         </button>
                                     </td>
@@ -91,20 +104,52 @@
             document.getElementById('modalTitle').innerText = 'Unpaid Commissions for ' + affiliateName + ' (This Month)';
             
             // Set the form action
-            document.getElementById('payForm').action = '/admin/commissions/' + affiliateId + '/pay';
-
+            const payForm = document.getElementById('payForm');
+            if (payForm) {
+                payForm.action = '/admin/commissions/' + affiliateId + '/pay';
+            }
+    
             // Fetch commission details via AJAX
             fetch('/admin/commissions/' + affiliateId)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     let tableBody = document.getElementById('commissionDetailsBody');
                     tableBody.innerHTML = ''; // Clear previous data
                     if (data.length > 0) {
                         data.forEach(commission => {
+                            
+                            // --- PERBAIKAN LOGIKA TAMPILAN DIMULAI DI SINI ---
+    
+                            let detailHtml = '';
+                            // Periksa jika ini komisi booking kamar (ada booking_id)
+                            if (commission.booking_id && commission.booking) {
+                                detailHtml = `<strong>Booking ID #${commission.booking_id}</strong><br><small>${commission.booking.room ? commission.booking.room.name : 'Room Deleted'}</small>`;
+                            } 
+                            // Jika tidak, ini komisi MICE (gunakan notes)
+                            else if (commission.notes) {
+                                // Parsing sederhana dari notes
+                                const lines = commission.notes.split('\\n');
+                                const eventName = lines[0] ? lines[0].replace('MICE Event: ', '') : 'MICE Event';
+                                const roomName = lines[1] ? lines[1].replace('Room: ', '') : '';
+                                detailHtml = `<strong>${eventName}</strong><br><small>${roomName}</small>`;
+                            } 
+                            // Fallback jika tidak ada keduanya
+                            else {
+                                detailHtml = 'Manual Commission';
+                            }
+    
+                            // Perbaiki referensi ke 'commission_amount'
+                            const commissionAmount = parseInt(commission.commission_amount).toLocaleString('id-ID');
+    
                             let row = `<tr>
-                                <td class="px-4 py-2">#${commission.booking_id}</td>
-                                <td class="px-4 py-2">${new Date(commission.created_at).toLocaleDateString()}</td>
-                                <td class="px-4 py-2">Rp ${parseInt(commission.amount).toLocaleString('id-ID')}</td>
+                                <td class="px-4 py-3">${detailHtml}</td>
+                                <td class="px-4 py-3">${new Date(commission.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                                <td class="px-4 py-3 font-semibold">Rp ${commissionAmount}</td>
                             </tr>`;
                             tableBody.innerHTML += row;
                         });
@@ -112,9 +157,15 @@
                         tableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4">No unpaid commissions for this month.</td></tr>';
                     }
                     document.getElementById('commissionModal').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Failed to fetch commission details:', error);
+                    let tableBody = document.getElementById('commissionDetailsBody');
+                    tableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-red-500">Failed to load details.</td></tr>';
+                    document.getElementById('commissionModal').style.display = 'block';
                 });
         }
-
+    
         function closeCommissionModal() {
             document.getElementById('commissionModal').style.display = 'none';
         }

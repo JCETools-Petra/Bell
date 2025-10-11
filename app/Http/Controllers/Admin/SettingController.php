@@ -54,9 +54,9 @@ class SettingController extends Controller
             'terms_and_conditions' => 'nullable|string',
 
             // Midtrans (non-checkbox)
-            'midtrans_merchant_id' => 'required|string|max:255',
-            'midtrans_client_key' => 'required|string|max:255',
-            'midtrans_server_key' => 'required|string|max:255',
+            'midtrans_merchant_id' => 'sometimes|required|string|max:255',
+            'midtrans_client_key' => 'sometimes|required|string|max:255',
+            'midtrans_server_key' => 'sometimes|required|string|max:255',
 
             // WhatsApp Templates
             'whatsapp_customer_message' => 'required|string',
@@ -66,39 +66,72 @@ class SettingController extends Controller
             'booking_method' => 'required|in:direct,manual',
             'running_text_content' => 'nullable|string|max:255',
             'running_text_url' => 'nullable|url|max:255',
+            
+            // Validasi Ikon Layout MICE
+            'layout_icon_classroom' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'layout_icon_theatre'   => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'layout_icon_ushape'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'layout_icon_round'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'layout_icon_board'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+            // --- PERBAIKAN: VALIDASI UNTUK NOTIFIKASI PAY AT HOTEL DITAMBAHKAN DI SINI ---
+            'fonnte_api_key' => 'nullable|string', // Jika Anda menambahkan field ini
+            'whatsapp_admin_receiver' => 'nullable|string',
+            'whatsapp_supervisor_receivers' => 'nullable|string',
+            'whatsapp_pay_at_hotel_admin_template' => 'nullable|string',
+            'whatsapp_pay_at_hotel_customer_template' => 'nullable|string',
+            // ----------------------------------------------------------------------------
         ]);
 
         // 2) Proses file upload (logo, favicon, hero image)
         $filesToUpload = ['logo', 'favicon', 'hero_image'];
         foreach ($filesToUpload as $fileKey) {
             if ($request->hasFile($fileKey)) {
-                // Hapus file lama jika ada
                 $oldPath = Setting::where('key', $fileKey . '_path')->value('value');
                 if ($oldPath) {
                     Storage::disk('public')->delete($oldPath);
                 }
-                // Simpan file baru
                 $path = $request->file($fileKey)->store('settings', 'public');
-                // Catat path ke dalam data yang akan disimpan
                 $validatedData[$fileKey . '_path'] = $path;
             }
         }
+        
+        // Proses Upload Ikon Layout MICE
+        $layout_icons = [
+            'layout_icon_classroom',
+            'layout_icon_theatre',
+            'layout_icon_ushape',
+            'layout_icon_round',
+            'layout_icon_board',
+        ];
 
-        // Singkirkan field file supaya tidak ikut disimpan sebagai string
+        foreach ($layout_icons as $key) {
+            if ($request->hasFile($key)) {
+                $oldPath = Setting::where('key', $key)->value('value');
+                if ($oldPath) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                $path = $request->file($key)->store('settings', 'public');
+                Setting::updateOrCreate(['key' => $key], ['value' => $path]);
+            }
+        }
+
+        // Singkirkan field file supaya tidak ikut disimpan sebagai string biasa
         unset($validatedData['logo'], $validatedData['favicon'], $validatedData['hero_image']);
 
         // 3) Simpan semua data non-checkbox yang sudah divalidasi
         foreach ($validatedData as $key => $value) {
+            if (in_array($key, $layout_icons)) {
+                continue;
+            }
+            
             Setting::updateOrCreate(
                 ['key' => $key],
                 ['value' => $value ?? '']
             );
         }
 
-        // ==========================================================
-        // 4) Simpan semua CHECKBOX dengan $request->boolean()
-        //    (hidden input value="0" akan terbaca sebagai false)
-        // ==========================================================
+        // 4) Simpan semua CHECKBOX
         $checkboxes = [
             'show_logo_text',
             'midtrans_is_production',
@@ -112,7 +145,6 @@ class SettingController extends Controller
                 ['value' => $value]
             );
         }
-        // ==========================================================
 
         // 5) Hapus cache & redirect
         Cache::forget('site_settings');

@@ -92,6 +92,11 @@ Route::prefix('api')->group(function () {
 Route::middleware(['auth', 'verified', 'affiliate.active'])->prefix('affiliate')->name('affiliate.')->group(function () {
     Route::get('/dashboard', [AffiliateDashboardController::class, 'index'])->name('dashboard');
     Route::resource('bookings', AffiliateBookingController::class)->only(['create', 'store']);
+    Route::get('/mice-kit', [App\Http\Controllers\Affiliate\MiceKitController::class, 'index'])->name('mice-kit.index');
+    Route::get('/mice-kit/download/{filename}', [App\Http\Controllers\Affiliate\MiceKitController::class, 'download'])->name('mice-kit.download');
+    Route::get('/mice-kit/download/{id}', [App\Http\Controllers\Affiliate\MiceKitController::class, 'download'])->name('mice-kit.download');
+    Route::get('/mice-kit/preview/{id}', [App\Http\Controllers\Affiliate\MiceKitController::class, 'preview'])->name('mice-kit.preview');
+    Route::get('/mice-kit/stream/{id}', [App\Http\Controllers\Affiliate\MiceKitController::class, 'stream'])->name('mice-kit.stream');
 });
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
@@ -126,6 +131,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::post('/maintenance-settings', [MaintenanceController::class, 'update'])->name('maintenance.update');
         Route::get('/affiliate-page-settings', [AffiliatePageController::class, 'index'])->name('affiliate_page.index');
         Route::put('/affiliate-page-settings', [AffiliatePageController::class, 'update'])->name('affiliate_page.update');
+        Route::resource('mice-kits', App\Http\Controllers\Admin\MiceKitController::class);
+        Route::get('mice-inquiries', [\App\Http\Controllers\Admin\MiceInquiryController::class, 'index'])->name('mice-inquiries.index');
+        Route::post('mice-inquiries', [\App\Http\Controllers\Admin\MiceInquiryController::class, 'store'])->name('mice-inquiries.store');
+        Route::delete('mice-inquiries/{commission}', [\App\Http\Controllers\Admin\MiceInquiryController::class, 'destroy'])->name('mice-inquiries.destroy');
+        Route::post('bookings/{booking}/confirm-pay-at-hotel', [AdminBookingController::class, 'confirmPayAtHotel'])->name('bookings.confirmPayAtHotel');
     });
 });
 

@@ -39,6 +39,23 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                {{-- Tambahkan blok ini di dalam <form> di create.blade.php, sebelum tombol submit --}}
+
+                                <div class="mb-4">
+                                    <label class="form-label">Metode Pembayaran</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="payment_method" id="pay_online" value="online" checked>
+                                        <label class="form-check-label" for="pay_online">
+                                            Bayar Online (via Midtrans)
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="payment_method" id="pay_at_hotel" value="pay_at_hotel">
+                                        <label class="form-check-label" for="pay_at_hotel">
+                                            Bayar di Hotel
+                                        </label>
+                                    </div>
+                                </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="checkin" class="form-label fw-bold">Check-in</label>
                                     <input type="text" name="checkin" id="checkin" class="form-control datepicker" value="{{ old('checkin', request('checkin')) }}" required autocomplete="off">

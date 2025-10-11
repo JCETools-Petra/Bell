@@ -28,12 +28,8 @@ class CommissionController extends Controller
         $affiliate = Affiliate::find($validated['affiliate_id']);
         $commissionAmount = $validated['booking_amount'] * ($affiliate->commission_rate / 100);
 
-        // ==========================================================
-        // PERBAIKAN ADA DI BLOK DI BAWAH INI
-        // ==========================================================
-        // Buat "dummy" booking dengan semua field yang required diisi nilai default
         $booking = Booking::create([
-            'room_id' => 1, // Atau ID kamar default lainnya
+            'room_id' => 1, 
             'guest_name' => 'Manual Booking via WA (' . $validated['booking_reference'] . ')',
             'guest_email' => 'manual@booking.com',
             'guest_phone' => '0000',
@@ -41,17 +37,20 @@ class CommissionController extends Controller
             'checkin_date' => now(),
             'checkout_date' => now(),
         ]);
-        // ==========================================================
         
         Commission::create([
             'affiliate_id' => $affiliate->id,
             'booking_id' => $booking->id,
-            'amount' => $commissionAmount,
+            // --- PERBAIKAN 1 ---
+            'commission_amount' => $commissionAmount, // Diubah dari 'amount'
+            'rate' => $affiliate->commission_rate,
             'status' => 'unpaid',
+            'notes' => 'Manual commission for booking: ' . $validated['booking_reference'],
         ]);
 
         return redirect()->route('admin.affiliates.index')->with('success', 'Manual commission added successfully.');
     }
+
     public function index()
     {
         if (! Gate::allows('manage-commissions')) abort(403);
@@ -59,7 +58,8 @@ class CommissionController extends Controller
         $affiliates = Affiliate::with('user')
             ->withSum(['commissions as unpaid_amount' => function ($query) {
                 $query->where('status', 'unpaid');
-            }], 'amount')
+            // --- PERBAIKAN 2 ---
+            }], 'commission_amount') // Diubah dari 'amount'
             ->paginate(15);
             
         return view('admin.commissions.index', compact('affiliates'));
@@ -67,7 +67,6 @@ class CommissionController extends Controller
 
     public function update(Request $request, Commission $commission)
     {
-        // Tolak akses jika pengguna tidak memiliki izin
         if (! Gate::allows('manage-commissions')) {
             abort(403);
         }
@@ -98,10 +97,12 @@ class CommissionController extends Controller
 
         Commission::where('affiliate_id', $affiliate->id)
             ->where('status', 'unpaid')
-            ->whereMonth('created_at', now()->month)
+            // Sebaiknya hapus filter per bulan ini agar bisa membayar semua komisi,
+            // atau biarkan jika memang sengaja hanya untuk bulan ini.
+            // ->whereMonth('created_at', now()->month) 
             ->update(['status' => 'paid']);
 
-        return back()->with('success', 'All unpaid commissions for this month have been marked as paid.');
+        return back()->with('success', 'All unpaid commissions for this affiliate have been marked as paid.');
     }
 
 }
