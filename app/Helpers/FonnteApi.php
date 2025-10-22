@@ -51,4 +51,10 @@ class FonnteApi
             return false;
         }
     }
+    
+    public static function sendMessageWithDelay($recipientNumber, $message, $delaySeconds = 7)
+    {
+        sleep($delaySeconds); // delay per nomor
+        return self::sendMessage($recipientNumber, $message);
+    }
 }

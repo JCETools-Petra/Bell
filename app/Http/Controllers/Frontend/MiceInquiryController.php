@@ -17,11 +17,17 @@ class MiceInquiryController extends Controller
             'event_type' => 'required|string',
             'event_other_description' => 'required_if:event_type,other|nullable|string',
         ]);
-
-        MiceInquiry::create($validated);
-
-        // TODO: Tambahkan notifikasi WhatsApp ke admin
-
+    
+        $inquiry = MiceInquiry::create($validated);
+    
+        // Cek inquiry untuk SOTA ROOM
+        $room = \App\Models\MiceRoom::find($validated['mice_room_id']);
+        if ($room && $room->name === 'SOTA ROOM') {
+            $adminPhone = env('ADMIN_WHATSAPP_NUMBER'); // Pastikan sudah di .env
+            $message = "Inquiry for SOTA ROOM\nNama: {$validated['customer_name']}\nNomor: {$validated['customer_phone']}\nJenis acara: {$validated['event_type']}";
+            \App\Helpers\FonnteApi::sendMessageWithDelay($adminPhone, $message, 2); // 2 detik delay
+        }
+    
         return back()->with('success', 'Thank you! Our sales team will contact you shortly.');
     }
 }

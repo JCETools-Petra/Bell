@@ -175,14 +175,12 @@ class MidtransCallbackController extends Controller
             $customerPhone = $booking->guest_phone;
             if ($customerPhone) {
                 Log::info('Sending message to customer: ' . $customerPhone);
-                FonnteApi::sendMessage($customerPhone, $customerMessage);
+                FonnteApi::sendMessageWithDelay($customerPhone, $customerMessage);
             }
 
-            // Send to admin
-            $adminPhoneNumber = env('ADMIN_WHATSAPP_NUMBER');
             if ($adminPhoneNumber) {
                 Log::info('Sending message to admin: ' . $adminPhoneNumber);
-                FonnteApi::sendMessage($adminPhoneNumber, $adminMessage);
+                FonnteApi::sendMessageWithDelay($adminPhoneNumber, $adminMessage);
             } else {
                 Log::warning('ADMIN_WHATSAPP_NUMBER is not configured in .env file.');
             }
