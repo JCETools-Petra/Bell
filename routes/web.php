@@ -136,6 +136,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::post('mice-inquiries', [\App\Http\Controllers\Admin\MiceInquiryController::class, 'store'])->name('mice-inquiries.store');
         Route::delete('mice-inquiries/{commission}', [\App\Http\Controllers\Admin\MiceInquiryController::class, 'destroy'])->name('mice-inquiries.destroy');
         Route::post('bookings/{booking}/confirm-pay-at-hotel', [AdminBookingController::class, 'confirmPayAtHotel'])->name('bookings.confirmPayAtHotel');
+        Route::resource('hero-sliders', App\Http\Controllers\Admin\HeroSliderController::class);
     });
 });
 

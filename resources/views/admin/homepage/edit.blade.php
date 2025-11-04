@@ -116,7 +116,8 @@
                         <div class="space-y-6">
                             <h3 class="text-lg font-bold border-b pb-2">Hero Section Settings</h3>
                             <div>
-                                <label for="hero_bg_image" class="block text-sm font-medium text-gray-700">Gambar Latar Belakang</label>
+                                <label for="hero_bg_image" class="block text-sm font-medium text-gray-700">Gambar Latar Belakang (Fallback)</label>
+                                <p class="text-xs text-gray-500 mb-2">Gambar ini akan digunakan jika tidak ada gambar di "Hero Sliders".</p>
                                 <input type="file" name="hero_bg_image" id="hero_bg_image" class="mt-1 block w-full text-sm text-gray-500">
                                 @if(isset($settings['hero_bg_image']))
                                     <div class="mt-4">
@@ -133,6 +134,22 @@
                                     <option value="text-end" {{ ($settings['hero_text_align'] ?? '') == 'text-end' ? 'selected' : '' }}>Right</option>
                                 </select>
                             </div>
+                            
+                            {{-- ======================= AWAL TAMBAHAN ======================= --}}
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="hero_slider_height" class="block text-sm font-medium text-gray-700">Hero Slider Height</label>
+                                    <input type="text" name="hero_slider_height" id="hero_slider_height" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ $settings['hero_slider_height'] ?? '' }}" placeholder="e.g., 100vh or 800px">
+                                    <p class="mt-1 text-xs text-gray-500">Contoh: `100vh` (full screen), `800px`. Biarkan kosong for default (auto).</p>
+                                </div>
+                                <div>
+                                    <label for="hero_slider_width" class="block text-sm font-medium text-gray-700">Hero Slider Width</label>
+                                    <input type="text" name="hero_slider_width" id="hero_slider_width" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ $settings['hero_slider_width'] ?? '' }}" placeholder="e.g., 100%">
+                                    <p class="mt-1 text-xs text-gray-500">Contoh: `100%`. Biarkan kosong untuk default (100%).</p>
+                                </div>
+                            </div>
+                            {{-- ======================== AKHIR TAMBAHAN ======================= --}}
+
                             <div class="p-4 border rounded-md bg-gray-50">
                                 <label for="hero_title" class="block text-sm font-medium text-gray-700">Judul Hero</label>
                                 <input type="text" name="hero_title" id="hero_title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ $settings['hero_title'] ?? '' }}">

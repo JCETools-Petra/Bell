@@ -512,3 +512,54 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
     white-space: pre-wrap;
     word-wrap: break-word;
 }
+
+/* =================================================================== */
+/* BAGIAN 7: PERBAIKAN HERO SLIDER
+/* =================================================================== */
+
+/* 1. Modifikasi Hero Section */
+.hero-section {
+    /* Hapus background-size/position, biarkan padding & color */
+    background-size: unset;
+    background-position: unset;
+    overflow: hidden; /* Pastikan slider tidak 'bocor' */
+}
+
+/* 2. Styling Slider sebagai Background */
+.hero-slider-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* Paling belakang */
+}
+
+.hero-slider-background .carousel,
+.hero-slider-background .carousel-inner,
+.hero-slider-background .carousel-item {
+    height: 100%;
+}
+
+.hero-slider-background .carousel-item img {
+    height: 100%;
+    object-fit: cover; /* Penting: agar gambar menutupi area */
+    object-position: center;
+}
+
+/* 3. Pastikan overlay gelap ada DI ATAS slider */
+.hero-section::before {
+    z-index: 1; /* DI ATAS slider */
+}
+
+/* 4. Styling Konten (H1, form, dll) */
+.hero-content-overlay {
+    position: relative;
+    z-index: 2; /* DI ATAS overlay gelap */
+}
+
+/* 5. Styling navigasi slider di hero */
+.hero-section .carousel-control-prev,
+.hero-section .carousel-control-next {
+    z-index: 3; /* Pastikan di atas segalanya */
+}

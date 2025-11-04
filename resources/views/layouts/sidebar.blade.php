@@ -26,6 +26,11 @@
 
                 <hr class="border-gray-700 my-2">
                 <h6 class="px-4 pt-2 pb-1 text-xs font-semibold uppercase text-gray-400">Content Management</h6>
+                
+                {{-- ======================= AWAL TAMBAHAN ======================= --}}
+                <a href="{{ route('admin.hero-sliders.index') }}" class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('admin.hero-sliders.*') ? 'bg-brand-gold text-brand-black' : 'hover:bg-gray-700 hover:text-white' }}">Hero Sliders</a>
+                {{-- ======================== AKHIR TAMBAHAN ======================= --}}
+                
                 <a href="{{ route('admin.banners.index') }}" class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('admin.banners.*') ? 'bg-brand-gold text-brand-black' : 'hover:bg-gray-700 hover:text-white' }}">Banners</a>
                 {{-- PENAMBAHAN LINK CUSTOM PRICES --}}
                 <a href="{{ route('admin.price-overrides.index') }}" class="flex items-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs('admin.price-overrides.*') ? 'bg-brand-gold text-brand-black' : 'hover:bg-gray-700 hover:text-white' }}">Custom Prices</a>

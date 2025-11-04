@@ -10,8 +10,42 @@
               : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop';
 @endphp
 
-<section class="hero-section" style="background-image: url('{{ $heroBg }}');">
-    <div class="container {{ $settings['hero_text_align'] ?? 'text-center' }}">
+{{-- GANTI BAGIAN HERO SECTION --}}
+<section class="hero-section" style="
+    height: {{ $settings['hero_slider_height'] ?? 'auto' }};
+    width: {{ $settings['hero_slider_width'] ?? '100%' }};
+">
+
+    {{-- 1. Slider sebagai Background (MENGGUNAKAN $heroSliders) --}}
+    @if($heroSliders->isNotEmpty())
+        <div id="heroSlider" class="carousel slide hero-slider-background" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-inner">
+                @foreach($heroSliders as $slider)
+                    <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                        <img src="{{ asset('storage/' . $slider->image_path) }}" class="d-block w-100" alt="Hero Background Image">
+                    </div>
+                @endforeach
+            </div>
+
+            @if($heroSliders->count() > 1)
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroSlider" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroSlider" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+            @endif
+        </div>
+    @else
+        {{-- Fallback jika tidak ada slider, gunakan gambar statis lama --}}
+        <div class="hero-slider-background" style="background-image: url('{{ $heroBg }}'); background-size: cover; background-position: center;"></div>
+    @endif
+
+    {{-- 2. Konten (Teks & Form) sebagai Overlay --}}
+    <div class="container hero-content-overlay {{ $settings['hero_text_align'] ?? 'text-center' }}">
+        {{-- ... (Seluruh H1, P, dan Form Booking tetap sama, tidak perlu diubah) ... --}}
         <h1 class="display-3" style="
             font-size: {{ $settings['hero_title_font_size'] ?? '4.5' }}rem;
             font-family: {!! $settings['hero_title_font_family'] ?? 'var(--heading-font)' !!};
@@ -27,6 +61,7 @@
         </p>
 
         <div class="hero-booking-form mt-4">
+            {{-- ... (Form Booking tetap sama) ... --}}
             <form action="{{ route('rooms.availability') }}" method="GET">
                 <div class="row g-2 align-items-center">
                     <div class="col-lg-3">
@@ -54,6 +89,7 @@
     </div>
 </section>
 
+{{-- TAMBAHKAN KEMBALI KODE INI --}}
 @if($banners->isNotEmpty())
 <section class="banner-section py-5">
     <div class="container">
@@ -88,6 +124,7 @@
     </div>
 </section>
 @endif
+{{-- AKHIR DARI KODE YANG DITAMBAHKAN KEMBALI --}}
 
 <div class="container" id="featured-content">
     @if(isset($settings['show_about_section']) && $settings['show_about_section'] == '1')

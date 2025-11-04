@@ -10,6 +10,7 @@ use App\Models\Restaurant;
 use App\Models\Banner;
 use App\Models\RestaurantImage; // Pastikan ini di-import
 use Illuminate\Support\Facades\Auth;
+use App\Models\HeroSlider;
 
 class HomeController extends Controller
 {
@@ -20,22 +21,22 @@ class HomeController extends Controller
 
         $featuredRooms = collect();
         $featuredMice = collect();
-        $featuredRestaurantImages = collect(); // Gunakan variabel ini
+        $featuredRestaurantImages = collect(); 
 
         if (in_array('rooms', $featuredOptions)) {
-            // Eager load images untuk performa lebih baik
             $featuredRooms = Room::with('images')->where('is_available', true)->latest()->take(3)->get();
         }
         if (in_array('mice', $featuredOptions)) {
             $featuredMice = MiceRoom::with('images')->where('is_available', true)->latest()->take(3)->get();
         }
         if (in_array('restaurants', $featuredOptions)) {
-            // ======================= PERBAIKAN DI SINI =======================
-            // Hapus ->take(7) untuk mengambil SEMUA gambar restoran terbaru
             $featuredRestaurantImages = RestaurantImage::with('restaurant')->latest()->get();
         }
         
         $banners = Banner::where('is_active', true)->orderBy('order')->get();
+        
+        // 2. TAMBAHKAN BARIS INI
+        $heroSliders = HeroSlider::where('is_active', true)->orderBy('order')->get();
 
         // Terapkan diskon afiliasi pada kamar
         if (Auth::check() && in_array(Auth::user()->role, ['admin', 'affiliate']) && $featuredRooms->isNotEmpty()) {
@@ -48,7 +49,7 @@ class HomeController extends Controller
             }
         }
 
-        // Kirim variabel yang benar ke view
-        return view('frontend.home', compact('featuredOptions', 'featuredRooms', 'featuredMice', 'featuredRestaurantImages', 'banners'));
+        // 3. TAMBAHKAN 'heroSliders' KE DALAM COMPACT
+        return view('frontend.home', compact('featuredOptions', 'featuredRooms', 'featuredMice', 'featuredRestaurantImages', 'banners', 'heroSliders'));
     }
 }

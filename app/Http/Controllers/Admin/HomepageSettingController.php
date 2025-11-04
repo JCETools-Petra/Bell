@@ -46,6 +46,8 @@ class HomepageSettingController extends Controller
             'layout_icon_ushape' => 'nullable|image|max:2048',
             'layout_icon_round' => 'nullable|image|max:2048',
             'layout_icon_board' => 'nullable|image|max:2048',
+            'hero_slider_height' => 'nullable|string|max:50',
+            'hero_slider_width' => 'nullable|string|max:50',
         ]);
 
         $textInputs = $request->except([
