@@ -28,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Middleware Grup
         $middleware->appendToGroup('web', [
             \App\Http\Middleware\AffiliateMiddleware::class,
+            \App\Http\Middleware\TrackWebsiteVisit::class,
         ]);
 
         // Middleware Alias
