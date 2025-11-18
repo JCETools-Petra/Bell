@@ -34,4 +34,12 @@ class Affiliate extends Model
     {
         return $this->hasMany(Commission::class);
     }
+
+    /**
+     * Mendefinisikan bahwa seorang affiliate memiliki banyak kunjungan/klik.
+     */
+    public function affiliateVisits()
+    {
+        return $this->hasMany(AffiliateVisit::class);
+    }
 }
