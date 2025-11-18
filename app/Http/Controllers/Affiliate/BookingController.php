@@ -120,7 +120,11 @@ class BookingController extends Controller
             'affiliate_id' => $affiliate->id,
             'guest_name' => $validated['guest_name'],
             'guest_phone' => $validated['guest_phone'],
-            'guest_email' => $validated['guest_email'],
+            
+            // --- PERBAIKAN DI SINI ---
+            // Menggunakan ?? '' untuk memastikan nilai tidak null jika validasi mengizinkan null
+            'guest_email' => $validated['guest_email'] ?? '', 
+            
             'checkin_date' => $checkin->format('Y-m-d'),
             'checkout_date' => $checkout->format('Y-m-d'),
             'num_rooms' => $validated['num_rooms'],
