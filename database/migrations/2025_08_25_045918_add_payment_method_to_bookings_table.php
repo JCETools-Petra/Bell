@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('bookings', function (Blueprint $table) {
             // Menambahkan kolom baru setelah 'status'
-            $table->string('payment_method')->nullable()->after('status');
+            $table->string('payment_method')->default('online')->after('status');
         });
     }
 

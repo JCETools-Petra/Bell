@@ -203,7 +203,7 @@ body, .page-content-wrapper { background:#fff !important; color:#333; }
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="{{ route('bookings.store') }}" method="POST">
+        <form action="{{ route('bookings.store') }}" method="POST" id="bookingForm">
           @csrf
           <input type="hidden" name="room_id" value="{{ $room->id }}">
           <input type="hidden" id="room_price_modal_{{ $room->id }}" value="{{ $room->price }}">
@@ -257,9 +257,9 @@ body, .page-content-wrapper { background:#fff !important; color:#333; }
 
           <div class="d-grid mt-4">
             @if(settings('booking_method', 'direct') == 'direct')
-              <button type="submit" class="btn btn-custom">Lanjutkan ke Pembayaran</button>
+              <button type="submit" class="btn btn-custom" id="btnSubmitBooking">Lanjutkan ke Pembayaran</button>
             @else
-              <button type="submit" class="btn btn-custom">Kirim Permintaan Booking</button>
+              <button type="submit" class="btn btn-custom" id="btnSubmitBooking">Kirim Permintaan Booking</button>
             @endif
           </div>
 
@@ -269,6 +269,13 @@ body, .page-content-wrapper { background:#fff !important; color:#333; }
             <p class="text-muted small mt-3">*Admin kami akan segera menghubungi Anda melalui WhatsApp untuk konfirmasi dan pembayaran.</p>
           @endif
         </form>
+        <script>
+            document.getElementById('bookingForm').addEventListener('submit', function() {
+                const btn = document.getElementById('btnSubmitBooking');
+                btn.classList.add('btn-loading');
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+            });
+        </script>
       </div>
     </div>
   </div>

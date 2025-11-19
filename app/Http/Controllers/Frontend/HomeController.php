@@ -11,10 +11,11 @@ use App\Models\Banner;
 use App\Models\RestaurantImage; // Pastikan ini di-import
 use Illuminate\Support\Facades\Auth;
 use App\Models\HeroSlider;
+use App\Services\PricingService;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(PricingService $pricingService)
     {
         $settings = Setting::pluck('value', 'key')->all();
         $featuredOptions = explode(',', $settings['featured_display_option'] ?? 'rooms');
@@ -38,14 +39,10 @@ class HomeController extends Controller
         // 2. TAMBAHKAN BARIS INI
         $heroSliders = HeroSlider::where('is_active', true)->orderBy('order')->get();
 
-        // Terapkan diskon afiliasi pada kamar
+        // Terapkan diskon afiliasi pada kamar menggunakan PricingService
         if (Auth::check() && in_array(Auth::user()->role, ['admin', 'affiliate']) && $featuredRooms->isNotEmpty()) {
             foreach ($featuredRooms as $room) {
-                if ($room->discount_percentage > 0) {
-                    $originalPrice = $room->getOriginal('price');
-                    $discountAmount = $originalPrice * ($room->discount_percentage / 100);
-                    $room->price = $originalPrice - $discountAmount;
-                }
+                $pricingService->applyAffiliateDiscount($room);
             }
         }
 

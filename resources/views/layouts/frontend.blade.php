@@ -34,12 +34,49 @@
             bottom: 2px;
             left: 0;
             width: 100%;
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    @if(isset($settings['favicon_path']))
+        <link rel="icon" href="{{ asset('storage/' . $settings['favicon_path']) }}" type="image/x-icon">
+    @endif
+    
+    <title>@yield('seo_title', $settings['website_title'] ?? 'Bell Hotel Merauke')</title>
+    <meta name="description" content="@yield('meta_description', 'Bell Hotel Merauke adalah hotel modern yang berlokasi strategis di pusat Kota Merauke.')">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700;800&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="{{ asset('css/custom-style.css') }}?v={{ filemtime(public_path('css/custom-style.css')) }}">
+
+    {{-- Style untuk kalender Flatpickr --}}
+    <style>
+        .flatpickr-day { position: relative; }
+        .day-price {
+            display: block;
+            font-size: 0.65rem;
+            color: #28a745;
+            font-weight: bold;
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
             text-align: center;
         }
         .flatpickr-day.selected .day-price, .flatpickr-day:hover .day-price {
             color: #fff;
         }
     </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
 <body class="{{ request()->routeIs('home') ? 'homepage' : '' }}">
@@ -141,6 +178,10 @@
             <p class="mb-0 text-white">&copy; {{ date('Y') }} {{ $settings['website_title'] ?? 'Bell Hotel Merauke' }}. All Rights Reserved.</p>
         </div>
     </footer>
+    
+    {{-- Scroll to Top Button --}}
+    <button id="scrollTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
     <div class="floating-social-bar" aria-label="Social Media Links">
         <div class="social-tab" aria-hidden="true">Social&nbsp;Media</div>
         <ul>
@@ -263,5 +304,48 @@
         flatpickr(".datepicker", fpConfig);
     });
     </script>
-    </body>
+
+    <script>
+        // Scroll to Top Logic
+        const scrollTopBtn = document.getElementById("scrollTopBtn");
+        window.onscroll = function() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                scrollTopBtn.style.display = "block";
+            } else {
+                scrollTopBtn.style.display = "none";
+            }
+        };
+        scrollTopBtn.addEventListener("click", function() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
+        // SweetAlert2 Toast Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            @if(session('success'))
+                Toast.fire({ icon: 'success', title: "{{ session('success') }}" });
+            @endif
+            @if(session('error'))
+                Toast.fire({ icon: 'error', title: "{{ session('error') }}" });
+            @endif
+            @if(session('info'))
+                Toast.fire({ icon: 'info', title: "{{ session('info') }}" });
+            @endif
+            @if(session('warning'))
+                Toast.fire({ icon: 'warning', title: "{{ session('warning') }}" });
+            @endif
+        });
+    </script>
+</body>
 </html>

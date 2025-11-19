@@ -9,9 +9,19 @@ use App\Helpers\FonnteApi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Models\Commission;
+use App\Services\CommissionService;
+use Midtrans\Config;
+use Midtrans\Notification;
 
 class MidtransCallbackController extends Controller
 {
+    protected $commissionService;
+
+    public function __construct(CommissionService $commissionService)
+    {
+        $this->commissionService = $commissionService;
+    }
+
     public function handle(Request $request)
     {
         // Konfigurasi Midtrans
@@ -46,23 +56,8 @@ class MidtransCallbackController extends Controller
                 $booking->payment_status = 'paid';
                 $booking->save();
 
-                // ======================= AWAL PERUBAHAN =======================
-                // SETELAH BOOKING DIPASTIKAN LUNAS, BUAT KOMISI JIKA INI BOOKING AFILIASI
-                if ($booking->affiliate_id && $booking->affiliate) {
-                    
-                    // Cek lagi untuk memastikan komisi belum ada
-                    $existingCommission = Commission::where('booking_id', $booking->id)->first();
-
-                    if (!$existingCommission) {
-                        Commission::create([
-                            'booking_id' => $booking->id,
-                            'affiliate_id' => $booking->affiliate_id,
-                            'amount' => $booking->total_price * ($booking->affiliate->commission_rate / 100),
-                            'status' => 'unpaid', // Status 'unpaid' menunggu dibayarkan oleh admin
-                        ]);
-                    }
-                }
-                // ======================== AKHIR PERUBAHAN =======================
+                // Use CommissionService to create commission
+                $this->commissionService->createForBooking($booking);
             }
         } else if ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
             $booking->status = 'cancelled';
@@ -79,8 +74,8 @@ class MidtransCallbackController extends Controller
     public function callback(Request $request)
     {
         // 1. Set Server Key & Log
-        \Midtrans\Config::$serverKey = config('midtrans.server_key');
-        \Midtrans\Config::$isProduction = config('midtrans.is_production');
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
         Log::info('--- Midtrans Callback Received ---', $request->all());
 
         // 2. Validate Signature Key
@@ -164,7 +159,7 @@ class MidtransCallbackController extends Controller
                 '{guest_email}'   => $booking->guest_email,
                 '{checkin_date}'  => \Carbon\Carbon::parse($booking->checkin_date)->format('d M Y'),
                 '{checkout_date}' => \Carbon\Carbon::parse($booking->checkout_date)->format('d M Y'),
-                '{payment_method}' => $booking->payment_method ?: 'N/A', // <-- ADD THIS NEW VARIABLE
+                '{payment_method}' => $booking->payment_method ?: 'N/A',
             ];
 
             // Create final messages
@@ -178,6 +173,8 @@ class MidtransCallbackController extends Controller
                 FonnteApi::sendMessageWithDelay($customerPhone, $customerMessage);
             }
 
+            // Send to admin
+            $adminPhoneNumber = env('ADMIN_WHATSAPP_NUMBER'); // Assuming this is how we get it, or via settings
             if ($adminPhoneNumber) {
                 Log::info('Sending message to admin: ' . $adminPhoneNumber);
                 FonnteApi::sendMessageWithDelay($adminPhoneNumber, $adminMessage);
