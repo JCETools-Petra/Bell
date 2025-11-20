@@ -29,6 +29,7 @@ function initCalendar() {
 
         const cacheKey = `${year}-${month}-${roomId || 'default'}`;
         if (pricesCache[cacheKey]) {
+            console.log(`Using cached prices for ${cacheKey}`);
             return pricesCache[cacheKey]; // Ambil dari cache jika ada
         }
 
@@ -45,10 +46,14 @@ function initCalendar() {
                 url += `&room_id=${roomId}`;
             }
 
+            console.log(`Fetching API: ${url}`); // Debug URL
+
             const response = await fetch(url);
             if (!response.ok) throw new Error('Network response was not ok');
 
             const data = await response.json();
+            console.log("Data received from API:", data); // Debug Data Masuk
+
             pricesCache[cacheKey] = data; // Simpan ke cache
             return data;
         } catch (error) {
@@ -119,12 +124,14 @@ function initCalendar() {
         minDate: "today",
         // Event yang berjalan saat kalender siap
         onReady: async function (selectedDates, dateStr, instance) {
+            console.log("Flatpickr onReady triggered");
             const prices = await getPricesForMonth(instance.currentYear, instance.currentMonth);
             instance.prices = prices;
             instance.redraw();
         },
         // Event yang berjalan saat bulan diganti
         onMonthChange: async function (selectedDates, dateStr, instance) {
+            console.log("Flatpickr onMonthChange triggered");
             const prices = await getPricesForMonth(instance.currentYear, instance.currentMonth);
             instance.prices = prices;
             instance.redraw();
@@ -140,26 +147,21 @@ function initCalendar() {
 
             // 2. Cek harga
             // PERBAIKAN: Cek ID 'checkin' (Home) ATAU 'modal-checkin' (Booking Form)
-            // Atau lebih aman: cek apakah input memiliki class 'datepicker' dan bukan checkout
-            // DEBUG: Force display price
-            // const isCheckinInput = fp.input.id.includes('checkin') || fp.input.name.includes('checkin');
-            const isCheckinInput = true; // Always true for debugging
+            // Untuk debugging, kita set true dulu agar selalu mencoba render
+            const isCheckinInput = true;
 
             if (isCheckinInput) {
-                // Use actual price if available, otherwise dummy
-                let priceText = '---';
+                let priceText = '';
                 let priceColor = '#ccc';
 
                 if (fp.prices && fp.prices[dateString]) {
                     const priceInfo = fp.prices[dateString];
+                    // Format harga: Bagi 1000 dan tambah 'k'. Contoh: 500000 -> 500k
                     priceText = parseInt(priceInfo.price / 1000) + 'k';
-                    priceColor = priceInfo.is_special ? '#e11d48' : '#10b981';
-                } else {
-                    // If no data, don't show anything (or show '?' for debug)
-                    // return; 
+                    priceColor = priceInfo.is_special ? '#e11d48' : '#10b981'; // Merah jika special, Hijau jika biasa
                 }
 
-                if (fp.prices && fp.prices[dateString]) {
+                if (priceText) {
                     const priceElement = document.createElement('span');
                     priceElement.className = 'day-price';
                     priceElement.textContent = priceText;
