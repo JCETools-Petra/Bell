@@ -26,7 +26,7 @@
     {{-- Style untuk kalender Flatpickr sudah dipindahkan ke custom-style.css --}}
     @stack('styles')
 </head>
-<body class="{{ request()->routeIs('home') ? 'homepage' : '' }}">
+<body class="{{ request()->routeIs('home') || request()->routeIs('rooms.index') || request()->routeIs('contact.index') || request()->routeIs('mice.index') || request()->routeIs('restaurants.index') || request()->routeIs('restaurants.show') ? 'homepage' : '' }}">
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" data-bs-theme="dark">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">

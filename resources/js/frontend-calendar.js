@@ -141,20 +141,31 @@ function initCalendar() {
             // 2. Cek harga
             // PERBAIKAN: Cek ID 'checkin' (Home) ATAU 'modal-checkin' (Booking Form)
             // Atau lebih aman: cek apakah input memiliki class 'datepicker' dan bukan checkout
-            const isCheckinInput = fp.input.id === 'checkin' || fp.input.id === 'modal-checkin' || fp.input.name === 'checkin';
+            // DEBUG: Force display price
+            // const isCheckinInput = fp.input.id.includes('checkin') || fp.input.name.includes('checkin');
+            const isCheckinInput = true; // Always true for debugging
 
-            if (isCheckinInput && fp.prices && fp.prices[dateString]) {
-                const priceInfo = fp.prices[dateString];
-                const priceElement = document.createElement('span');
-                priceElement.className = 'day-price';
+            if (isCheckinInput) {
+                // Use actual price if available, otherwise dummy
+                let priceText = '---';
+                let priceColor = '#ccc';
 
-                // Format harga menjadi "100rb"
-                const shortPrice = parseInt(priceInfo.price / 1000) + 'k';
+                if (fp.prices && fp.prices[dateString]) {
+                    const priceInfo = fp.prices[dateString];
+                    priceText = parseInt(priceInfo.price / 1000) + 'k';
+                    priceColor = priceInfo.is_special ? '#e11d48' : '#10b981';
+                } else {
+                    // If no data, don't show anything (or show '?' for debug)
+                    // return; 
+                }
 
-                priceElement.textContent = shortPrice;
-                priceElement.style.color = priceInfo.is_special ? '#e11d48' : '#10b981'; // Merah jika promo, hijau jika normal
-
-                dayElem.appendChild(priceElement);
+                if (fp.prices && fp.prices[dateString]) {
+                    const priceElement = document.createElement('span');
+                    priceElement.className = 'day-price';
+                    priceElement.textContent = priceText;
+                    priceElement.style.color = priceColor;
+                    dayElem.appendChild(priceElement);
+                }
             }
         }
     };

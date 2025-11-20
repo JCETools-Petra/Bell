@@ -4,71 +4,104 @@
 @section('meta_description', $settings['contact_seo_description'] ?? 'Get in touch with us. Find our address, phone number, and location on the map.')
 
 @section('content')
-<style>
-    .contact-map iframe {
-        width: 100%;
-        height: 100%;
-        min-height: 450px;
-        border: 0;
-    }
-    .page-content-wrapper {
-        padding-top: 8rem;
-        padding-bottom: 5rem;
-    }
-</style>
+<!-- Hero Section -->
+<section class="contact-hero">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3 text-gold" style="font-family: var(--heading-font);">Contact Us</h1>
+        <p class="lead mb-0 text-white-50 mx-auto" style="max-width: 600px;">
+            We are here to help. Reach out to us for any inquiries or assistance.
+        </p>
+    </div>
+</section>
 
-<div class="page-content-wrapper"> 
-    <div class="container my-5">
-        <div class="text-center mb-5">
-            <h1 class="section-title">Contact Us</h1>
-            <p class="lead text-muted">Kami senang mendengar dari Anda. Hubungi kami melalui detail di bawah ini.</p>
-        </div>
-
-        <div class="row g-5">
-            <div class="col-lg-6">
-                <div class="card p-4 h-100 shadow-sm">
-                    <h3 class="mb-4">Alamat Kami</h3>
-                    {{-- style="white-space: pre-wrap;" akan menjaga format baris baru dari alamat --}}
-                    <p style="white-space: pre-wrap;">{{ $settings['contact_address'] ?? 'Alamat tidak tersedia.' }}</p>
-                    
-                    <h3 class="mt-5 mb-4">Detail Kontak</h3>
-                    <ul class="list-unstyled">
-                        <li class="mb-3 d-flex align-items-center">
-                            <i class="fas fa-phone fa-fw me-3"></i>
-                            <div>
-                                @if(!empty($settings['contact_phone']))
-                                    @php
-                                        $originalPhone = $settings['contact_phone'];
-                                        $cleanedPhone = preg_replace('/[^0-9]/', '', $originalPhone);
-                                        $waPhone = substr($cleanedPhone, 0, 1) === '0' ? '62' . substr($cleanedPhone, 1) : $cleanedPhone;
-                                    @endphp
-                                    {{-- Tampilkan nomor asli, tapi link-nya ke nomor WhatsApp --}}
-                                    <a href="https://wa.me/{{ $waPhone }}" target="_blank" rel="noopener noreferrer">{{ $originalPhone }}</a>
-                                @else
-                                    Telepon tidak tersedia.
-                                @endif
-                            </div>
-                        </li>
-                        <li class="d-flex align-items-center">
-                             <i class="fas fa-envelope fa-fw me-3"></i>
-                             <div>
-                                <a href="mailto:{{ $settings['contact_email'] ?? '' }}">{{ $settings['contact_email'] ?? 'Email tidak tersedia.' }}</a>
-                            </div>
-                        </li>
-                    </ul>
+<!-- Contact Info Cards -->
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        <div class="row g-4 justify-content-center">
+            <!-- Address -->
+            <div class="col-md-4">
+                <div class="contact-info-card">
+                    <div class="contact-icon-wrapper">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3 class="contact-label">Our Location</h3>
+                    <p class="contact-value preserve-format">{{ $settings['contact_address'] ?? 'Address not available.' }}</p>
                 </div>
             </div>
-            <div class="contact-map shadow rounded overflow-hidden h-100">
-                @if(!empty($settings['contact_maps_embed']))
-                    {!! $settings['contact_maps_embed'] !!}
-                @else
-                    <div class="d-flex justify-content-center align-items-center h-100 bg-light">
-                        <p class="text-muted">Peta tidak tersedia.</p>
+            
+            <!-- Phone -->
+            <div class="col-md-4">
+                <div class="contact-info-card">
+                    <div class="contact-icon-wrapper">
+                        <i class="fas fa-phone-alt"></i>
                     </div>
-                @endif
+                    <h3 class="contact-label">Phone Number</h3>
+                    <div class="contact-value">
+                        @if(!empty($settings['contact_phone']))
+                            @php
+                                $phone = $settings['contact_phone'];
+                                $clean = preg_replace('/[^0-9]/', '', $phone);
+                                $wa = substr($clean, 0, 1) === '0' ? '62' . substr($clean, 1) : $clean;
+                            @endphp
+                            <p class="mb-0">{{ $phone }}</p>
+                            <a href="https://wa.me/{{ $wa }}" target="_blank" class="btn btn-sm btn-outline-danger mt-3 rounded-pill px-4">
+                                <i class="fab fa-whatsapp me-2"></i>Chat on WhatsApp
+                            </a>
+                        @else
+                            Not available
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="col-md-4">
+                <div class="contact-info-card">
+                    <div class="contact-icon-wrapper">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3 class="contact-label">Email Address</h3>
+                    <div class="contact-value">
+                         @if(!empty($settings['contact_email']))
+                            <a href="mailto:{{ $settings['contact_email'] }}">{{ $settings['contact_email'] }}</a>
+                         @else
+                            Not available
+                         @endif
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
+<!-- Map Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="text-center mb-5">
+                    <h2 class="section-title">Find Us on Map</h2>
+                </div>
+                <div class="map-container">
+                     @if(!empty($settings['contact_maps_embed']))
+                        {!! $settings['contact_maps_embed'] !!}
+                    @else
+                        <div class="d-flex justify-content-center align-items-center h-100 bg-light">
+                            <p class="text-muted">Map not available.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Inline override for map iframe to ensure it fits container */
+    .map-container iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+</style>
 @endsection
