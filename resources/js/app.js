@@ -6,7 +6,6 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-import './home';
+import './frontend-calendar';
+import './frontend-slider';
 
-import Swal from 'sweetalert2';
-window.Swal = Swal;

@@ -9,73 +9,14 @@ use App\Helpers\FonnteApi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Models\Commission;
-use App\Services\CommissionService;
-use Midtrans\Config;
-use Midtrans\Notification;
 
 class MidtransCallbackController extends Controller
 {
-    protected $commissionService;
-
-    public function __construct(CommissionService $commissionService)
-    {
-        $this->commissionService = $commissionService;
-    }
-
-    public function handle(Request $request)
-    {
-        // Konfigurasi Midtrans
-        Config::$serverKey = config('midtrans.server_key');
-        Config::$isProduction = config('midtrans.is_production');
-        
-        try {
-            $notification = new Notification();
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Invalid notification object.'], 500);
-        }
-        
-        $transactionStatus = $notification->transaction_status;
-        $orderId = explode('-', $notification->order_id)[0]; // Ambil ID booking asli
-        $fraudStatus = $notification->fraud_status;
-
-        $booking = Booking::find($orderId);
-
-        if (!$booking) {
-            return response()->json(['error' => 'Booking not found.'], 404);
-        }
-
-        // Jangan proses notifikasi yang sama dua kali
-        if ($booking->status === 'paid') {
-            return response()->json(['status' => 'ok', 'message' => 'Booking already paid.']);
-        }
-
-        // Logika pembaruan status booking
-        if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
-            if ($fraudStatus == 'accept') {
-                $booking->status = 'paid';
-                $booking->payment_status = 'paid';
-                $booking->save();
-
-                // Use CommissionService to create commission
-                $this->commissionService->createForBooking($booking);
-            }
-        } else if ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
-            $booking->status = 'cancelled';
-            $booking->payment_status = 'failed';
-            $booking->save();
-        } else if ($transactionStatus == 'pending') {
-            $booking->payment_status = 'pending';
-            $booking->save();
-        }
-
-        return response()->json(['status' => 'ok']);
-    }
-    
     public function callback(Request $request)
     {
         // 1. Set Server Key & Log
-        Config::$serverKey = config('midtrans.server_key');
-        Config::$isProduction = config('midtrans.is_production');
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = config('midtrans.is_production');
         Log::info('--- Midtrans Callback Received ---', $request->all());
 
         // 2. Validate Signature Key
@@ -110,34 +51,74 @@ class MidtransCallbackController extends Controller
 
         Log::info('Found booking ID: ' . $booking->id . ' with current status: "' . $booking->status . '"');
 
-        // 4. Update booking status on successful payment
-        if (($request->transaction_status == 'capture' || $request->transaction_status == 'settlement') && $booking->status != 'success') {
-            Log::info('Transaction is successful. Updating status and sending notifications.');
+        // 4. Update booking status
+        $transactionStatus = $request->transaction_status;
+        $fraudStatus = $request->fraud_status;
 
-            $booking->status = 'success';
-            
-            // ==========================================================
-            //         SAVE PAYMENT METHOD INFORMATION HERE
-            // ==========================================================
-            $paymentType = $request->payment_type;
-            $paymentMethod = Str::title(str_replace('_', ' ', $paymentType)); // Changes 'bank_transfer' to 'Bank Transfer'
+        if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
+            if ($fraudStatus == 'challenge') {
+                // Do nothing or set to pending? Usually challenge means manual review.
+                Log::info('Transaction challenged. Waiting for review.');
+            } else if ($fraudStatus == 'accept' || $transactionStatus == 'settlement') {
+                if ($booking->status != 'success') {
+                    Log::info('Transaction is successful. Updating status and sending notifications.');
 
-            if ($paymentType == 'bank_transfer' && isset($request->va_numbers[0]['bank'])) {
-                $bank = strtoupper($request->va_numbers[0]['bank']);
-                $paymentMethod = "$bank Virtual Account"; // Result: "BCA Virtual Account"
-            } elseif ($paymentType == 'qris') {
-                 $acquirer = isset($request->acquirer) ? Str::title($request->acquirer) : 'QRIS';
-                 $paymentMethod = "QRIS ($acquirer)"; // Result: "QRIS (Gopay)"
+                    $booking->status = 'success';
+                    $booking->payment_status = 'paid'; // Ensure payment_status is also updated if it exists
+                    
+                    // ==========================================================
+                    //         SAVE PAYMENT METHOD INFORMATION
+                    // ==========================================================
+                    $paymentType = $request->payment_type;
+                    $paymentMethod = Str::title(str_replace('_', ' ', $paymentType));
+
+                    if ($paymentType == 'bank_transfer' && isset($request->va_numbers[0]['bank'])) {
+                        $bank = strtoupper($request->va_numbers[0]['bank']);
+                        $paymentMethod = "$bank Virtual Account";
+                    } elseif ($paymentType == 'qris') {
+                         $acquirer = isset($request->acquirer) ? Str::title($request->acquirer) : 'QRIS';
+                         $paymentMethod = "QRIS ($acquirer)";
+                    }
+
+                    $booking->payment_method = $paymentMethod;
+                    $booking->save();
+
+                    // ==========================================================
+                    //         CREATE AFFILIATE COMMISSION
+                    // ==========================================================
+                    if ($booking->affiliate_id && $booking->affiliate) {
+                        // Use firstOrCreate to prevent race conditions/duplicates
+                        $commission = Commission::firstOrCreate(
+                            ['booking_id' => $booking->id],
+                            [
+                                'affiliate_id' => $booking->affiliate_id,
+                                'commission_amount' => $booking->total_price * ($booking->affiliate->commission_rate / 100),
+                                'rate' => $booking->affiliate->commission_rate,
+                                'status' => 'unpaid',
+                            ]
+                        );
+
+                        if ($commission->wasRecentlyCreated) {
+                            Log::info('Commission created for affiliate ID: ' . $booking->affiliate_id);
+                        } else {
+                            Log::info('Commission already exists for booking ID: ' . $booking->id);
+                        }
+                    }
+
+                    $this->sendWhatsAppNotifications($booking);
+                } else {
+                    Log::info('Booking already marked as success.');
+                }
             }
-
-            $booking->payment_method = $paymentMethod;
-            // ==========================================================
-            
+        } elseif ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
+            Log::info('Transaction status is ' . $transactionStatus . '. Marking booking as cancelled/failed.');
+            $booking->status = 'cancelled';
+            $booking->payment_status = 'failed';
             $booking->save();
-            
-            $this->sendWhatsAppNotifications($booking);
-        } else {
-            Log::info('Transaction status is "' . $request->transaction_status . '" or booking status is already "success". No action taken.');
+        } elseif ($transactionStatus == 'pending') {
+            Log::info('Transaction is pending.');
+            $booking->payment_status = 'pending';
+            $booking->save();
         }
 
         Log::info('--- Midtrans Callback Processed ---');
@@ -147,7 +128,15 @@ class MidtransCallbackController extends Controller
     private function sendWhatsAppNotifications($booking)
     {
         Log::info('Preparing to send WhatsApp notifications for booking ID: ' . $booking->id);
+        
+        if (!class_exists(FonnteApi::class)) {
+             Log::error('CRITICAL: FonnteApi class not found. Cannot send WhatsApp notifications.');
+             return;
+        }
+
         try {
+            $adminPhoneNumber = env('ADMIN_WHATSAPP_NUMBER'); // Ensure this variable is available
+
             $customerTemplate = settings('whatsapp_customer_message', 'Terima kasih! Pembayaran untuk booking ID: {booking_id} telah kami terima.');
             $adminTemplate = settings('whatsapp_admin_message', 'Pembayaran baru diterima untuk Booking ID: {booking_id}');
 
@@ -173,8 +162,6 @@ class MidtransCallbackController extends Controller
                 FonnteApi::sendMessageWithDelay($customerPhone, $customerMessage);
             }
 
-            // Send to admin
-            $adminPhoneNumber = env('ADMIN_WHATSAPP_NUMBER'); // Assuming this is how we get it, or via settings
             if ($adminPhoneNumber) {
                 Log::info('Sending message to admin: ' . $adminPhoneNumber);
                 FonnteApi::sendMessageWithDelay($adminPhoneNumber, $adminMessage);
@@ -184,6 +171,7 @@ class MidtransCallbackController extends Controller
             Log::info('WhatsApp notification process finished.');
         } catch (\Exception $e) {
             Log::error('CRITICAL: Failed to send WhatsApp notification: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
         }
     }
 }

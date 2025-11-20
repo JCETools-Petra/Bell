@@ -22,24 +22,19 @@ class RoomPriceController extends Controller
         $rooms = Room::where('is_available', true)->get();
         $prices = [];
 
+        $user = Auth::user();
+        $isEligibleForDiscount = Auth::check() && in_array($user->role, ['admin', 'affiliate']);
+
         foreach ($rooms as $room) {
             $override = PriceOverride::where('room_id', $room->id)
                                      ->where('date', $date)
                                      ->first();
             
-            $currentPrice = $override ? $override->price : $room->price;
-
-            // --- LOGIKA DISKON ---
-            if (Auth::check() && in_array(Auth::user()->role, ['admin', 'affiliate'])) {
-                if ($room->discount_percentage > 0) {
-                    $discountAmount = $currentPrice * ($room->discount_percentage / 100);
-                    $currentPrice -= $discountAmount;
-                }
-            }
-            // --- END LOGIKA DISKON ---
+            $basePrice = $override ? $override->price : $room->price;
+            $finalPrice = $this->calculateDiscountedPrice($basePrice, $room->discount_percentage, $isEligibleForDiscount);
 
             $prices[$room->id] = [
-                'price' => $currentPrice,
+                'price' => $finalPrice,
                 'is_special' => (bool)$override
             ];
         }
@@ -52,16 +47,23 @@ class RoomPriceController extends Controller
         $request->validate([
             'year' => 'required|integer|between:2020,2030',
             'month' => 'required|integer|between:1,12',
+            'room_id' => 'nullable|exists:rooms,id', // Validasi room_id opsional
         ]);
 
         $year = $request->year;
         $month = $request->month;
 
-        $baseRoom = Room::where('name', 'Superior')->where('is_available', true)->first();
+        // Jika room_id dikirim, gunakan itu. Jika tidak, ambil kamar termurah sebagai default.
+        if ($request->has('room_id') && $request->room_id) {
+            $baseRoom = Room::find($request->room_id);
+        } else {
+            $baseRoom = Room::where('is_available', true)->orderBy('price', 'asc')->first();
+        }
         
         if (!$baseRoom) {
             return response()->json([]);
         }
+
         $basePrice = $baseRoom->price;
         $discountPercentage = $baseRoom->discount_percentage;
 
@@ -73,27 +75,33 @@ class RoomPriceController extends Controller
         $prices = [];
         $daysInMonth = Carbon::create($year, $month)->daysInMonth;
         
-        $isAffiliateOrAdmin = Auth::check() && in_array(Auth::user()->role, ['admin', 'affiliate']);
+        $isEligibleForDiscount = Auth::check() && in_array(Auth::user()->role, ['admin', 'affiliate']);
 
         for ($day = 1; $day <= $daysInMonth; $day++) {
             $date = Carbon::create($year, $month, $day)->format('Y-m-d');
             $isSpecial = $overrides->has($date);
             
-            $currentPrice = $isSpecial ? $overrides[$date] : $basePrice;
-
-            // --- LOGIKA DISKON ---
-            if ($isAffiliateOrAdmin && $discountPercentage > 0) {
-                $discountAmount = $currentPrice * ($discountPercentage / 100);
-                $currentPrice -= $discountAmount;
-            }
-            // --- END LOGIKA DISKON ---
+            $currentBasePrice = $isSpecial ? $overrides[$date] : $basePrice;
+            $finalPrice = $this->calculateDiscountedPrice($currentBasePrice, $discountPercentage, $isEligibleForDiscount);
 
             $prices[$date] = [
-                'price' => $currentPrice,
+                'price' => $finalPrice,
                 'is_special' => $isSpecial
             ];
         }
 
         return response()->json($prices);
+    }
+
+    /**
+     * Helper method to calculate discounted price.
+     */
+    private function calculateDiscountedPrice($price, $discountPercentage, $isEligible)
+    {
+        if ($isEligible && $discountPercentage > 0) {
+            $discountAmount = $price * ($discountPercentage / 100);
+            return $price - $discountAmount;
+        }
+        return $price;
     }
 }

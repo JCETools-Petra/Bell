@@ -9,17 +9,9 @@ use App\Models\MiceRoom;
 use App\Models\Affiliate;
 use App\Models\Commission;
 use App\Models\User;
-use App\Services\CommissionService;
 
 class MiceInquiryController extends Controller
 {
-    protected $commissionService;
-
-    public function __construct(CommissionService $commissionService)
-    {
-        $this->commissionService = $commissionService;
-    }
-
     /**
      * Menampilkan formulir untuk mencatat komisi MICE dan riwayatnya.
      */
@@ -66,7 +58,8 @@ class MiceInquiryController extends Controller
 
         $total_payment = $request->total_payment;
         $commission_rate = 2.5;
-        
+        $commission_amount = ($total_payment * $commission_rate) / 100;
+
         $miceRoom = MiceRoom::findOrFail($request->mice_room_id);
 
         // Buat catatan untuk komisi
@@ -78,8 +71,19 @@ class MiceInquiryController extends Controller
             'Rp ' . number_format($total_payment, 0, ',', '.')
         );
 
-        // Simpan data ke tabel commissions menggunakan Service
-        $this->commissionService->createForMice($affiliate, $total_payment, $commission_rate, $notes);
+        // Simpan data ke tabel commissions
+        Commission::create([
+            'affiliate_id' => $affiliate->id,
+            'booking_id' => null,
+            'commission_amount' => $commission_amount,
+            'rate' => $commission_rate,
+            
+            // --- PERUBAHAN DI SINI ---
+            'status' => 'unpaid', // Diubah dari 'paid' menjadi 'unpaid'
+            // -------------------------
+
+            'notes' => $notes,
+        ]);
 
         return redirect()->route('admin.mice-inquiries.index')->with('success', 'MICE commission has been successfully recorded.');
     }

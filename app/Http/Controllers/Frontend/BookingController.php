@@ -14,61 +14,70 @@ use App\Helpers\FonnteApi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Commission;
-use App\Http\Requests\StoreBookingRequest;
-use Illuminate\Support\Facades\DB;
-use App\Services\PricingService;
 
 class BookingController extends Controller
 {
-    public function store(StoreBookingRequest $request, PricingService $pricingService)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
+        $validated = $request->validate([
+            'room_id' => 'required|exists:rooms,id',
+            'guest_name' => 'required|string|max:255',
+            'guest_phone' => 'required|string|max:20',
+            'guest_email' => 'required|email|max:255',
+            'checkin' => 'required|date_format:d-m-Y',
+            'checkout' => 'required|date_format:d-m-Y|after:checkin',
+            'num_rooms' => 'required|integer|min:1',
+        ]);
 
-        try {
-            return DB::transaction(function () use ($validated, $pricingService) {
-                $room = Room::findOrFail($validated['room_id']);
-                $checkinDate = Carbon::createFromFormat('d-m-Y', $validated['checkin']);
-                $checkoutDate = Carbon::createFromFormat('d-m-Y', $validated['checkout']);
-                
-                // Cek apakah pengguna yang login adalah afiliasi
-                $isAffiliate = Auth::check() && Auth::user()->role === 'affiliate';
+        $room = Room::findOrFail($validated['room_id']);
+        $checkinDate = Carbon::createFromFormat('d-m-Y', $validated['checkin']);
+        $checkoutDate = Carbon::createFromFormat('d-m-Y', $validated['checkout']);
+        
+        // --- AWAL LOGIKA HARGA BARU ---
+        $totalPrice = 0;
+        
+        // Cek apakah pengguna yang login adalah afiliasi
+        $isAffiliate = Auth::check() && Auth::user()->role === 'affiliate';
+        $discountPercentage = $isAffiliate ? $room->discount_percentage : 0;
 
-                // Gunakan PricingService untuk menghitung total harga
-                $finalPrice = $pricingService->calculateTotalRoomPrice(
-                    $room, 
-                    $checkinDate, 
-                    $checkoutDate, 
-                    $validated['num_rooms'], 
-                    $isAffiliate
-                );
+        // Hitung harga per malam, terapkan override dan diskon
+        for ($date = $checkinDate->copy(); $date->lt($checkoutDate); $date->addDay()) {
+            $override = $room->priceOverrides()->where('date', $date->format('Y-m-d'))->first();
+            $nightlyPrice = $override ? $override->price : $room->price;
 
-                $booking = Booking::create([
-                    'room_id' => $validated['room_id'],
-                    'guest_name' => $validated['guest_name'],
-                    'guest_phone' => $validated['guest_phone'],
-                    'guest_email' => $validated['guest_email'],
-                    'checkin_date' => $checkinDate->format('Y-m-d'),
-                    'checkout_date' => $checkoutDate->format('Y-m-d'),
-                    'num_rooms' => $validated['num_rooms'],
-                    'total_price' => $finalPrice, // Gunakan harga final yang sudah benar
-                    'status' => 'pending',
-                    'access_token' => Str::random(32),
-                    // Simpan affiliate_id jika yang booking adalah afiliasi
-                    'affiliate_id' => $isAffiliate ? Auth::user()->affiliate->id : null,
-                ]);
+            // Terapkan diskon jika ada
+            if ($discountPercentage > 0) {
+                $discountAmount = $nightlyPrice * ($discountPercentage / 100);
+                $nightlyPrice -= $discountAmount;
+            }
+            $totalPrice += $nightlyPrice;
+        }
 
-                // Arahkan ke pembayaran (logika lama tetap sama)
-                if (settings('booking_method', 'direct') == 'direct') {
-                    return redirect()->route('booking.payment', ['booking' => $booking->access_token]);
-                } else {
-                    // (Optional) Kirim notifikasi WhatsApp jika metode manual
-                    // $this->sendAdminBookingNotification($booking);
-                    return redirect()->back()->with('success', 'Permintaan booking Anda telah berhasil dikirim!');
-                }
-            });
-        } catch (\Exception $e) {
-            Log::error('Booking Error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses booking Anda. Silakan coba lagi.')->withInput();
+        $finalPrice = $totalPrice * $validated['num_rooms'];
+        // --- AKHIR LOGIKA HARGA BARU ---
+
+        $booking = Booking::create([
+            'room_id' => $validated['room_id'],
+            'guest_name' => $validated['guest_name'],
+            'guest_phone' => $validated['guest_phone'],
+            'guest_email' => $validated['guest_email'],
+            'checkin_date' => $checkinDate->format('Y-m-d'),
+            'checkout_date' => $checkoutDate->format('Y-m-d'),
+            'num_rooms' => $validated['num_rooms'],
+            'total_price' => $finalPrice, // Gunakan harga final yang sudah benar
+            'status' => 'pending',
+            'access_token' => Str::random(32),
+            // Simpan affiliate_id jika yang booking adalah afiliasi
+            'affiliate_id' => $isAffiliate ? Auth::user()->affiliate->id : null,
+        ]);
+
+        // Arahkan ke pembayaran (logika lama tetap sama)
+        if (settings('booking_method', 'direct') == 'direct') {
+            return redirect()->route('booking.payment', ['booking' => $booking->access_token]);
+        } else {
+            // (Optional) Kirim notifikasi WhatsApp jika metode manual
+            // $this->sendAdminBookingNotification($booking);
+            return redirect()->back()->with('success', 'Permintaan booking Anda telah berhasil dikirim!');
         }
     }
 
@@ -83,7 +92,13 @@ class BookingController extends Controller
 
         $snapToken = null;
         try {
-            Config::$serverKey = config('midtrans.server_key');
+            $serverKey = config('midtrans.server_key');
+            if (empty($serverKey)) {
+                Log::error('Midtrans Server Key is missing in configuration.');
+                throw new \Exception('Midtrans Server Key is not configured.');
+            }
+
+            Config::$serverKey = $serverKey;
             Config::$isProduction = config('midtrans.is_production');
             Config::$isSanitized = true;
             Config::$is3ds = true;

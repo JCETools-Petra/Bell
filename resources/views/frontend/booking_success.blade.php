@@ -76,8 +76,14 @@
                                     <td>
                                         @if($booking->payment_method == 'pay_at_hotel')
                                             <span class="badge bg-primary">Confirmed</span>
-                                        @else
+                                        @elseif($booking->status == 'success' || $booking->status == 'paid')
                                             <span class="badge bg-success">Paid</span>
+                                        @elseif($booking->status == 'pending')
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        @elseif($booking->status == 'cancelled')
+                                            <span class="badge bg-danger">Cancelled</span>
+                                        @else
+                                            <span class="badge bg-secondary">{{ ucfirst($booking->status) }}</span>
                                         @endif
                                     </td>
                                 </tr>

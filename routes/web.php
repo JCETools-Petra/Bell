@@ -36,7 +36,10 @@ use App\Http\Controllers\Admin\PriceOverrideController as AdminPriceOverrideCont
 // Affiliate Dashboard Controller
 use App\Http\Controllers\Affiliate\DashboardController as AffiliateDashboardController;
 use App\Http\Controllers\Affiliate\BookingController as AffiliateBookingController;
-use App\Http\Controllers\Api\RoomPriceController;
+// PERHATIKAN: Kita MASIH perlu import RoomPriceController karena file api.php Anda mungkin di-cache oleh web.php
+// Namun, jika Anda menggunakan Laravel 11+ style routing, ini mungkin tidak perlu.
+// Untuk saat ini, biarkan saja agar aman.
+use App\Http\Controllers\Api\RoomPriceController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -79,13 +82,9 @@ Route::get('/sitemap.xml', function () {
     return SitemapGenerator::create(config('app.url'))->generate()->toResponse(request());
 });
 
-
-// ======================= AWAL PERBAIKAN =======================
-// API route untuk kalender (dibuat publik, di luar middleware 'auth')
-Route::prefix('api')->group(function () {
-    Route::get('/room-prices/month', [RoomPriceController::class, 'getPricesForMonth'])->name('api.room-prices.month');
-});
-// ======================== AKHIR PERBAIKAN =======================
+// ======================= BLOK API DIHAPUS =======================
+// Rute 'api.room-prices.month' sekarang HANYA ada di file 'routes/api.php'
+// ================================================================
 
 
 // == BACKEND (ADMIN) & AFFILIATE DASHBOARD ROUTES ==
@@ -93,8 +92,12 @@ Route::middleware(['auth', 'verified', 'affiliate.active'])->prefix('affiliate')
     Route::get('/dashboard', [AffiliateDashboardController::class, 'index'])->name('dashboard');
     Route::resource('bookings', AffiliateBookingController::class)->only(['create', 'store']);
     Route::get('/mice-kit', [App\Http\Controllers\Affiliate\MiceKitController::class, 'index'])->name('mice-kit.index');
-    Route::get('/mice-kit/download/{filename}', [App\Http\Controllers\Affiliate\MiceKitController::class, 'download'])->name('mice-kit.download');
+    
+    // ======================= AWAL PERBAIKAN =======================
+    // Menghapus baris {filename} yang duplikat
     Route::get('/mice-kit/download/{id}', [App\Http\Controllers\Affiliate\MiceKitController::class, 'download'])->name('mice-kit.download');
+    // ======================== AKHIR PERBAIKAN =======================
+    
     Route::get('/mice-kit/preview/{id}', [App\Http\Controllers\Affiliate\MiceKitController::class, 'preview'])->name('mice-kit.preview');
     Route::get('/mice-kit/stream/{id}', [App\Http\Controllers\Affiliate\MiceKitController::class, 'stream'])->name('mice-kit.stream');
 });
