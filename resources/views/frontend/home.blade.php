@@ -125,24 +125,35 @@
                 </div>
             </div>
             
-            {{-- Optional Features Icons --}}
-            <div class="row mt-5 g-4 justify-content-center">
-                <div class="col-md-4 col-lg-3">
+            {{-- Features Grid --}}
+            <div class="row mt-5 g-4">
+                <div class="col-md-6 col-lg-3">
                     <div class="feature-icon-box">
                         <div class="feature-icon"><i class="fas fa-bed"></i></div>
-                        <h5 class="fw-bold">Luxury Rooms</h5>
-                        <p class="text-muted small">Designed for your ultimate comfort.</p>
+                        <h5>Luxury Rooms</h5>
+                        <p>Elegantly designed accommodations with premium amenities for your ultimate comfort and relaxation.</p>
                     </div>
                 </div>
-                <div class="col-md-4 col-lg-3">
-                    <div class="feature-icon"><i class="fas fa-utensils"></i></div>
-                    <h5 class="fw-bold">Fine Dining</h5>
-                    <p class="text-muted small">Exquisite culinary experiences.</p>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-icon-box">
+                        <div class="feature-icon"><i class="fas fa-utensils"></i></div>
+                        <h5>Fine Dining</h5>
+                        <p>Savor exquisite culinary creations prepared by our award-winning chefs using the finest local ingredients.</p>
+                    </div>
                 </div>
-                <div class="col-md-4 col-lg-3">
-                    <div class="feature-icon"><i class="fas fa-wifi"></i></div>
-                    <h5 class="fw-bold">High-Speed WiFi</h5>
-                    <p class="text-muted small">Stay connected everywhere.</p>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-icon-box">
+                        <div class="feature-icon"><i class="fas fa-wifi"></i></div>
+                        <h5>High-Speed WiFi</h5>
+                        <p>Stay seamlessly connected with complimentary high-speed internet access throughout the property.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-icon-box">
+                        <div class="feature-icon"><i class="fas fa-concierge-bell"></i></div>
+                        <h5>24/7 Service</h5>
+                        <p>Our dedicated concierge team is available around the clock to cater to your every need and request.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -151,17 +162,18 @@
 
     {{-- FEATURED ROOMS --}}
     @if(in_array('rooms', $featuredOptions) && $featuredRooms->isNotEmpty())
-        <section class="featured-section py-5 bg-light">
+        <section class="featured-section alt-bg">
             <div class="container">
                 <div class="text-center mb-5">
-                    <h2 class="section-title d-inline-block">Featured Rooms</h2>
-                    <p class="text-muted mt-2">Choose the perfect space for your stay.</p>
+                    <h2 class="section-title">Featured Rooms</h2>
+                    <p class="section-subtitle">Discover our handpicked selection of luxurious accommodations, each designed to provide the ultimate comfort and elegance for your stay.</p>
                 </div>
                 
                 <div class="row g-4 justify-content-center">
                     @foreach($featuredRooms as $room)
                         <div class="col-md-6 col-lg-4">
-                            <div class="card h-100 shadow-sm border-0">
+                            <div class="card h-100">
+                                <span class="card-badge">Featured</span>
                                 @if ($room->images->isNotEmpty())
                                     <div id="roomSlider{{ $room->id }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
                                         <div class="carousel-inner">
@@ -202,17 +214,18 @@
 
     {{-- FEATURED MICE --}}
     @if(in_array('mice', $featuredOptions) && $featuredMice->isNotEmpty())
-        <section class="featured-section py-5">
+        <section class="featured-section">
             <div class="container">
                 <div class="text-center mb-5">
-                    <h2 class="section-title d-inline-block">Featured Event Spaces</h2>
-                    <p class="text-muted mt-2">Perfect venues for your meetings and events.</p>
+                    <h2 class="section-title">Featured Event Spaces</h2>
+                    <p class="section-subtitle">Host memorable events in our state-of-the-art venues, equipped with cutting-edge technology and elegant design to ensure your gathering is a resounding success.</p>
                 </div>
 
                 <div class="row g-4 justify-content-center">
                     @foreach($featuredMice as $mice)
                         <div class="col-md-6 col-lg-4">
-                            <div class="card h-100 shadow-sm border-0">
+                            <div class="card h-100">
+                                <span class="card-badge">Popular</span>
                                 @if ($mice->images->isNotEmpty())
                                     <div id="miceSlider{{ $mice->id }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4500">
                                         <div class="carousel-inner">
@@ -253,11 +266,11 @@
 
     {{-- RESTAURANTS MARQUEE --}}
     @if(in_array('restaurants', $featuredOptions) && $featuredRestaurantImages->isNotEmpty())
-        <section id="restaurants" class="py-5 bg-light overflow-hidden">
+        <section id="restaurants" class="featured-section alt-bg overflow-hidden">
             <div class="container mb-5">
                 <div class="text-center">
-                    <h2 class="section-title d-inline-block">Our Restaurants</h2>
-                    <p class="text-muted mt-2">Culinary delights awaiting you.</p>
+                    <h2 class="section-title">Culinary Excellence</h2>
+                    <p class="section-subtitle">Embark on a gastronomic journey with our world-class dining experiences, where every dish tells a story of passion, creativity, and the finest ingredients.</p>
                 </div>
             </div>
 

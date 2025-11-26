@@ -14,12 +14,12 @@
 </section>
 
 <!-- Restaurants List Section -->
-<section class="py-5 bg-light">
-    <div class="container py-4">
-        <div class="row g-4">
+<section class="featured-section">
+    <div class="container">
+        <div class="row g-5">
             @forelse($restaurants as $restaurant)
                 <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm border-0">
+                    <div class="card h-100">
                         <!-- Image Slider -->
                         @if ($restaurant->images->isNotEmpty())
                             <div id="restaurantSlider{{ $restaurant->id }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
@@ -45,13 +45,13 @@
                             <img src="https://via.placeholder.com/400x250" class="card-img-top" alt="{{ $restaurant->name }}">
                         @endif
 
-                        <div class="card-body d-flex flex-column p-4">
-                            <h5 class="card-title h3 mb-2" style="font-family: var(--heading-font);">{{ $restaurant->name }}</h5>
-                            
-                            <p class="card-text text-muted flex-grow-1">{{ Str::limit($restaurant->description, 120) }}</p>
-                            
-                            <div class="mt-3">
-                                <a href="{{ route('restaurants.show', $restaurant->slug) }}" class="btn rounded-pill px-4 w-100" style="background: linear-gradient(135deg, #87CEEB, #8FBC8F); color: white; border: none;">View Details</a>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title mb-3">{{ $restaurant->name }}</h5>
+
+                            <p class="card-text text-muted flex-grow-1" style="line-height: 1.7;">{{ Str::limit($restaurant->description, 140) }}</p>
+
+                            <div class="mt-4 pt-3 border-top">
+                                <a href="{{ route('restaurants.show', $restaurant->slug) }}" class="btn btn-custom w-100 py-3">Discover Menu</a>
                             </div>
                         </div>
                     </div>

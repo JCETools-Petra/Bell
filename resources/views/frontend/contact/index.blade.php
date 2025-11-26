@@ -15,8 +15,8 @@
 </section>
 
 <!-- Contact Info Cards -->
-<section class="py-5 bg-light">
-    <div class="container py-4">
+<section class="featured-section">
+    <div class="container">
         <div class="row g-4 justify-content-center">
             <!-- Address -->
             <div class="col-md-4">
@@ -75,12 +75,13 @@
 </section>
 
 <!-- Map Section -->
-<section class="py-5">
+<section class="featured-section alt-bg">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12">
                 <div class="text-center mb-5">
                     <h2 class="section-title">Find Us on Map</h2>
+                    <p class="section-subtitle">Located in the heart of Merauke, our resort is easily accessible and surrounded by the natural beauty of Papua.</p>
                 </div>
                 <div class="map-container">
                      @if(!empty($settings['contact_maps_embed']))

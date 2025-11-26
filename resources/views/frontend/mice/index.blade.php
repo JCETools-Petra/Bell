@@ -14,12 +14,12 @@
 </section>
 
 <!-- MICE List Section -->
-<section class="py-5 bg-light">
-    <div class="container py-4">
-        <div class="row g-4">
+<section class="featured-section">
+    <div class="container">
+        <div class="row g-5">
             @forelse($miceRooms as $mice)
                 <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm border-0">
+                    <div class="card h-100">
                         <!-- Image Slider -->
                         @if ($mice->images->isNotEmpty())
                             <div id="miceSlider{{ $mice->id }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
@@ -45,19 +45,25 @@
                             <img src="https://via.placeholder.com/400x250" class="card-img-top" alt="{{ $mice->name }}">
                         @endif
 
-                        <div class="card-body d-flex flex-column p-4">
-                            <div class="mb-2">
-                                <h5 class="card-title h3 mb-1" style="font-family: var(--heading-font);">{{ $mice->name }}</h5>
-                                <div class="d-flex align-items-center text-muted small">
-                                    <i class="fas fa-users me-2"></i> 
-                                    Capacity: {{ $mice->capacity_theatre ?? $mice->capacity_classroom }} Persons
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-3">
+                                <h5 class="card-title mb-3">{{ $mice->name }}</h5>
+                                <div class="p-3 rounded" style="background: linear-gradient(135deg, rgba(135, 206, 235, 0.1), rgba(143, 188, 143, 0.1));">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-users fs-4 me-3" style="color: var(--color-accent);"></i>
+                                        <div>
+                                            <small class="text-muted d-block" style="font-size: 0.85rem;">Maximum Capacity</small>
+                                            <strong class="text-primary fs-5">{{ $mice->capacity_theatre ?? $mice->capacity_classroom }}</strong>
+                                            <small class="text-muted"> persons</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <p class="card-text text-muted flex-grow-1 mt-3">{{ Str::limit($mice->description, 100) }}</p>
-                            
-                            <div class="mt-3">
-                                <a href="{{ route('mice.show', $mice->slug) }}" class="btn rounded-pill px-4 w-100" style="background: linear-gradient(135deg, #87CEEB, #8FBC8F); color: white; border: none;">View Details</a>
+
+                            <p class="card-text text-muted flex-grow-1" style="line-height: 1.7;">{{ Str::limit($mice->description, 130) }}</p>
+
+                            <div class="mt-4">
+                                <a href="{{ route('mice.show', $mice->slug) }}" class="btn btn-custom w-100 py-3">Explore Venue</a>
                             </div>
                         </div>
                     </div>
