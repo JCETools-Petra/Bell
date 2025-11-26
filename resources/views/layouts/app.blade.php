@@ -53,7 +53,7 @@
                     </div>
                 @endif
 
-                <main class="bg-gray-100 p-6">
+                <main class="bg-gradient-to-br from-admin-light via-white to-admin-light/50 p-6 min-h-screen">
                     {{ $slot }}
                 </main>
             </div>
