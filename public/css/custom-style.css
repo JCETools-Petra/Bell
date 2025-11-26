@@ -13,11 +13,17 @@
 
     --color-black: #222222;
     --color-white: #FFFFFF;
-    --color-red: #A4161A;
-    /* Merah marun elegan */
-    --color-gold: #D4AF37;
-    /* Emas mewah */
+    --color-primary: #8B4513;
+    /* Saddle Brown - Warna coklat hangat elegan */
+    --color-accent: #87CEEB;
+    /* Sky Blue - Warna biru langit */
+    --color-secondary: #8FBC8F;
+    /* Dark Sea Green - Warna hijau laut */
     --color-light-gray: #f8f9fa;
+
+    /* Legacy color mappings for backward compatibility */
+    --color-red: #8B4513;
+    --color-gold: #87CEEB;
 }
 
 
@@ -67,7 +73,7 @@ h6,
     transform: translateX(-50%);
     width: 80px;
     height: 3px;
-    background-color: var(--color-gold);
+    background: linear-gradient(90deg, var(--color-accent), var(--color-secondary));
 }
 
 
@@ -77,21 +83,24 @@ h6,
 
 /* --- Navbar Utama --- */
 .navbar {
-    background-color: var(--color-black) !important;
+    background: linear-gradient(135deg, var(--color-primary) 0%, #6B3410 100%) !important;
     padding: 1rem 0;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .navbar-brand {
     font-family: var(--heading-font);
     font-size: 1.8rem;
-    color: var(--color-gold) !important;
+    color: var(--color-accent) !important;
     font-weight: 800;
     transition: color 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 .navbar-brand:hover {
-    color: var(--color-white) !important;
+    color: var(--color-secondary) !important;
+    transform: scale(1.05);
 }
 
 .nav-link {
@@ -117,7 +126,7 @@ h6,
     height: 3px;
     bottom: 0;
     left: 0;
-    background-color: var(--color-gold);
+    background: linear-gradient(90deg, var(--color-accent), var(--color-secondary));
     transform: scaleX(0);
     transform-origin: center;
     transition: transform 0.4s ease;
@@ -130,7 +139,7 @@ h6,
 
 .nav-link:hover,
 .nav-link.active {
-    color: var(--color-gold) !important;
+    color: var(--color-accent) !important;
 }
 
 /* --- Dropdown di Navbar --- */
@@ -142,8 +151,8 @@ h6,
 }
 
 .navbar .dropdown-menu {
-    background-color: var(--color-black);
-    border: 1px solid var(--color-gold);
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-accent);
     border-radius: 0.5rem;
     padding: 0.5rem 0;
 }
@@ -154,13 +163,13 @@ h6,
 }
 
 .navbar .dropdown-menu .dropdown-item:hover {
-    background-color: #333;
-    color: var(--color-gold);
+    background: linear-gradient(90deg, var(--color-accent), var(--color-secondary));
+    color: var(--color-white);
 }
 
 /* --- Running Text (Marquee) --- */
 .running-text-container {
-    background-color: var(--color-black);
+    background: linear-gradient(90deg, var(--color-primary) 0%, #6B3410 100%);
     color: var(--color-white);
     padding: 10px 0;
     width: 100%;
@@ -181,7 +190,7 @@ h6,
 }
 
 .running-text-link:hover {
-    color: var(--color-gold);
+    color: var(--color-accent);
 }
 
 .running-text-content {
@@ -215,22 +224,23 @@ h6,
 
 /* --- Tombol Kustom --- */
 .btn-custom {
-    background-color: var(--color-red);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-secondary) 100%);
     color: var(--color-white);
     font-family: var(--primary-font);
     font-weight: 700;
     padding: 12px 30px;
-    border-radius: 5px;
+    border-radius: 25px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    border: 2px solid var(--color-red);
+    border: none;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(135, 206, 235, 0.3);
 }
 
 .btn-custom:hover {
-    background-color: #831012;
-    /* Merah lebih gelap saat hover */
-    border-color: #831012;
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(135, 206, 235, 0.4);
     color: var(--color-white);
 }
 
@@ -250,7 +260,7 @@ h6,
 }
 
 .card-title {
-    color: var(--color-gold);
+    color: var(--color-primary);
 }
 
 .card-img-top {
@@ -288,8 +298,8 @@ h6,
 }
 
 .pagination .page-item.active .page-link {
-    background-color: var(--color-red) !important;
-    border-color: var(--color-red) !important;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-secondary) 100%) !important;
+    border-color: var(--color-accent) !important;
     color: #fff !important;
 }
 
@@ -514,8 +524,8 @@ h6,
 
 .thumbnail-item img.active {
     opacity: 1;
-    border-color: var(--color-red);
-    box-shadow: 0 0 10px rgba(164, 22, 26, 0.5);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
 }
 
 .restaurant-details .display-5 {
@@ -736,7 +746,7 @@ h6,
 .contact-hero {
     position: relative;
     padding: 8rem 0 4rem;
-    background-color: var(--color-black);
+    background: linear-gradient(135deg, var(--color-primary) 0%, #6B3410 100%);
     color: var(--color-white);
     text-align: center;
     overflow: hidden;
@@ -749,7 +759,7 @@ h6,
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(34, 34, 34, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.9) 0%, rgba(107, 52, 16, 0.8) 100%);
     z-index: 1;
 }
 
@@ -777,20 +787,22 @@ h6,
 .contact-icon-wrapper {
     width: 80px;
     height: 80px;
-    background: var(--color-light-gray);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-secondary) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 1.5rem;
-    color: var(--color-red);
+    color: var(--color-white);
     font-size: 2rem;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(135, 206, 235, 0.3);
 }
 
 .contact-info-card:hover .contact-icon-wrapper {
-    background: var(--color-red);
-    color: var(--color-white);
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
 }
 
 .contact-label {
@@ -813,7 +825,7 @@ h6,
 }
 
 .contact-value a:hover {
-    color: var(--color-red);
+    color: var(--color-accent);
 }
 
 .map-container {
@@ -827,10 +839,11 @@ h6,
 .rooms-hero {
     position: relative;
     padding: 8rem 0 4rem;
-    background-color: var(--color-black);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-secondary) 100%);
     color: var(--color-white);
     text-align: center;
     overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
 .rooms-hero::before {
@@ -840,7 +853,7 @@ h6,
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(34, 34, 34, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(135, 206, 235, 0.95) 0%, rgba(143, 188, 143, 0.9) 100%);
     z-index: 1;
 }
 
@@ -853,10 +866,11 @@ h6,
 .restaurants-hero {
     position: relative;
     padding: 8rem 0 4rem;
-    background-color: var(--color-black);
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
     color: var(--color-white);
     text-align: center;
     overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
 .mice-hero::before,
@@ -867,7 +881,7 @@ h6,
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(34, 34, 34, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(143, 188, 143, 0.95) 0%, rgba(135, 206, 235, 0.9) 100%);
     z-index: 1;
 }
 
@@ -979,7 +993,7 @@ h6,
     display: block;
     width: 60px;
     height: 3px;
-    background: var(--color-gold);
+    background: linear-gradient(90deg, var(--color-accent), var(--color-secondary));
     margin-top: 10px;
 }
 
@@ -1001,6 +1015,9 @@ h6,
 
 .feature-icon {
     font-size: 2.5rem;
-    color: var(--color-gold);
+    background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 1rem;
 }

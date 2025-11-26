@@ -6,8 +6,8 @@
 <!-- Hero Section -->
 <section class="mice-hero">
     <div class="container">
-        <h1 class="display-4 fw-bold mb-3 text-gold" style="font-family: var(--heading-font);">MICE & Events</h1>
-        <p class="lead mb-0 text-white-50 mx-auto" style="max-width: 700px;">
+        <h1 class="display-4 fw-bold mb-3 text-white" style="font-family: var(--heading-font); text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">MICE & Events</h1>
+        <p class="lead mb-0 text-white mx-auto" style="max-width: 700px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
             Meetings, Incentives, Conferences, and Exhibitions. The perfect venues for your professional gatherings.
         </p>
     </div>
@@ -57,7 +57,7 @@
                             <p class="card-text text-muted flex-grow-1 mt-3">{{ Str::limit($mice->description, 100) }}</p>
                             
                             <div class="mt-3">
-                                <a href="{{ route('mice.show', $mice->slug) }}" class="btn btn-outline-danger rounded-pill px-4 w-100">View Details</a>
+                                <a href="{{ route('mice.show', $mice->slug) }}" class="btn rounded-pill px-4 w-100" style="background: linear-gradient(135deg, #87CEEB, #8FBC8F); color: white; border: none;">View Details</a>
                             </div>
                         </div>
                     </div>

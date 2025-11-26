@@ -6,8 +6,8 @@
 <!-- Hero Section -->
 <section class="restaurants-hero">
     <div class="container">
-        <h1 class="display-4 fw-bold mb-3 text-gold" style="font-family: var(--heading-font);">Our Restaurants</h1>
-        <p class="lead mb-0 text-white-50 mx-auto" style="max-width: 700px;">
+        <h1 class="display-4 fw-bold mb-3 text-white" style="font-family: var(--heading-font); text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Our Restaurants</h1>
+        <p class="lead mb-0 text-white mx-auto" style="max-width: 700px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
             Discover culinary delights and unwind at our exquisite venues.
         </p>
     </div>
@@ -51,7 +51,7 @@
                             <p class="card-text text-muted flex-grow-1">{{ Str::limit($restaurant->description, 120) }}</p>
                             
                             <div class="mt-3">
-                                <a href="{{ route('restaurants.show', $restaurant->slug) }}" class="btn btn-outline-danger rounded-pill px-4 w-100">View Details</a>
+                                <a href="{{ route('restaurants.show', $restaurant->slug) }}" class="btn rounded-pill px-4 w-100" style="background: linear-gradient(135deg, #87CEEB, #8FBC8F); color: white; border: none;">View Details</a>
                             </div>
                         </div>
                     </div>

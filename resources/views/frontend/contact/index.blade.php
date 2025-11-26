@@ -7,8 +7,8 @@
 <!-- Hero Section -->
 <section class="contact-hero">
     <div class="container">
-        <h1 class="display-4 fw-bold mb-3 text-gold" style="font-family: var(--heading-font);">Contact Us</h1>
-        <p class="lead mb-0 text-white-50 mx-auto" style="max-width: 600px;">
+        <h1 class="display-4 fw-bold mb-3 text-white" style="font-family: var(--heading-font); text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Contact Us</h1>
+        <p class="lead mb-0 text-white mx-auto" style="max-width: 600px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
             We are here to help. Reach out to us for any inquiries or assistance.
         </p>
     </div>
@@ -44,7 +44,7 @@
                                 $wa = substr($clean, 0, 1) === '0' ? '62' . substr($clean, 1) : $clean;
                             @endphp
                             <p class="mb-0">{{ $phone }}</p>
-                            <a href="https://wa.me/{{ $wa }}" target="_blank" class="btn btn-sm btn-outline-danger mt-3 rounded-pill px-4">
+                            <a href="https://wa.me/{{ $wa }}" target="_blank" class="btn btn-sm mt-3 rounded-pill px-4" style="background: linear-gradient(135deg, #87CEEB, #8FBC8F); color: white; border: none;">
                                 <i class="fab fa-whatsapp me-2"></i>Chat on WhatsApp
                             </a>
                         @else

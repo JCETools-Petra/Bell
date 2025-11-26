@@ -6,8 +6,8 @@
 <!-- Hero Section -->
 <section class="rooms-hero">
     <div class="container">
-        <h1 class="display-4 fw-bold mb-3 text-gold" style="font-family: var(--heading-font);">Our Rooms</h1>
-        <p class="lead mb-0 text-white-50 mx-auto" style="max-width: 600px;">
+        <h1 class="display-4 fw-bold mb-3 text-white" style="font-family: var(--heading-font); text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Our Rooms</h1>
+        <p class="lead mb-0 text-white mx-auto" style="max-width: 600px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
             Experience comfort and elegance in our thoughtfully designed rooms.
         </p>
     </div>
@@ -60,10 +60,10 @@
                             <div class="d-flex justify-content-between align-items-end mt-3">
                                 <div>
                                     <small class="text-muted d-block">Starts from</small>
-                                    <span class="h4 text-danger fw-bold mb-0">Rp {{ number_format($room->price, 0, ',', '.') }}</span>
+                                    <span class="h4 fw-bold mb-0" style="background: linear-gradient(135deg, #87CEEB, #8FBC8F); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Rp {{ number_format($room->price, 0, ',', '.') }}</span>
                                     <small class="text-muted">/ night</small>
                                 </div>
-                                <a href="{{ route('rooms.show', $room->slug) }}" class="btn btn-outline-danger rounded-pill px-4">View Details</a>
+                                <a href="{{ route('rooms.show', $room->slug) }}" class="btn rounded-pill px-4" style="background: linear-gradient(135deg, #87CEEB, #8FBC8F); color: white; border: none;">View Details</a>
                             </div>
                         </div>
                     </div>
