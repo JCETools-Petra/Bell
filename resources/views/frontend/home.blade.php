@@ -200,7 +200,7 @@
                                 
                                 <div class="card-body d-flex flex-column p-4">
                                     <h5 class="card-title h3 mb-2" style="font-family: var(--heading-font);">{{ $room->name }}</h5>
-                                    <p class="card-price fw-bold mb-3" style="background: linear-gradient(135deg, #87CEEB, #8FBC8F); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Rp {{ number_format($room->price, 0, ',', '.') }} <span class="text-muted small fw-normal">/ night</span></p>
+                                    <p class="card-price fw-bold mb-3" style="background: linear-gradient(135deg, #87CEEB, #4682B4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Rp {{ number_format($room->price, 0, ',', '.') }} <span class="text-muted small fw-normal">/ night</span></p>
                                     <p class="card-text text-muted flex-grow-1">{{ Str::limit($room->description, 100) }}</p>
                                     <a href="{{ route('rooms.show', $room->slug) }}" class="btn btn-custom mt-3 w-100">View Details</a>
                                 </div>
@@ -252,7 +252,7 @@
                                 
                                 <div class="card-body d-flex flex-column p-4">
                                     <h5 class="card-title h3 mb-2" style="font-family: var(--heading-font);">{{ $mice->name }}</h5>
-                                    <p class="mb-3 text-muted"><i class="fas fa-users me-2" style="color: #87CEEB;"></i> Capacity: <strong>{{ $mice->capacity_theatre ?? $mice->capacity_classroom }}</strong></p>
+                                    <p class="mb-3 text-muted"><i class="fas fa-users me-2" style="color: #4682B4;"></i> Capacity: <strong>{{ $mice->capacity_theatre ?? $mice->capacity_classroom }}</strong></p>
                                     <p class="card-text text-muted flex-grow-1">{{ Str::limit($mice->description, 100) }}</p>
                                     <a href="{{ route('mice.show', $mice->slug) }}" class="btn btn-custom mt-3 w-100">View Details</a>
                                 </div>

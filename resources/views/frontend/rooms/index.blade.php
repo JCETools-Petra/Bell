@@ -60,7 +60,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <small class="text-muted d-block mb-1" style="font-size: 0.85rem;">Starting from</small>
-                                        <div class="h4 fw-bold mb-0" style="background: linear-gradient(135deg, #87CEEB, #8FBC8F); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                                        <div class="h4 fw-bold mb-0" style="background: linear-gradient(135deg, #87CEEB, #4682B4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                                             Rp {{ number_format($room->price, 0, ',', '.') }}
                                             <small class="text-muted" style="font-size: 0.8rem; font-weight: 400;">/ night</small>
                                         </div>

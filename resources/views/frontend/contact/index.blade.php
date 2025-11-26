@@ -44,7 +44,7 @@
                                 $wa = substr($clean, 0, 1) === '0' ? '62' . substr($clean, 1) : $clean;
                             @endphp
                             <p class="mb-0">{{ $phone }}</p>
-                            <a href="https://wa.me/{{ $wa }}" target="_blank" class="btn btn-sm mt-3 rounded-pill px-4" style="background: linear-gradient(135deg, #87CEEB, #8FBC8F); color: white; border: none;">
+                            <a href="https://wa.me/{{ $wa }}" target="_blank" class="btn btn-sm mt-3 rounded-pill px-4" style="background: linear-gradient(135deg, #87CEEB, #4682B4); color: white; border: none; box-shadow: 0 4px 15px rgba(135, 206, 235, 0.4);">
                                 <i class="fab fa-whatsapp me-2"></i>Chat on WhatsApp
                             </a>
                         @else

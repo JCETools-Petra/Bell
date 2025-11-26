@@ -48,9 +48,9 @@
                         <div class="card-body d-flex flex-column">
                             <div class="mb-3">
                                 <h5 class="card-title mb-3">{{ $mice->name }}</h5>
-                                <div class="p-3 rounded" style="background: linear-gradient(135deg, rgba(135, 206, 235, 0.1), rgba(143, 188, 143, 0.1));">
+                                <div class="p-3 rounded" style="background: linear-gradient(135deg, rgba(135, 206, 235, 0.15), rgba(70, 130, 180, 0.15));">
                                     <div class="d-flex align-items-center">
-                                        <i class="fas fa-users fs-4 me-3" style="color: var(--color-accent);"></i>
+                                        <i class="fas fa-users fs-4 me-3" style="color: #4682B4;"></i>
                                         <div>
                                             <small class="text-muted d-block" style="font-size: 0.85rem;">Maximum Capacity</small>
                                             <strong class="text-primary fs-5">{{ $mice->capacity_theatre ?? $mice->capacity_classroom }}</strong>
