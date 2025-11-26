@@ -80,8 +80,19 @@
                 @endphp
                 
                 {{-- General Settings --}}
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">General Settings</h3>
+                <div class="bg-white overflow-hidden shadow-xl rounded-2xl border border-gray-100">
+                    <div class="bg-gradient-to-r from-admin-primary/10 to-admin-secondary/10 px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-gradient-to-br from-admin-primary to-admin-secondary rounded-lg">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">General Settings</h3>
+                                <p class="text-xs text-gray-500">Logo, title, dan pengaturan umum website</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="website_title" class="block font-medium text-sm text-gray-700">Website Title</label>
@@ -114,10 +125,22 @@
                         </div>
                     </div>
                 </div>
+                </div>
 
                 {{-- Running Text Announcement --}}
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">Running Text Announcement</h3>
+                <div class="bg-white overflow-hidden shadow-xl rounded-2xl border border-gray-100">
+                    <div class="bg-gradient-to-r from-admin-primary/10 to-admin-secondary/10 px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-gradient-to-br from-admin-primary to-admin-secondary rounded-lg">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Running Text Announcement</h3>
+                                <p class="text-xs text-gray-500">Pengumuman berjalan di bagian atas website</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
                     <div class="mb-4">
                         <input type="hidden" name="running_text_enabled" value="0">
                         <label for="running_text_enabled" class="flex items-center">
@@ -136,10 +159,22 @@
                         </div>
                     </div>
                 </div>
+                </div>
 
                 {{-- MICE Layout Icons --}}
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">MICE Layout Icons</h3>
+                <div class="bg-white overflow-hidden shadow-xl rounded-2xl border border-gray-100">
+                    <div class="bg-gradient-to-r from-admin-primary/10 to-admin-secondary/10 px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-gradient-to-br from-admin-primary to-admin-secondary rounded-lg">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">MICE Layout Icons</h3>
+                                <p class="text-xs text-gray-500">Icon untuk setiap layout ruang MICE</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
                     <p class="text-sm text-gray-600 mb-6">Upload an icon for each MICE room layout. These icons will be displayed on all MICE detail pages.</p>
                     
                     @php
@@ -168,10 +203,22 @@
                         @endforeach
                     </div>
                 </div>
+                </div>
 
                 {{-- Metode Booking --}}
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">Metode Booking</h3>
+                <div class="bg-white overflow-hidden shadow-xl rounded-2xl border border-gray-100">
+                    <div class="bg-gradient-to-r from-admin-primary/10 to-admin-secondary/10 px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-gradient-to-br from-admin-primary to-admin-secondary rounded-lg">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Metode Booking</h3>
+                                <p class="text-xs text-gray-500">Pilih metode reservasi untuk customer</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
                     <div class="space-y-4">
                         <div>
                             <label for="booking_method" class="block font-medium text-sm text-gray-700">Metode Booking Aktif</label>
@@ -194,10 +241,22 @@
                         </div>
                     </div>
                 </div>
+                </div>
 
                 {{-- Homepage Hero Section --}}
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">Homepage Hero Section</h3>
+                <div class="bg-white overflow-hidden shadow-xl rounded-2xl border border-gray-100">
+                    <div class="bg-gradient-to-r from-admin-primary/10 to-admin-secondary/10 px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-gradient-to-br from-admin-primary to-admin-secondary rounded-lg">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Homepage Hero Section</h3>
+                                <p class="text-xs text-gray-500">Banner utama halaman depan website</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
                     <div class="space-y-4">
                         <div>
                             <label for="hero_title" class="block font-medium text-sm text-gray-700">Hero Title</label>
@@ -216,10 +275,22 @@
                         </div>
                     </div>
                 </div>
+                </div>
 
                 {{-- Contact & Social Media --}}
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">Contact & Social Media</h3>
+                <div class="bg-white overflow-hidden shadow-xl rounded-2xl border border-gray-100">
+                    <div class="bg-gradient-to-r from-admin-primary/10 to-admin-secondary/10 px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-gradient-to-br from-admin-primary to-admin-secondary rounded-lg">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Contact & Social Media</h3>
+                                <p class="text-xs text-gray-500">Informasi kontak dan media sosial hotel</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
                     <div class="space-y-4">
                         <div>
                             <label for="contact_address" class="block font-medium text-sm text-gray-700">Address</label>
@@ -266,10 +337,22 @@
                         </div>
                     </div>
                 </div>
+                </div>
 
                 {{-- Midtrans Payment Gateway --}}
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">Midtrans Payment Gateway</h3>
+                <div class="bg-white overflow-hidden shadow-xl rounded-2xl border border-gray-100">
+                    <div class="bg-gradient-to-r from-admin-primary/10 to-admin-secondary/10 px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-gradient-to-br from-admin-primary to-admin-secondary rounded-lg">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Midtrans Payment Gateway</h3>
+                                <p class="text-xs text-gray-500">Konfigurasi pembayaran online via Midtrans</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
                     <div class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -295,69 +378,121 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <label for="fonnte_api_key" class="block font-medium text-sm text-gray-700">Fonnte API Key (Token)</label>
-                    <input type="text" name="fonnte_api_key" id="fonnte_api_key" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ old('fonnte_api_key', $settings['fonnte_api_key'] ?? '') }}" placeholder="Masukkan token Fonnte Anda di sini">
                 </div>
+
                 {{-- Pengaturan Notifikasi WhatsApp (Pay at Hotel) --}}
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">Notifikasi WhatsApp (Pay at Hotel)</h3>
-                    <div class="space-y-4">
+                <div class="bg-white overflow-hidden shadow-xl rounded-2xl border border-gray-100">
+                    <div class="bg-gradient-to-r from-admin-primary/10 to-admin-secondary/10 px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-gradient-to-br from-admin-primary to-admin-secondary rounded-lg">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">WhatsApp Integration</h3>
+                                <p class="text-xs text-gray-500">Notifikasi WhatsApp untuk Pay at Hotel & Fonnte API</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-md font-semibold text-gray-800 mb-3 flex items-center">
+                                <svg class="w-4 h-4 mr-2 text-admin-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                                Fonnte API Configuration
+                            </h4>
+                            <label for="fonnte_api_key" class="block font-medium text-sm text-gray-700">Fonnte API Key (Token)</label>
+                            <input type="text" name="fonnte_api_key" id="fonnte_api_key" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:border-admin-primary focus:ring focus:ring-admin-primary/20" value="{{ old('fonnte_api_key', $settings['fonnte_api_key'] ?? '') }}" placeholder="Masukkan token Fonnte Anda di sini">
+                        </div>
+
+                        <hr class="border-gray-200">
+
+                        <h4 class="text-md font-semibold text-gray-800 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-admin-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Pay at Hotel Notifications
+                        </h4>
+
                         <div>
                             <label for="whatsapp_admin_receiver" class="block font-medium text-sm text-gray-700">Nomor WA Admin Utama</label>
-                            <input type="text" name="whatsapp_admin_receiver" id="whatsapp_admin_receiver" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ old('whatsapp_admin_receiver', $settings['whatsapp_admin_receiver'] ?? '') }}" placeholder="Contoh: 081234567890">
+                            <input type="text" name="whatsapp_admin_receiver" id="whatsapp_admin_receiver" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:border-admin-primary focus:ring focus:ring-admin-primary/20" value="{{ old('whatsapp_admin_receiver', $settings['whatsapp_admin_receiver'] ?? '') }}" placeholder="Contoh: 081234567890">
                         </div>
                         <div>
                             <label for="whatsapp_supervisor_receivers" class="block font-medium text-sm text-gray-700">Nomor WA Supervisor Tambahan (pisahkan dengan koma)</label>
-                            <input type="text" name="whatsapp_supervisor_receivers" id="whatsapp_supervisor_receivers" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ old('whatsapp_supervisor_receivers', $settings['whatsapp_supervisor_receivers'] ?? '') }}" placeholder="Contoh: 0812..., 0813...">
+                            <input type="text" name="whatsapp_supervisor_receivers" id="whatsapp_supervisor_receivers" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:border-admin-primary focus:ring focus:ring-admin-primary/20" value="{{ old('whatsapp_supervisor_receivers', $settings['whatsapp_supervisor_receivers'] ?? '') }}" placeholder="Contoh: 0812..., 0813...">
                         </div>
                         <div>
                             <label for="whatsapp_pay_at_hotel_admin_template" class="block font-medium text-sm text-gray-700">Template Pesan ke Admin/Supervisor</label>
-                            <textarea name="whatsapp_pay_at_hotel_admin_template" id="whatsapp_pay_at_hotel_admin_template" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" rows="6">{{ old('whatsapp_pay_at_hotel_admin_template', $settings['whatsapp_pay_at_hotel_admin_template'] ?? "🔔 *Booking Baru - Bayar di Hotel*\n\nSeorang tamu telah melakukan reservasi melalui afiliasi dan akan membayar di hotel.\n\n*Booking ID:* {booking_id}\n*Afiliasi:* {affiliate_name}\n\n*Detail Tamu:*\n*Nama:* {guest_name}\n*Telepon:* {guest_phone}\n*Email:* {guest_email}\n\n*Detail Menginap:*\n*Kamar:* {room_name}\n*Check-in:* {checkin_date}\n*Check-out:* {checkout_date}\n*Total Biaya:* {total_price}") }}</textarea>
+                            <textarea name="whatsapp_pay_at_hotel_admin_template" id="whatsapp_pay_at_hotel_admin_template" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:border-admin-primary focus:ring focus:ring-admin-primary/20 font-mono text-sm" rows="6">{{ old('whatsapp_pay_at_hotel_admin_template', $settings['whatsapp_pay_at_hotel_admin_template'] ?? "🔔 *Booking Baru - Bayar di Hotel*\n\nSeorang tamu telah melakukan reservasi melalui afiliasi dan akan membayar di hotel.\n\n*Booking ID:* {booking_id}\n*Afiliasi:* {affiliate_name}\n\n*Detail Tamu:*\n*Nama:* {guest_name}\n*Telepon:* {guest_phone}\n*Email:* {guest_email}\n\n*Detail Menginap:*\n*Kamar:* {room_name}\n*Check-in:* {checkin_date}\n*Check-out:* {checkout_date}\n*Total Biaya:* {total_price}") }}</textarea>
                         </div>
                         <div>
                             <label for="whatsapp_pay_at_hotel_customer_template" class="block font-medium text-sm text-gray-700">Template Pesan ke Customer</label>
-                            <textarea name="whatsapp_pay_at_hotel_customer_template" id="whatsapp_pay_at_hotel_customer_template" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" rows="4">{{ old('whatsapp_pay_at_hotel_customer_template', $settings['whatsapp_pay_at_hotel_customer_template'] ?? "Terima kasih, {guest_name}!\n\nBooking Anda di Bell Hotel Merauke dengan ID #{booking_id} telah kami konfirmasi.\n\nSilakan lakukan pembayaran saat Anda tiba di hotel. Kami tunggu kedatangan Anda!") }}</textarea>
+                            <textarea name="whatsapp_pay_at_hotel_customer_template" id="whatsapp_pay_at_hotel_customer_template" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:border-admin-primary focus:ring focus:ring-admin-primary/20 font-mono text-sm" rows="4">{{ old('whatsapp_pay_at_hotel_customer_template', $settings['whatsapp_pay_at_hotel_customer_template'] ?? "Terima kasih, {guest_name}!\n\nBooking Anda di Bell Hotel Merauke dengan ID #{booking_id} telah kami konfirmasi.\n\nSilakan lakukan pembayaran saat Anda tiba di hotel. Kami tunggu kedatangan Anda!") }}</textarea>
                         </div>
-                        <p class="mt-2 text-xs text-gray-500">
-                            Variabel yang tersedia: <code>{booking_id}</code>, <code>{affiliate_name}</code>, <code>{guest_name}</code>, <code>{guest_phone}</code>, <code>{guest_email}</code>, <code>{room_name}</code>, <code>{checkin_date}</code>, <code>{checkout_date}</code>, <code>{total_price}</code>
+                        <p class="mt-2 text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
+                            <span class="font-semibold text-gray-700">Variabel yang tersedia:</span> <code class="bg-white px-2 py-1 rounded">{booking_id}</code>, <code class="bg-white px-2 py-1 rounded">{affiliate_name}</code>, <code class="bg-white px-2 py-1 rounded">{guest_name}</code>, <code class="bg-white px-2 py-1 rounded">{guest_phone}</code>, <code class="bg-white px-2 py-1 rounded">{guest_email}</code>, <code class="bg-white px-2 py-1 rounded">{room_name}</code>, <code class="bg-white px-2 py-1 rounded">{checkin_date}</code>, <code class="bg-white px-2 py-1 rounded">{checkout_date}</code>, <code class="bg-white px-2 py-1 rounded">{total_price}</code>
                         </p>
-                    </div>
-                </div>
-                {{-- Pengaturan Notifikasi WhatsApp --}}
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">Pengaturan Notifikasi WhatsApp</h3>
-                    <div class="space-y-4">
+
+                        <hr class="border-gray-200">
+
+                        <h4 class="text-md font-semibold text-gray-800 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-admin-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Online Booking Confirmations
+                        </h4>
                         <div>
                             <label for="whatsapp_customer_message" class="block font-medium text-sm text-gray-700">Template Pesan ke Pelanggan</label>
-                            <textarea name="whatsapp_customer_message" id="whatsapp_customer_message" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" rows="5">{{ $waCustMsg }}</textarea>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Variabel yang tersedia: <code>{guest_name}</code>, <code>{booking_id}</code>
+                            <textarea name="whatsapp_customer_message" id="whatsapp_customer_message" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:border-admin-primary focus:ring focus:ring-admin-primary/20 font-mono text-sm" rows="5">{{ $waCustMsg }}</textarea>
+                            <p class="mt-2 text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
+                                <span class="font-semibold text-gray-700">Variabel yang tersedia:</span> <code class="bg-white px-2 py-1 rounded">{guest_name}</code>, <code class="bg-white px-2 py-1 rounded">{booking_id}</code>
                             </p>
                         </div>
                         <div>
                             <label for="whatsapp_admin_message" class="block font-medium text-sm text-gray-700">Template Pesan ke Admin</label>
-                            <textarea name="whatsapp_admin_message" id="whatsapp_admin_message" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" rows="8">{{ $waAdminMsg }}</textarea>
-                            <p class="mt-2 text-xs text-gray-500">
-                                Variabel yang tersedia: <code>{booking_id}</code>, <code>{guest_name}</code>, <code>{guest_phone}</code>, <code>{guest_email}</code>, <code>{checkin_date}</code>, <code>{checkout_date}</code>
+                            <textarea name="whatsapp_admin_message" id="whatsapp_admin_message" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:border-admin-primary focus:ring focus:ring-admin-primary/20 font-mono text-sm" rows="8">{{ $waAdminMsg }}</textarea>
+                            <p class="mt-2 text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
+                                <span class="font-semibold text-gray-700">Variabel yang tersedia:</span> <code class="bg-white px-2 py-1 rounded">{booking_id}</code>, <code class="bg-white px-2 py-1 rounded">{guest_name}</code>, <code class="bg-white px-2 py-1 rounded">{guest_phone}</code>, <code class="bg-white px-2 py-1 rounded">{guest_email}</code>, <code class="bg-white px-2 py-1 rounded">{checkin_date}</code>, <code class="bg-white px-2 py-1 rounded">{checkout_date}</code>
                             </p>
                         </div>
                     </div>
                 </div>
+                </div>
 
                 {{-- Terms and Conditions --}}
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-3 mb-4">Terms and Conditions Page</h3>
+                <div class="bg-white overflow-hidden shadow-xl rounded-2xl border border-gray-100">
+                    <div class="bg-gradient-to-r from-admin-primary/10 to-admin-secondary/10 px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-gradient-to-br from-admin-primary to-admin-secondary rounded-lg">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Terms and Conditions</h3>
+                                <p class="text-xs text-gray-500">Syarat & ketentuan halaman booking</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
                     <div>
                         <label for="terms_and_conditions_editor" class="block font-medium text-sm text-gray-700 mb-1">Page Content</label>
                         <textarea name="terms_and_conditions" id="terms_and_conditions_editor" class="form-control" rows="15">{{ old('terms_and_conditions', $settings['terms_and_conditions'] ?? '') }}</textarea>
                     </div>
                 </div>
+                </div>
 
-                <div class="flex justify-end">
-                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                        Save Settings
-                    </button>
+                {{-- Save Button --}}
+                <div class="sticky bottom-6 z-10">
+                    <div class="bg-gradient-to-r from-admin-primary/10 to-admin-secondary/10 border border-admin-primary/30 rounded-2xl p-6 shadow-2xl">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <svg class="w-6 h-6 text-admin-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-900">Simpan Pengaturan</p>
+                                    <p class="text-xs text-gray-600">Klik tombol untuk menyimpan semua perubahan</p>
+                                </div>
+                            </div>
+                            <button type="submit" class="inline-flex items-center px-8 py-3.5 bg-gradient-to-r from-admin-primary to-admin-secondary text-white rounded-xl hover:shadow-2xl hover:shadow-admin-primary/50 transition-all duration-300 font-bold text-lg">
+                                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                Save All Settings
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
