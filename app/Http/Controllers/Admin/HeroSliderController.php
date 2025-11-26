@@ -23,7 +23,7 @@ class HeroSliderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'image_path' => 'required|image|max:2048', // Validasi gambar
+            'image_path' => 'required|image|max:25600', // Max 25MB for hero slider images
             'order' => 'nullable|integer',
             'is_active' => 'nullable|string',
         ]);
@@ -48,7 +48,7 @@ class HeroSliderController extends Controller
     public function update(Request $request, HeroSlider $heroSlider) // GANTI INI
     {
         $request->validate([
-            'image_path' => 'nullable|image|max:2048',
+            'image_path' => 'nullable|image|max:25600', // Max 25MB for hero slider images
             'order' => 'nullable|integer',
             'is_active' => 'nullable|string',
         ]);
