@@ -2,8 +2,11 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="csrf-token" content="{{ csrf_token() }}" >
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     @if(isset($settings['favicon_path']))
         <link rel="icon" href="{{ asset('storage/' . $settings['favicon_path']) }}" type="image/x-icon">
@@ -482,27 +485,44 @@
             left: 75px !important;
         }
 
-        /* Responsive design for mobile */
-        @media (max-width: 768px) {
+        /* Pulse animation for WhatsApp */
+        @keyframes pulse-whatsapp {
+            0%, 100% {
+                box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            }
+            50% {
+                box-shadow: 0 4px 25px rgba(37, 211, 102, 0.6);
+            }
+        }
+
+        .social-btn[data-social="WhatsApp"] {
+            animation: pulse-whatsapp 2s infinite;
+        }
+
+        /* =================== IMPROVED MOBILE RESPONSIVENESS =================== */
+
+        /* Tablet Responsiveness */
+        @media (max-width: 991.98px) {
             .modern-floating-social {
                 left: auto !important;
                 right: 0 !important;
                 top: auto !important;
-                bottom: 80px !important;
+                bottom: 20px !important;
                 transform: none !important;
             }
 
             .modern-floating-social > div {
                 flex-direction: row !important;
-                border-radius: 24px 0 0 24px !important;
-                padding: 12px 16px !important;
+                border-radius: 20px 0 0 20px !important;
+                padding: 10px 14px !important;
                 border-right: none !important;
                 border-left: 1px solid rgba(255,255,255,0.15) !important;
+                gap: 10px !important;
             }
 
             .social-btn {
-                width: 45px !important;
-                height: 45px !important;
+                width: 44px !important;
+                height: 44px !important;
             }
 
             .social-btn i {
@@ -516,20 +536,190 @@
             .modern-floating-social > div > div:last-child {
                 display: none !important;
             }
-        }
 
-        /* Pulse animation for WhatsApp */
-        @keyframes pulse-whatsapp {
-            0%, 100% {
-                box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-            }
-            50% {
-                box-shadow: 0 4px 25px rgba(37, 211, 102, 0.6);
+            /* Disable hover effects on tablet/mobile */
+            .social-btn:hover {
+                transform: none !important;
             }
         }
 
-        .social-btn[data-social="WhatsApp"] {
-            animation: pulse-whatsapp 2s infinite;
+        /* Mobile Phone Responsiveness */
+        @media (max-width: 767.98px) {
+            .modern-floating-social {
+                bottom: 16px !important;
+                /* Safe area for iOS notch/home indicator */
+                padding-bottom: env(safe-area-inset-bottom, 0px);
+            }
+
+            .modern-floating-social > div {
+                flex-direction: row !important;
+                border-radius: 16px 0 0 16px !important;
+                padding: 8px 10px !important;
+                gap: 8px !important;
+                max-width: 90vw;
+                overflow-x: auto;
+                /* Hide scrollbar */
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .modern-floating-social > div::-webkit-scrollbar {
+                display: none;
+            }
+
+            .social-btn {
+                width: 40px !important;
+                height: 40px !important;
+                flex-shrink: 0;
+            }
+
+            .social-btn i {
+                font-size: 1.1rem !important;
+            }
+
+            /* Make navbar items more touch-friendly */
+            .navbar-nav .nav-link {
+                padding: 12px 16px !important;
+                font-size: 1rem !important;
+            }
+
+            .navbar-toggler {
+                padding: 8px 12px;
+                border-radius: 8px;
+            }
+
+            /* Running text responsive */
+            .running-text-container {
+                font-size: 0.85rem !important;
+                padding: 8px 0 !important;
+            }
+        }
+
+        /* Extra Small Mobile (< 375px) */
+        @media (max-width: 374.98px) {
+            .modern-floating-social > div {
+                padding: 6px 8px !important;
+                gap: 6px !important;
+            }
+
+            .social-btn {
+                width: 36px !important;
+                height: 36px !important;
+            }
+
+            .social-btn i {
+                font-size: 1rem !important;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .modern-floating-social {
+                bottom: 10px !important;
+            }
+
+            .modern-floating-social > div {
+                padding: 6px 8px !important;
+            }
+
+            .social-btn {
+                width: 36px !important;
+                height: 36px !important;
+            }
+        }
+
+        /* Footer responsive improvements */
+        @media (max-width: 767.98px) {
+            footer .container {
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+            }
+
+            footer .row.g-4 {
+                gap: 2rem !important;
+            }
+
+            footer h5 {
+                font-size: 1.1rem !important;
+            }
+
+            footer .social-links a {
+                width: 40px !important;
+                height: 40px !important;
+            }
+
+            /* Back to top button mobile */
+            .back-to-top {
+                width: 45px !important;
+                height: 45px !important;
+                bottom: 80px !important;
+                right: 20px !important;
+            }
+        }
+
+        /* Ensure content doesn't hide behind floating social */
+        @media (max-width: 991.98px) {
+            main {
+                padding-bottom: 80px !important;
+            }
+        }
+
+        /* Navbar improvements for mobile */
+        @media (max-width: 991.98px) {
+            .navbar-collapse {
+                background: rgba(30, 58, 95, 0.98);
+                backdrop-filter: blur(10px);
+                margin-top: 16px;
+                padding: 16px;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+
+            .navbar-nav .nav-item {
+                margin: 4px 0;
+            }
+
+            .navbar-nav .nav-link {
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+
+            .navbar-nav .nav-link:hover,
+            .navbar-nav .nav-link.active {
+                background: rgba(135, 206, 235, 0.2);
+                padding-left: 20px !important;
+            }
+
+            .dropdown-menu {
+                background: rgba(44, 95, 141, 0.95);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                margin-top: 8px !important;
+            }
+
+            .dropdown-item {
+                color: rgba(255, 255, 255, 0.9);
+                padding: 10px 16px;
+                border-radius: 6px;
+            }
+
+            .dropdown-item:hover {
+                background: rgba(135, 206, 235, 0.2);
+                color: #ffffff;
+            }
+        }
+
+        /* Touch-friendly tap targets (minimum 44x44px for accessibility) */
+        @media (max-width: 991.98px) {
+            .social-btn,
+            .navbar-toggler,
+            .btn,
+            a.nav-link,
+            button {
+                min-width: 44px;
+                min-height: 44px;
+            }
         }
     </style>
 
