@@ -389,60 +389,170 @@
             });
         </script>
     </footer>
-    <div class="floating-social-bar" aria-label="Social Media Links">
-        <div class="social-tab" aria-hidden="true">Social&nbsp;Media</div>
-        <ul>
+    <!-- Modern Floating Social Media Bar -->
+    <div class="modern-floating-social" style="position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 1000;">
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 16px 12px; background: linear-gradient(135deg, rgba(30, 58, 95, 0.95) 0%, rgba(44, 95, 141, 0.95) 50%, rgba(135, 206, 235, 0.95) 100%); backdrop-filter: blur(20px); border-radius: 0 24px 24px 0; box-shadow: 4px 0 30px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15); border-left: none;">
+
             @if(!empty($settings['contact_facebook']))
-                <li class="facebook">
-                    <a href="{{ $settings['contact_facebook'] }}" target="_blank" rel="noopener" aria-label="Facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                </li>
+            <a href="{{ $settings['contact_facebook'] }}" target="_blank" rel="noopener"
+               class="social-btn" data-social="Facebook"
+               style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1877f2 0%, #0d5dbf 100%); border-radius: 14px; text-decoration: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; box-shadow: 0 4px 15px rgba(24, 119, 242, 0.3); border: 2px solid rgba(255,255,255,0.2);"
+               onmouseover="this.style.transform='translateX(8px) scale(1.1)'; this.style.boxShadow='0 8px 25px rgba(24, 119, 242, 0.5)'; this.style.borderColor='rgba(255,255,255,0.4)';"
+               onmouseout="this.style.transform='translateX(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(24, 119, 242, 0.3)'; this.style.borderColor='rgba(255,255,255,0.2)';">
+                <i class="fab fa-facebook-f" style="color: white; font-size: 1.4rem;"></i>
+                <span class="social-tooltip" style="position: absolute; left: 70px; background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8d 100%); color: white; padding: 8px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">Facebook</span>
+            </a>
             @endif
+
             @if(!empty($settings['contact_instagram']))
-                <li class="instagram">
-                    <a href="{{ $settings['contact_instagram'] }}" target="_blank" rel="noopener" aria-label="Instagram">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                </li>
+            <a href="{{ $settings['contact_instagram'] }}" target="_blank" rel="noopener"
+               class="social-btn" data-social="Instagram"
+               style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border-radius: 14px; text-decoration: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; box-shadow: 0 4px 15px rgba(225, 48, 108, 0.3); border: 2px solid rgba(255,255,255,0.2);"
+               onmouseover="this.style.transform='translateX(8px) scale(1.1)'; this.style.boxShadow='0 8px 25px rgba(225, 48, 108, 0.5)'; this.style.borderColor='rgba(255,255,255,0.4)';"
+               onmouseout="this.style.transform='translateX(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(225, 48, 108, 0.3)'; this.style.borderColor='rgba(255,255,255,0.2)';">
+                <i class="fab fa-instagram" style="color: white; font-size: 1.5rem;"></i>
+                <span class="social-tooltip" style="position: absolute; left: 70px; background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8d 100%); color: white; padding: 8px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">Instagram</span>
+            </a>
             @endif
+
             @if(!empty($settings['contact_phone']))
-                @php
-                    $phone = $settings['contact_phone'];
-                    $cleanedPhone = preg_replace('/[^0-9]/', '', $phone);
-                    $waPhone = substr($cleanedPhone, 0, 1) === '0'
-                        ? '62' . substr($cleanedPhone, 1)
-                        : $cleanedPhone;
-                @endphp
-                <li class="whatsapp">
-                    <a href="https://wa.me/{{ $waPhone }}" target="_blank" rel="noopener" aria-label="WhatsApp">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-                </li>
+            @php
+                $phone = $settings['contact_phone'];
+                $cleanedPhone = preg_replace('/[^0-9]/', '', $phone);
+                $waPhone = substr($cleanedPhone, 0, 1) === '0'
+                    ? '62' . substr($cleanedPhone, 1)
+                    : $cleanedPhone;
+            @endphp
+            <a href="https://wa.me/{{ $waPhone }}" target="_blank" rel="noopener"
+               class="social-btn" data-social="WhatsApp"
+               style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #25d366 0%, #1da851 100%); border-radius: 14px; text-decoration: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); border: 2px solid rgba(255,255,255,0.2);"
+               onmouseover="this.style.transform='translateX(8px) scale(1.1)'; this.style.boxShadow='0 8px 25px rgba(37, 211, 102, 0.5)'; this.style.borderColor='rgba(255,255,255,0.4)';"
+               onmouseout="this.style.transform='translateX(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(37, 211, 102, 0.3)'; this.style.borderColor='rgba(255,255,255,0.2)';">
+                <i class="fab fa-whatsapp" style="color: white; font-size: 1.6rem;"></i>
+                <span class="social-tooltip" style="position: absolute; left: 70px; background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8d 100%); color: white; padding: 8px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">WhatsApp</span>
+            </a>
             @endif
+
             @if(!empty($settings['contact_linkedin']))
-                <li class="linkedin">
-                    <a href="{{ $settings['contact_linkedin'] }}" target="_blank" rel="noopener" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                </li>
+            <a href="{{ $settings['contact_linkedin'] }}" target="_blank" rel="noopener"
+               class="social-btn" data-social="LinkedIn"
+               style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0077b5 0%, #005582 100%); border-radius: 14px; text-decoration: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; box-shadow: 0 4px 15px rgba(0, 119, 181, 0.3); border: 2px solid rgba(255,255,255,0.2);"
+               onmouseover="this.style.transform='translateX(8px) scale(1.1)'; this.style.boxShadow='0 8px 25px rgba(0, 119, 181, 0.5)'; this.style.borderColor='rgba(255,255,255,0.4)';"
+               onmouseout="this.style.transform='translateX(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(0, 119, 181, 0.3)'; this.style.borderColor='rgba(255,255,255,0.2)';">
+                <i class="fab fa-linkedin-in" style="color: white; font-size: 1.4rem;"></i>
+                <span class="social-tooltip" style="position: absolute; left: 70px; background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8d 100%); color: white; padding: 8px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">LinkedIn</span>
+            </a>
             @endif
+
             @if(!empty($settings['contact_youtube']))
-                <li class="youtube">
-                    <a href="{{ $settings['contact_youtube'] }}" target="_blank" rel="noopener" aria-label="YouTube">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                </li>
+            <a href="{{ $settings['contact_youtube'] }}" target="_blank" rel="noopener"
+               class="social-btn" data-social="YouTube"
+               style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); border-radius: 14px; text-decoration: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3); border: 2px solid rgba(255,255,255,0.2);"
+               onmouseover="this.style.transform='translateX(8px) scale(1.1)'; this.style.boxShadow='0 8px 25px rgba(255, 0, 0, 0.5)'; this.style.borderColor='rgba(255,255,255,0.4)';"
+               onmouseout="this.style.transform='translateX(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(255, 0, 0, 0.3)'; this.style.borderColor='rgba(255,255,255,0.2)';">
+                <i class="fab fa-youtube" style="color: white; font-size: 1.5rem;"></i>
+                <span class="social-tooltip" style="position: absolute; left: 70px; background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8d 100%); color: white; padding: 8px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">YouTube</span>
+            </a>
             @endif
+
             @if(!empty($settings['contact_tiktok']))
-                <li class="tiktok">
-                    <a href="{{ $settings['contact_tiktok'] }}" target="_blank" rel="noopener" aria-label="TikTok">
-                        <i class="fab fa-tiktok"></i>
-                    </a>
-                </li>
+            <a href="{{ $settings['contact_tiktok'] }}" target="_blank" rel="noopener"
+               class="social-btn" data-social="TikTok"
+               style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #000000 0%, #333333 100%); border-radius: 14px; text-decoration: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); border: 2px solid rgba(255,255,255,0.2);"
+               onmouseover="this.style.transform='translateX(8px) scale(1.1)'; this.style.boxShadow='0 8px 25px rgba(0, 0, 0, 0.6)'; this.style.borderColor='rgba(255,255,255,0.4)';"
+               onmouseout="this.style.transform='translateX(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(0, 0, 0, 0.4)'; this.style.borderColor='rgba(255,255,255,0.2)';">
+                <i class="fab fa-tiktok" style="color: white; font-size: 1.4rem;"></i>
+                <span class="social-tooltip" style="position: absolute; left: 70px; background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8d 100%); color: white; padding: 8px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">TikTok</span>
+            </a>
             @endif
-        </ul>
+
+            <!-- Social Media Label -->
+            <div style="margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2);">
+                <div style="writing-mode: vertical-rl; text-orientation: mixed; color: white; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.9; text-align: center; background: linear-gradient(180deg, #FFE4B5 0%, #f4d9a6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    Connect
+                </div>
+            </div>
+        </div>
     </div>
+
+    <style>
+        /* Tooltip hover effect */
+        .social-btn:hover .social-tooltip {
+            opacity: 1 !important;
+            left: 75px !important;
+        }
+
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            .modern-floating-social {
+                left: auto !important;
+                right: 0 !important;
+                top: auto !important;
+                bottom: 80px !important;
+                transform: none !important;
+            }
+
+            .modern-floating-social > div {
+                flex-direction: row !important;
+                border-radius: 24px 0 0 24px !important;
+                padding: 12px 16px !important;
+                border-right: none !important;
+                border-left: 1px solid rgba(255,255,255,0.15) !important;
+            }
+
+            .social-btn {
+                width: 45px !important;
+                height: 45px !important;
+            }
+
+            .social-btn i {
+                font-size: 1.2rem !important;
+            }
+
+            .social-tooltip {
+                display: none !important;
+            }
+
+            .modern-floating-social > div > div:last-child {
+                display: none !important;
+            }
+        }
+
+        /* Pulse animation for WhatsApp */
+        @keyframes pulse-whatsapp {
+            0%, 100% {
+                box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            }
+            50% {
+                box-shadow: 0 4px 25px rgba(37, 211, 102, 0.6);
+            }
+        }
+
+        .social-btn[data-social="WhatsApp"] {
+            animation: pulse-whatsapp 2s infinite;
+        }
+    </style>
+
+    <script>
+        // Enhanced tooltip functionality
+        document.querySelectorAll('.social-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                const tooltip = this.querySelector('.social-tooltip');
+                if (tooltip) {
+                    tooltip.style.opacity = '1';
+                    tooltip.style.left = '75px';
+                }
+            });
+
+            btn.addEventListener('mouseleave', function() {
+                const tooltip = this.querySelector('.social-tooltip');
+                if (tooltip) {
+                    tooltip.style.opacity = '0';
+                    tooltip.style.left = '70px';
+                }
+            });
+        });
+    </script>
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
