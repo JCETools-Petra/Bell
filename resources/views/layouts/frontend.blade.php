@@ -392,8 +392,18 @@
             });
         </script>
     </footer>
+    <!-- Floating Action Button for Mobile -->
+    <button id="socialFabBtn" class="social-fab-button" aria-label="Open Social Media Menu">
+        <i class="fas fa-share-alt"></i>
+    </button>
+
     <!-- Modern Floating Social Media Bar -->
-    <div class="modern-floating-social" style="position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 1000;">
+    <div id="modernFloatingSocial" class="modern-floating-social" style="position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 1000;">
+        <!-- Close Button (Mobile Only) -->
+        <button id="socialCloseBtn" class="social-close-button" aria-label="Close Social Media Menu">
+            <i class="fas fa-times"></i>
+        </button>
+
         <div style="display: flex; flex-direction: column; gap: 12px; padding: 16px 12px; background: linear-gradient(135deg, rgba(30, 58, 95, 0.95) 0%, rgba(44, 95, 141, 0.95) 50%, rgba(135, 206, 235, 0.95) 100%); backdrop-filter: blur(20px); border-radius: 0 24px 24px 0; box-shadow: 4px 0 30px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15); border-left: none;">
 
             @if(!empty($settings['contact_facebook']))
@@ -479,6 +489,58 @@
     </div>
 
     <style>
+        /* =================== FLOATING ACTION BUTTON (FAB) =================== */
+        .social-fab-button {
+            display: none; /* Hidden on desktop */
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.4);
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .social-fab-button i {
+            color: white;
+            font-size: 1.3rem;
+        }
+
+        .social-fab-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Close Button for Mobile */
+        .social-close-button {
+            display: none; /* Hidden on desktop */
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .social-close-button i {
+            color: white;
+            font-size: 1rem;
+        }
+
+        .social-close-button:active {
+            transform: scale(0.9);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
         /* Tooltip hover effect */
         .social-btn:hover .social-tooltip {
             opacity: 1 !important;
@@ -499,34 +561,69 @@
             animation: pulse-whatsapp 2s infinite;
         }
 
+        /* FAB Pulse Animation */
+        @keyframes fab-pulse {
+            0%, 100% {
+                box-shadow: 0 4px 20px rgba(30, 58, 95, 0.4);
+            }
+            50% {
+                box-shadow: 0 6px 30px rgba(30, 58, 95, 0.6);
+            }
+        }
+
+        .social-fab-button.pulse {
+            animation: fab-pulse 2s infinite;
+        }
+
         /* =================== IMPROVED MOBILE RESPONSIVENESS =================== */
 
-        /* Tablet Responsiveness */
+        /* Tablet & Mobile Responsiveness */
         @media (max-width: 991.98px) {
+            /* Show FAB button on mobile */
+            .social-fab-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Show close button on mobile */
+            .social-close-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Hide social bar by default on mobile */
             .modern-floating-social {
-                left: auto !important;
-                right: 0 !important;
-                top: auto !important;
-                bottom: 20px !important;
+                left: -100% !important; /* Hidden off-screen */
+                bottom: 0 !important;
+                top: 0 !important;
                 transform: none !important;
+                transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                width: 280px !important;
+                max-width: 80vw !important;
+            }
+
+            /* Show social bar when active */
+            .modern-floating-social.active {
+                left: 0 !important;
             }
 
             .modern-floating-social > div {
-                flex-direction: row !important;
-                border-radius: 20px 0 0 20px !important;
-                padding: 10px 14px !important;
-                border-right: none !important;
-                border-left: 1px solid rgba(255,255,255,0.15) !important;
-                gap: 10px !important;
+                height: 100vh;
+                border-radius: 0 !important;
+                padding: 60px 20px 20px 20px !important;
+                justify-content: center !important;
             }
 
             .social-btn {
-                width: 44px !important;
-                height: 44px !important;
+                width: 60px !important;
+                height: 60px !important;
+                margin: 0 auto !important;
             }
 
             .social-btn i {
-                font-size: 1.2rem !important;
+                font-size: 1.5rem !important;
             }
 
             .social-tooltip {
@@ -541,40 +638,38 @@
             .social-btn:hover {
                 transform: none !important;
             }
+
+            /* Backdrop overlay when menu is open */
+            body.social-menu-open::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 998;
+                animation: fadeIn 0.3s ease;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
         }
 
         /* Mobile Phone Responsiveness */
         @media (max-width: 767.98px) {
-            .modern-floating-social {
+            /* FAB button positioning for small screens */
+            .social-fab-button {
                 bottom: 16px !important;
-                /* Safe area for iOS notch/home indicator */
-                padding-bottom: env(safe-area-inset-bottom, 0px);
+                right: 16px !important;
+                width: 52px !important;
+                height: 52px !important;
             }
 
-            .modern-floating-social > div {
-                flex-direction: row !important;
-                border-radius: 16px 0 0 16px !important;
-                padding: 8px 10px !important;
-                gap: 8px !important;
-                max-width: 90vw;
-                overflow-x: auto;
-                /* Hide scrollbar */
-                scrollbar-width: none;
-                -ms-overflow-style: none;
-            }
-
-            .modern-floating-social > div::-webkit-scrollbar {
-                display: none;
-            }
-
-            .social-btn {
-                width: 40px !important;
-                height: 40px !important;
-                flex-shrink: 0;
-            }
-
-            .social-btn i {
-                font-size: 1.1rem !important;
+            .social-fab-button i {
+                font-size: 1.2rem !important;
             }
 
             /* Make navbar items more touch-friendly */
@@ -592,39 +687,6 @@
             .running-text-container {
                 font-size: 0.85rem !important;
                 padding: 8px 0 !important;
-            }
-        }
-
-        /* Extra Small Mobile (< 375px) */
-        @media (max-width: 374.98px) {
-            .modern-floating-social > div {
-                padding: 6px 8px !important;
-                gap: 6px !important;
-            }
-
-            .social-btn {
-                width: 36px !important;
-                height: 36px !important;
-            }
-
-            .social-btn i {
-                font-size: 1rem !important;
-            }
-        }
-
-        /* Landscape orientation on mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .modern-floating-social {
-                bottom: 10px !important;
-            }
-
-            .modern-floating-social > div {
-                padding: 6px 8px !important;
-            }
-
-            .social-btn {
-                width: 36px !important;
-                height: 36px !important;
             }
         }
 
@@ -648,19 +710,12 @@
                 height: 40px !important;
             }
 
-            /* Back to top button mobile */
+            /* Back to top button mobile - position above FAB */
             .back-to-top {
                 width: 45px !important;
                 height: 45px !important;
-                bottom: 80px !important;
-                right: 20px !important;
-            }
-        }
-
-        /* Ensure content doesn't hide behind floating social */
-        @media (max-width: 991.98px) {
-            main {
-                padding-bottom: 80px !important;
+                bottom: 85px !important;
+                right: 16px !important;
             }
         }
 
@@ -741,6 +796,96 @@
                     tooltip.style.left = '70px';
                 }
             });
+        });
+
+        // =================== MOBILE FAB TOGGLE FUNCTIONALITY ===================
+        document.addEventListener('DOMContentLoaded', function() {
+            const fabBtn = document.getElementById('socialFabBtn');
+            const socialMenu = document.getElementById('modernFloatingSocial');
+            const closeBtn = document.getElementById('socialCloseBtn');
+
+            // Check if on mobile
+            function isMobile() {
+                return window.innerWidth <= 991.98;
+            }
+
+            // Open social menu
+            function openSocialMenu() {
+                if (isMobile()) {
+                    socialMenu.classList.add('active');
+                    document.body.classList.add('social-menu-open');
+                    fabBtn.style.display = 'none';
+                }
+            }
+
+            // Close social menu
+            function closeSocialMenu() {
+                if (isMobile()) {
+                    socialMenu.classList.remove('active');
+                    document.body.classList.remove('social-menu-open');
+                    fabBtn.style.display = 'flex';
+                }
+            }
+
+            // FAB button click
+            if (fabBtn) {
+                fabBtn.addEventListener('click', openSocialMenu);
+            }
+
+            // Close button click
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeSocialMenu);
+            }
+
+            // Close when clicking backdrop (on body)
+            document.body.addEventListener('click', function(e) {
+                if (document.body.classList.contains('social-menu-open')) {
+                    // If click is on body (backdrop) but not on social menu or FAB
+                    if (e.target === document.body ||
+                        (!socialMenu.contains(e.target) && !fabBtn.contains(e.target))) {
+                        closeSocialMenu();
+                    }
+                }
+            });
+
+            // Close menu when clicking social links
+            const socialLinks = document.querySelectorAll('.social-btn');
+            socialLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (isMobile()) {
+                        // Small delay before closing for better UX
+                        setTimeout(closeSocialMenu, 300);
+                    }
+                });
+            });
+
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (!isMobile()) {
+                        // On desktop, ensure menu is visible and FAB is hidden
+                        socialMenu.classList.remove('active');
+                        document.body.classList.remove('social-menu-open');
+                        fabBtn.style.display = 'none';
+                    } else {
+                        // On mobile, ensure FAB is visible if menu is closed
+                        if (!socialMenu.classList.contains('active')) {
+                            fabBtn.style.display = 'flex';
+                        }
+                    }
+                }, 250);
+            });
+
+            // Add pulse animation to FAB on page load (attract attention)
+            if (fabBtn && isMobile()) {
+                fabBtn.classList.add('pulse');
+                // Remove pulse after 5 seconds
+                setTimeout(function() {
+                    fabBtn.classList.remove('pulse');
+                }, 5000);
+            }
         });
     </script>
     
