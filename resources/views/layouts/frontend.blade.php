@@ -114,16 +114,280 @@
     <main>
         @yield('content')
     </main>
-    <footer class="footer mt-auto py-4 bg-dark text-white-50">
-        <div class="container text-center">
-            <div class="mb-3">
-                <a href="{{ route('home') }}" class="text-white-50 mx-2 text-decoration-none">Home</a>
-                <a href="{{ route('rooms.index') }}" class="text-white-50 mx-2 text-decoration-none">Rooms</a>
-                <a href="{{ route('contact.index') }}" class="text-white-50 mx-2 text-decoration-none">Contact Us</a>
-                <a href="{{ route('pages.terms') }}" class="text-white-50 mx-2 text-decoration-none">Terms & Conditions</a>
+    <footer class="footer mt-auto" style="background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8d 50%, #87ceeb 100%); position: relative; overflow: hidden;">
+        <!-- Decorative Wave Pattern -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 80px; background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 120%22 preserveAspectRatio=%22none%22><path d=%22M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z%22 fill=%22%23ffffff%22 opacity=%220.1%22/></svg>') no-repeat; background-size: cover;"></div>
+
+        <div class="container position-relative" style="padding-top: 5rem; padding-bottom: 2rem;">
+            <div class="row g-4">
+                <!-- About Section -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-center mb-4">
+                        @if(isset($settings['logo_path']) && $settings['logo_path'])
+                            <img src="{{ asset('storage/' . $settings['logo_path']) }}"
+                                 alt="{{ $settings['website_title'] ?? 'Logo' }}"
+                                 style="height: 50px; width: auto; filter: brightness(0) invert(1);">
+                        @else
+                            <div class="p-3 rounded-3 me-3" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+                                <i class="fas fa-hotel" style="font-size: 2rem; color: #FFE4B5;"></i>
+                            </div>
+                        @endif
+                        <h3 class="h4 text-white fw-bold mb-0 ms-3">{{ $settings['website_title'] ?? 'Bell Hotel Merauke' }}</h3>
+                    </div>
+                    <p class="text-white-50 mb-4" style="line-height: 1.8;">
+                        Pengalaman menginap terbaik di Merauke dengan fasilitas modern, pelayanan prima, dan suasana yang nyaman seperti di rumah sendiri.
+                    </p>
+                    <div class="d-flex gap-2">
+                        @if(!empty($settings['contact_facebook']))
+                        <a href="{{ $settings['contact_facebook'] }}" target="_blank" rel="noopener"
+                           class="btn btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;"
+                           onmouseover="this.style.background='#FFE4B5'; this.style.borderColor='#FFE4B5';"
+                           onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.2)';">
+                            <i class="fab fa-facebook-f text-white"></i>
+                        </a>
+                        @endif
+                        @if(!empty($settings['contact_instagram']))
+                        <a href="{{ $settings['contact_instagram'] }}" target="_blank" rel="noopener"
+                           class="btn btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;"
+                           onmouseover="this.style.background='#FFE4B5'; this.style.borderColor='#FFE4B5';"
+                           onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.2)';">
+                            <i class="fab fa-instagram text-white"></i>
+                        </a>
+                        @endif
+                        @if(!empty($settings['contact_phone']))
+                        @php
+                            $phone = $settings['contact_phone'];
+                            $cleanedPhone = preg_replace('/[^0-9]/', '', $phone);
+                            $waPhone = substr($cleanedPhone, 0, 1) === '0'
+                                ? '62' . substr($cleanedPhone, 1)
+                                : $cleanedPhone;
+                        @endphp
+                        <a href="https://wa.me/{{ $waPhone }}" target="_blank" rel="noopener"
+                           class="btn btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;"
+                           onmouseover="this.style.background='#FFE4B5'; this.style.borderColor='#FFE4B5';"
+                           onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.2)';">
+                            <i class="fab fa-whatsapp text-white"></i>
+                        </a>
+                        @endif
+                        @if(!empty($settings['contact_youtube']))
+                        <a href="{{ $settings['contact_youtube'] }}" target="_blank" rel="noopener"
+                           class="btn btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;"
+                           onmouseover="this.style.background='#FFE4B5'; this.style.borderColor='#FFE4B5';"
+                           onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.2)';">
+                            <i class="fab fa-youtube text-white"></i>
+                        </a>
+                        @endif
+                        @if(!empty($settings['contact_tiktok']))
+                        <a href="{{ $settings['contact_tiktok'] }}" target="_blank" rel="noopener"
+                           class="btn btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;"
+                           onmouseover="this.style.background='#FFE4B5'; this.style.borderColor='#FFE4B5';"
+                           onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.2)';">
+                            <i class="fab fa-tiktok text-white"></i>
+                        </a>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="p-2 rounded-3 me-2" style="background: linear-gradient(135deg, #FFE4B5 0%, #f4d9a6 100%);">
+                            <i class="fas fa-link" style="font-size: 1.2rem; color: #1e3a5f;"></i>
+                        </div>
+                        <h5 class="text-white fw-bold mb-0">Quick Links</h5>
+                    </div>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="{{ route('home') }}" class="text-white-50 text-decoration-none d-flex align-items-center"
+                               style="transition: all 0.3s;"
+                               onmouseover="this.style.color='#FFE4B5'; this.style.paddingLeft='8px';"
+                               onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.paddingLeft='0';">
+                                <i class="fas fa-chevron-right me-2" style="font-size: 0.7rem;"></i> Home
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ route('rooms.index') }}" class="text-white-50 text-decoration-none d-flex align-items-center"
+                               style="transition: all 0.3s;"
+                               onmouseover="this.style.color='#FFE4B5'; this.style.paddingLeft='8px';"
+                               onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.paddingLeft='0';">
+                                <i class="fas fa-chevron-right me-2" style="font-size: 0.7rem;"></i> Rooms
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ route('mice.index') }}" class="text-white-50 text-decoration-none d-flex align-items-center"
+                               style="transition: all 0.3s;"
+                               onmouseover="this.style.color='#FFE4B5'; this.style.paddingLeft='8px';"
+                               onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.paddingLeft='0';">
+                                <i class="fas fa-chevron-right me-2" style="font-size: 0.7rem;"></i> MICE
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ route('restaurants.index') }}" class="text-white-50 text-decoration-none d-flex align-items-center"
+                               style="transition: all 0.3s;"
+                               onmouseover="this.style.color='#FFE4B5'; this.style.paddingLeft='8px';"
+                               onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.paddingLeft='0';">
+                                <i class="fas fa-chevron-right me-2" style="font-size: 0.7rem;"></i> Restaurants
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ route('contact.index') }}" class="text-white-50 text-decoration-none d-flex align-items-center"
+                               style="transition: all 0.3s;"
+                               onmouseover="this.style.color='#FFE4B5'; this.style.paddingLeft='8px';"
+                               onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.paddingLeft='0';">
+                                <i class="fas fa-chevron-right me-2" style="font-size: 0.7rem;"></i> Contact Us
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Programs -->
+                <div class="col-lg-2 col-md-6">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="p-2 rounded-3 me-2" style="background: linear-gradient(135deg, #FFE4B5 0%, #f4d9a6 100%);">
+                            <i class="fas fa-handshake" style="font-size: 1.2rem; color: #1e3a5f;"></i>
+                        </div>
+                        <h5 class="text-white fw-bold mb-0">Programs</h5>
+                    </div>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="{{ route('pages.affiliate_info') }}" class="text-white-50 text-decoration-none d-flex align-items-center"
+                               style="transition: all 0.3s;"
+                               onmouseover="this.style.color='#FFE4B5'; this.style.paddingLeft='8px';"
+                               onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.paddingLeft='0';">
+                                <i class="fas fa-chevron-right me-2" style="font-size: 0.7rem;"></i> About Affiliate
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ route('affiliate.register.create') }}" class="text-white-50 text-decoration-none d-flex align-items-center"
+                               style="transition: all 0.3s;"
+                               onmouseover="this.style.color='#FFE4B5'; this.style.paddingLeft='8px';"
+                               onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.paddingLeft='0';">
+                                <i class="fas fa-chevron-right me-2" style="font-size: 0.7rem;"></i> Register Affiliate
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ route('pages.terms') }}" class="text-white-50 text-decoration-none d-flex align-items-center"
+                               style="transition: all 0.3s;"
+                               onmouseover="this.style.color='#FFE4B5'; this.style.paddingLeft='8px';"
+                               onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.paddingLeft='0';">
+                                <i class="fas fa-chevron-right me-2" style="font-size: 0.7rem;"></i> Terms & Conditions
+                            </a>
+                        </li>
+                        @auth
+                            @if(Auth::user()->affiliate && Auth::user()->affiliate->status == 'active')
+                            <li class="mb-2">
+                                <a href="{{ route('affiliate.dashboard') }}" class="text-white-50 text-decoration-none d-flex align-items-center"
+                                   style="transition: all 0.3s;"
+                                   onmouseover="this.style.color='#FFE4B5'; this.style.paddingLeft='8px';"
+                                   onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.paddingLeft='0';">
+                                    <i class="fas fa-chevron-right me-2" style="font-size: 0.7rem;"></i> Affiliate Dashboard
+                                </a>
+                            </li>
+                            @endif
+                        @endauth
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="p-2 rounded-3 me-2" style="background: linear-gradient(135deg, #FFE4B5 0%, #f4d9a6 100%);">
+                            <i class="fas fa-address-book" style="font-size: 1.2rem; color: #1e3a5f;"></i>
+                        </div>
+                        <h5 class="text-white fw-bold mb-0">Contact Info</h5>
+                    </div>
+                    <ul class="list-unstyled">
+                        @if(!empty($settings['contact_address']))
+                        <li class="mb-3 d-flex align-items-start">
+                            <div class="p-2 rounded me-3" style="background: rgba(255,255,255,0.1); min-width: 40px; text-align: center;">
+                                <i class="fas fa-map-marker-alt text-white"></i>
+                            </div>
+                            <div>
+                                <small class="text-white-50 d-block mb-1">Address</small>
+                                <p class="text-white mb-0" style="line-height: 1.6;">{{ $settings['contact_address'] }}</p>
+                            </div>
+                        </li>
+                        @endif
+                        @if(!empty($settings['contact_phone']))
+                        <li class="mb-3 d-flex align-items-start">
+                            <div class="p-2 rounded me-3" style="background: rgba(255,255,255,0.1); min-width: 40px; text-align: center;">
+                                <i class="fas fa-phone-alt text-white"></i>
+                            </div>
+                            <div>
+                                <small class="text-white-50 d-block mb-1">Phone</small>
+                                <a href="tel:{{ $settings['contact_phone'] }}" class="text-white text-decoration-none"
+                                   style="transition: color 0.3s;"
+                                   onmouseover="this.style.color='#FFE4B5';"
+                                   onmouseout="this.style.color='white';">
+                                    {{ $settings['contact_phone'] }}
+                                </a>
+                            </div>
+                        </li>
+                        @endif
+                        @if(!empty($settings['contact_email']))
+                        <li class="mb-3 d-flex align-items-start">
+                            <div class="p-2 rounded me-3" style="background: rgba(255,255,255,0.1); min-width: 40px; text-align: center;">
+                                <i class="fas fa-envelope text-white"></i>
+                            </div>
+                            <div>
+                                <small class="text-white-50 d-block mb-1">Email</small>
+                                <a href="mailto:{{ $settings['contact_email'] }}" class="text-white text-decoration-none"
+                                   style="transition: color 0.3s;"
+                                   onmouseover="this.style.color='#FFE4B5';"
+                                   onmouseout="this.style.color='white';">
+                                    {{ $settings['contact_email'] }}
+                                </a>
+                            </div>
+                        </li>
+                        @endif
+                    </ul>
+                </div>
             </div>
-            <p class="mb-0 text-white">&copy; {{ date('Y') }} {{ $settings['website_title'] ?? 'Bell Hotel Merauke' }}. All Rights Reserved.</p>
+
+            <!-- Bottom Bar -->
+            <div class="row mt-5 pt-4" style="border-top: 1px solid rgba(255,255,255,0.1);">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <p class="text-white-50 mb-0">
+                        <i class="far fa-copyright me-1"></i> {{ date('Y') }} {{ $settings['website_title'] ?? 'Bell Hotel Merauke' }}. All Rights Reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="text-white-50 mb-0">
+                        <i class="fas fa-heart" style="color: #FFE4B5;"></i> Designed with passion for hospitality excellence
+                    </p>
+                </div>
+            </div>
         </div>
+
+        <!-- Back to Top Button -->
+        <a href="#" class="btn btn-lg rounded-circle position-fixed bottom-0 end-0 mb-4 me-4 d-none" id="backToTop"
+           style="width: 55px; height: 55px; background: linear-gradient(135deg, #FFE4B5 0%, #f4d9a6 100%); border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 999; display: flex !important; align-items: center; justify-content: center;"
+           onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.4)';"
+           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.3)';">
+            <i class="fas fa-arrow-up" style="color: #1e3a5f; font-size: 1.2rem;"></i>
+        </a>
+
+        <script>
+            // Back to Top functionality
+            window.addEventListener('scroll', function() {
+                const backToTop = document.getElementById('backToTop');
+                if (window.scrollY > 300) {
+                    backToTop.classList.remove('d-none');
+                } else {
+                    backToTop.classList.add('d-none');
+                }
+            });
+
+            document.getElementById('backToTop').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        </script>
     </footer>
     <div class="floating-social-bar" aria-label="Social Media Links">
         <div class="social-tab" aria-hidden="true">Social&nbsp;Media</div>
