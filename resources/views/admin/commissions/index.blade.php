@@ -55,10 +55,11 @@
                             @forelse ($affiliates as $affiliate)
                                 <tr class="hover:bg-admin-primary/5 transition-colors duration-200">
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{-- PERBAIKAN 1: Periksa apakah user ada --}}
                                         @if ($affiliate->user)
-                                            <div class="font-semibold text-gray-900">{{ $affiliate->user->name }}</div>
-                                            <div class="text-sm text-gray-500">{{ $affiliate->user->email }}</div>
+                                            <div class="font-semibold text-gray-900">
+                                                {{ Str::limit($affiliate->user->name, 20) }}
+                                            </div>
+                                            <div class="text-sm text-gray-500">ID: {{ $affiliate->id }}</div>
                                         @else
                                             <div class="font-semibold text-red-600">User Deleted</div>
                                             <div class="text-sm text-gray-500">Affiliate ID: {{ $affiliate->id }}</div>

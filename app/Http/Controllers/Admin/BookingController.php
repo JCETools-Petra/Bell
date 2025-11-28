@@ -13,7 +13,12 @@ class BookingController extends Controller
 {
     public function index()
     {
-        $bookings = Booking::with(['room', 'affiliate.user'])->latest()->paginate(15); // Muat juga data affiliate
+        // Check authorization
+        if (! Gate::allows('manage-bookings')) {
+            abort(403, 'Unauthorized access to bookings.');
+        }
+
+        $bookings = Booking::with(['room', 'affiliate.user'])->latest()->paginate(15);
         return view('admin.bookings.index', compact('bookings'));
     }
 
