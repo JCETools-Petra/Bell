@@ -11,6 +11,7 @@ use App\Models\Banner;
 use App\Models\RestaurantImage; // Pastikan ini di-import
 use Illuminate\Support\Facades\Auth;
 use App\Models\HeroSlider;
+use App\Models\RecreationArea;
 
 class HomeController extends Controller
 {
@@ -21,7 +22,8 @@ class HomeController extends Controller
 
         $featuredRooms = collect();
         $featuredMice = collect();
-        $featuredRestaurantImages = collect(); 
+        $featuredRestaurantImages = collect();
+        $featuredRecreationAreas = collect();
 
         if (in_array('rooms', $featuredOptions)) {
             $featuredRooms = Room::with('images')->where('is_available', true)->latest()->take(3)->get();
@@ -32,6 +34,9 @@ class HomeController extends Controller
         if (in_array('restaurants', $featuredOptions)) {
             $featuredRestaurantImages = RestaurantImage::with('restaurant')->latest()->get();
         }
+
+        // Selalu tampilkan Recreation Areas
+        $featuredRecreationAreas = RecreationArea::with('images')->latest()->take(3)->get();
         
         $banners = Banner::where('is_active', true)->orderBy('order')->get();
         
@@ -50,6 +55,6 @@ class HomeController extends Controller
         }
 
         // 3. TAMBAHKAN 'heroSliders' KE DALAM COMPACT
-        return view('frontend.home', compact('featuredOptions', 'featuredRooms', 'featuredMice', 'featuredRestaurantImages', 'banners', 'heroSliders'));
+        return view('frontend.home', compact('featuredOptions', 'featuredRooms', 'featuredMice', 'featuredRestaurantImages', 'featuredRecreationAreas', 'banners', 'heroSliders'));
     }
 }
