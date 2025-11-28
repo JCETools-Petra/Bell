@@ -8,6 +8,7 @@ use App\Models\Affiliate;
 use App\Models\Booking;
 use App\Models\Commission;
 use Illuminate\Support\Facades\Gate;
+use App\Models\ActivityLog;
 
 class CommissionController extends Controller
 {
@@ -95,12 +96,44 @@ class CommissionController extends Controller
     {
         if (! Gate::allows('manage-commissions')) abort(403);
 
+        // Ambil semua komisi yang akan di-mark as paid beserta detailnya
+        $unpaidCommissions = Commission::where('affiliate_id', $affiliate->id)
+            ->where('status', 'unpaid')
+            ->with('booking')
+            ->get();
+
+        $totalAmount = $unpaidCommissions->sum('commission_amount');
+        $commissionCount = $unpaidCommissions->count();
+
+        // Siapkan detail untuk log
+        $commissionDetails = $unpaidCommissions->map(function ($commission) {
+            return [
+                'commission_id' => $commission->id,
+                'booking_id' => $commission->booking_id,
+                'amount' => $commission->commission_amount,
+                'created_at' => $commission->created_at->format('Y-m-d H:i:s'),
+            ];
+        })->toArray();
+
+        // Update status menjadi paid
         Commission::where('affiliate_id', $affiliate->id)
             ->where('status', 'unpaid')
-            // Sebaiknya hapus filter per bulan ini agar bisa membayar semua komisi,
-            // atau biarkan jika memang sengaja hanya untuk bulan ini.
-            // ->whereMonth('created_at', now()->month) 
             ->update(['status' => 'paid']);
+
+        // Log aktivitas dengan detail lengkap
+        ActivityLog::createLog(
+            action: 'commissions_marked_as_paid',
+            description: "Marked {$commissionCount} commission(s) as paid for affiliate '{$affiliate->user->name}' (ID: {$affiliate->id}). Total amount: Rp " . number_format($totalAmount, 0, ',', '.'),
+            modelType: 'Affiliate',
+            modelId: $affiliate->id,
+            oldValues: ['status' => 'unpaid', 'commission_count' => $commissionCount],
+            newValues: [
+                'status' => 'paid',
+                'commission_count' => $commissionCount,
+                'total_amount' => $totalAmount,
+                'commissions' => $commissionDetails,
+            ]
+        );
 
         return back()->with('success', 'All unpaid commissions for this affiliate have been marked as paid.');
     }

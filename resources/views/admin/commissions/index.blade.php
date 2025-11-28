@@ -56,10 +56,17 @@
                                 <tr class="hover:bg-admin-primary/5 transition-colors duration-200">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if ($affiliate->user)
-                                            <div class="font-semibold text-gray-900">
-                                                {{ Str::limit($affiliate->user->name, 20) }}
-                                            </div>
-                                            <div class="text-sm text-gray-500">ID: {{ $affiliate->id }}</div>
+                                            @if(Auth::user()->role === 'front_office')
+                                                {{-- Front Office: Nama disingkat, tanpa email --}}
+                                                <div class="font-semibold text-gray-900">
+                                                    {{ Str::limit($affiliate->user->name, 20) }}
+                                                </div>
+                                                <div class="text-sm text-gray-500">ID: {{ $affiliate->id }}</div>
+                                            @else
+                                                {{-- Admin & Accounting: Tampilkan semua detail --}}
+                                                <div class="font-semibold text-gray-900">{{ $affiliate->user->name }}</div>
+                                                <div class="text-sm text-gray-500">{{ $affiliate->user->email }}</div>
+                                            @endif
                                         @else
                                             <div class="font-semibold text-red-600">User Deleted</div>
                                             <div class="text-sm text-gray-500">Affiliate ID: {{ $affiliate->id }}</div>

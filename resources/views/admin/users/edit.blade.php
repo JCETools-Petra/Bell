@@ -18,6 +18,7 @@
                             <select name="role" id="role" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
                                 <option value="admin" @selected($user->role == 'admin')>Admin</option>
                                 <option value="accounting" @selected($user->role == 'accounting')>Accounting</option>
+                                <option value="front_office" @selected($user->role == 'front_office')>Front Office</option>
                                 <option value="affiliate" @selected($user->role == 'affiliate')>Affiliate</option>
                                 <option value="user" @selected($user->role == 'user')>User</option>
                             </select>

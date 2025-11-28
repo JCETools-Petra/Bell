@@ -40,6 +40,7 @@
                                 <select name="role" id="role" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                     <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
                                     <option value="accounting" {{ old('role') == 'accounting' ? 'selected' : '' }}>Accounting</option>
+                                    <option value="front_office" {{ old('role') == 'front_office' ? 'selected' : '' }}>Front Office</option>
                                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                                 </select>
                             </div>

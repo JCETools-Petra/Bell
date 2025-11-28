@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Commission;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Affiliate;
+use App\Models\ActivityLog;
 
 class BookingController extends Controller
 {
@@ -48,9 +49,21 @@ class BookingController extends Controller
             'status' => 'required|in:pending,confirmed,cancelled',
         ]);
 
+        $oldStatus = $booking->status;
         $newStatus = $request->status;
+
         $booking->status = $newStatus;
         $booking->save();
+
+        // Log aktivitas perubahan status booking
+        ActivityLog::createLog(
+            action: 'booking_status_changed',
+            description: "Changed booking #{$booking->id} status from '{$oldStatus}' to '{$newStatus}'",
+            modelType: 'Booking',
+            modelId: $booking->id,
+            oldValues: ['status' => $oldStatus],
+            newValues: ['status' => $newStatus]
+        );
 
         // Cek jika status diubah menjadi "confirmed" DAN booking ini memiliki affiliate
         if ($newStatus === 'confirmed' && $booking->affiliate_id) {
@@ -75,7 +88,17 @@ class BookingController extends Controller
         }
         // Jika status diubah menjadi "cancelled", hapus komisi yang mungkin sudah ada
         elseif ($newStatus === 'cancelled') {
+            $deletedCount = Commission::where('booking_id', $booking->id)->count();
             Commission::where('booking_id', $booking->id)->delete();
+
+            if ($deletedCount > 0) {
+                ActivityLog::createLog(
+                    action: 'booking_cancelled_commission_deleted',
+                    description: "Cancelled booking #{$booking->id} - Deleted {$deletedCount} commission(s)",
+                    modelType: 'Booking',
+                    modelId: $booking->id
+                );
+            }
         }
 
         return back()->with('success', 'Booking status updated successfully.');
@@ -83,7 +106,27 @@ class BookingController extends Controller
 
     public function destroy(Booking $booking)
     {
+        $bookingId = $booking->id;
+        $guestName = $booking->guest_name;
+        $bookingData = [
+            'id' => $booking->id,
+            'guest_name' => $booking->guest_name,
+            'guest_email' => $booking->guest_email,
+            'status' => $booking->status,
+            'total_price' => $booking->total_price,
+        ];
+
         $booking->delete();
+
+        // Log aktivitas penghapusan booking
+        ActivityLog::createLog(
+            action: 'booking_deleted',
+            description: "Deleted booking #{$bookingId} for guest '{$guestName}'",
+            modelType: 'Booking',
+            modelId: $bookingId,
+            oldValues: $bookingData
+        );
+
         return back()->with('success', 'Booking deleted successfully.');
     }
     
