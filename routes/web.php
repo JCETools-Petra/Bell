@@ -113,11 +113,15 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::middleware('role:admin,accounting')->group(function () {
+    Route::middleware('role:admin,accounting,front_office')->group(function () {
         Route::get('/commissions', [CommissionController::class, 'index'])->name('commissions.index');
         Route::get('/commissions/{affiliate}', [CommissionController::class, 'show'])->name('commissions.show');
         Route::post('/commissions/{affiliate}/pay', [CommissionController::class, 'markAsPaid'])->name('commissions.pay');
         Route::resource('commissions', CommissionController::class)->only(['create', 'store']);
+    });
+    Route::middleware('role:admin,front_office')->group(function () {
+        Route::resource('bookings', AdminBookingController::class);
+        Route::post('bookings/{booking}/confirm-pay-at-hotel', [AdminBookingController::class, 'confirmPayAtHotel'])->name('bookings.confirmPayAtHotel');
     });
     Route::middleware('role:admin')->group(function () {
         Route::resource('rooms', AdminRoomController::class);
@@ -129,7 +133,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'edit', 'update']);
         Route::get('activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
         Route::get('activity-logs/{activityLog}', [\App\Http\Controllers\Admin\ActivityLogController::class, 'show'])->name('activity-logs.show');
-        Route::resource('bookings', AdminBookingController::class);
         Route::resource('mice-inquiries', AdminMiceInquiryController::class)->only(['index', 'destroy']);
         Route::resource('affiliates', AdminAffiliateController::class)->only(['index', 'update']);
         Route::resource('banners', AdminBannerController::class);
@@ -148,7 +151,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('mice-inquiries', [\App\Http\Controllers\Admin\MiceInquiryController::class, 'index'])->name('mice-inquiries.index');
         Route::post('mice-inquiries', [\App\Http\Controllers\Admin\MiceInquiryController::class, 'store'])->name('mice-inquiries.store');
         Route::delete('mice-inquiries/{commission}', [\App\Http\Controllers\Admin\MiceInquiryController::class, 'destroy'])->name('mice-inquiries.destroy');
-        Route::post('bookings/{booking}/confirm-pay-at-hotel', [AdminBookingController::class, 'confirmPayAtHotel'])->name('bookings.confirmPayAtHotel');
         Route::resource('hero-sliders', App\Http\Controllers\Admin\HeroSliderController::class);
     });
 });
