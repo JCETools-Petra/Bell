@@ -127,6 +127,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
         Route::delete('recreation-areas/images/{image}', [AdminRecreationAreaController::class, 'destroyImage'])->name('recreation-areas.image.destroy');
         Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'edit', 'update']);
+        Route::get('activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
+        Route::get('activity-logs/{activityLog}', [\App\Http\Controllers\Admin\ActivityLogController::class, 'show'])->name('activity-logs.show');
         Route::resource('bookings', AdminBookingController::class);
         Route::resource('mice-inquiries', AdminMiceInquiryController::class)->only(['index', 'destroy']);
         Route::resource('affiliates', AdminAffiliateController::class)->only(['index', 'update']);
