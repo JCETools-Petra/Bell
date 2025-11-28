@@ -32,7 +32,7 @@ class RecreationAreaImage extends Model
 
     ];
 
- 
+
 
     public function recreationArea()
 
@@ -41,3 +41,5 @@ class RecreationAreaImage extends Model
         return $this->belongsTo(RecreationArea::class);
 
     }
+
+}

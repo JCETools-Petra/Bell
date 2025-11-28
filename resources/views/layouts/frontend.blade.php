@@ -29,7 +29,7 @@
     {{-- Style untuk kalender Flatpickr sudah dipindahkan ke custom-style.css --}}
     @stack('styles')
 </head>
-<body class="{{ request()->routeIs('home') || request()->routeIs('rooms.index') || request()->routeIs('contact.index') || request()->routeIs('mice.index') || request()->routeIs('restaurants.index') || request()->routeIs('restaurants.show') ? 'homepage' : '' }}">
+<body class="{{ request()->routeIs('home') || request()->routeIs('rooms.index') || request()->routeIs('contact.index') || request()->routeIs('mice.index') || request()->routeIs('restaurants.index') || request()->routeIs('restaurants.show') || request()->routeIs('recreation-areas.index') || request()->routeIs('recreation-areas.show') ? 'homepage' : '' }}">
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" data-bs-theme="dark">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
@@ -240,6 +240,14 @@
                                onmouseover="this.style.color='#FFE4B5'; this.style.paddingLeft='8px';"
                                onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.paddingLeft='0';">
                                 <i class="fas fa-chevron-right me-2" style="font-size: 0.7rem;"></i> Restaurants
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ route('recreation-areas.index') }}" class="text-white-50 text-decoration-none d-flex align-items-center"
+                               style="transition: all 0.3s;"
+                               onmouseover="this.style.color='#FFE4B5'; this.style.paddingLeft='8px';"
+                               onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.paddingLeft='0';">
+                                <i class="fas fa-chevron-right me-2" style="font-size: 0.7rem;"></i> Recreation Area
                             </a>
                         </li>
                         <li class="mb-2">

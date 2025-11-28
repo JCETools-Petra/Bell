@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\MaintenanceController;
 use App\Http\Controllers\Admin\AffiliatePageController;
 use App\Http\Controllers\Admin\BannerController as AdminBannerController;
 use App\Http\Controllers\Admin\PriceOverrideController as AdminPriceOverrideController;
+use App\Http\Controllers\Admin\RecreationAreaController as AdminRecreationAreaController;
 
 // Affiliate Dashboard Controller
 use App\Http\Controllers\Affiliate\DashboardController as AffiliateDashboardController;
