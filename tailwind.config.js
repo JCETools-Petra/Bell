@@ -18,11 +18,11 @@ export default {
                 'brand-black': '#222222',
                 'brand-red': '#A4161A',
                 'brand-gold': '#D4AF37',
-                // New Sky Blue Resort Theme
-                'admin-primary': '#87CEEB',      // Sky Blue - Main
-                'admin-secondary': '#4682B4',    // Steel Blue - Depth
-                'admin-accent': '#FFE4B5',       // Moccasin - Cream
-                'admin-tertiary': '#5F9EA0',     // Cadet Blue
+                // Navy Professional Theme
+                'admin-primary': '#1e3a8a',      // Navy Blue - Main (elegant & professional)
+                'admin-secondary': '#0ea5e9',    // Sky Blue - Bright accent
+                'admin-accent': '#fbbf24',       // Amber Gold - Warm & luxurious
+                'admin-tertiary': '#06b6d4',     // Cyan - Fresh touch
                 'admin-dark': '#1e293b',         // Slate 800 - Dark backgrounds
                 'admin-darker': '#0f172a',       // Slate 900 - Darker backgrounds
                 'admin-light': '#f8fafc',        // Slate 50 - Light backgrounds

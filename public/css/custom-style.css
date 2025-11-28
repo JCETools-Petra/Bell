@@ -13,21 +13,21 @@
 
     --color-black: #222222;
     --color-white: #FFFFFF;
-    --color-primary: #87CEEB;
-    /* Sky Blue - Biru langit cerah sebagai warna utama */
-    --color-secondary: #4682B4;
-    /* Steel Blue - Biru laut dalam untuk kedalaman */
-    --color-accent: #FFE4B5;
-    /* Moccasin - Cream hangat untuk aksen */
-    --color-tertiary: #5F9EA0;
-    /* Cadet Blue - Biru-hijau sophisticated */
+    --color-primary: #1e3a8a;
+    /* Navy Blue - Biru tua elegant & professional */
+    --color-secondary: #0ea5e9;
+    /* Sky Blue - Biru cerah untuk aksen */
+    --color-accent: #fbbf24;
+    /* Amber Gold - Warm & luxurious accent */
+    --color-tertiary: #06b6d4;
+    /* Cyan - Fresh touch */
     --color-light-gray: #f8f9fa;
     --color-sand: #F5DEB3;
     /* Wheat - Pasir pantai */
 
     /* Legacy color mappings for backward compatibility */
-    --color-red: #87CEEB;
-    --color-gold: #FFE4B5;
+    --color-red: #1e3a8a;
+    --color-gold: #fbbf24;
 }
 
 
@@ -118,10 +118,10 @@ h6,
 /* --- Navbar Utama --- */
 .navbar {
     background: var(--color-primary) !important;
-    /* Pure Sky Blue - Biru langit murni */
+    /* Navy Blue - Elegant & Professional */
     padding: 1rem 0;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(135, 206, 235, 0.5);
+    box-shadow: 0 4px 20px rgba(30, 58, 138, 0.5);
 }
 
 .navbar-brand {
@@ -165,7 +165,7 @@ h6,
     transform: scaleX(0);
     transform-origin: center;
     transition: transform 0.4s ease;
-    box-shadow: 0 2px 8px rgba(255, 228, 181, 0.6);
+    box-shadow: 0 2px 8px rgba(251, 191, 36, 0.6);
 }
 
 .nav-link:hover::after,
@@ -188,11 +188,11 @@ h6,
 
 .navbar .dropdown-menu {
     background: var(--color-primary);
-    /* Pure Sky Blue */
+    /* Navy Blue */
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 0.5rem;
     padding: 0.5rem 0;
-    box-shadow: 0 10px 30px rgba(135, 206, 235, 0.4);
+    box-shadow: 0 10px 30px rgba(30, 58, 138, 0.4);
 }
 
 .navbar .dropdown-menu .dropdown-item {
@@ -201,14 +201,14 @@ h6,
 }
 
 .navbar .dropdown-menu .dropdown-item:hover {
-    background: rgba(255, 228, 181, 0.2);
+    background: rgba(251, 191, 36, 0.2);
     color: var(--color-accent);
 }
 
 /* --- Running Text (Marquee) --- */
 .running-text-container {
     background: var(--color-primary);
-    /* Pure Sky Blue matching navbar */
+    /* Navy Blue matching navbar */
     color: var(--color-white);
     padding: 10px 0;
     width: 100%;
@@ -219,7 +219,7 @@ h6,
     /* Posisi di bawah navbar */
     left: 0;
     z-index: 1029;
-    box-shadow: 0 4px 12px rgba(135, 206, 235, 0.5);
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.5);
 }
 
 .running-text-link {
@@ -273,13 +273,13 @@ h6,
     letter-spacing: 1px;
     border: none;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(135, 206, 235, 0.4);
+    box-shadow: 0 4px 15px rgba(30, 58, 138, 0.4);
 }
 
 .btn-custom:hover {
     background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(135, 206, 235, 0.6);
+    box-shadow: 0 6px 25px rgba(14, 165, 233, 0.6);
     color: var(--color-white);
 }
 
@@ -302,7 +302,7 @@ h6,
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(135, 206, 235, 0.1), rgba(143, 188, 143, 0.1));
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(14, 165, 233, 0.1));
     opacity: 0;
     transition: opacity 0.5s ease;
     z-index: 1;
@@ -315,7 +315,7 @@ h6,
 
 .card:hover {
     transform: translateY(-15px);
-    box-shadow: 0 25px 60px rgba(135, 206, 235, 0.25);
+    box-shadow: 0 25px 60px rgba(30, 58, 138, 0.25);
 }
 
 .card-title {
@@ -363,7 +363,7 @@ h6,
     letter-spacing: 0.5px;
     text-transform: uppercase;
     z-index: 3;
-    box-shadow: 0 4px 15px rgba(135, 206, 235, 0.5);
+    box-shadow: 0 4px 15px rgba(30, 58, 138, 0.5);
 }
 
 /* --- Paginasi --- */
@@ -497,7 +497,7 @@ h6,
 
 .hero-booking-form .form-control:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 0.2rem rgba(135, 206, 235, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.25);
 }
 
 .hero-booking-form .d-grid {
@@ -658,7 +658,7 @@ h6,
 .thumbnail-item img.active {
     opacity: 1;
     border-color: var(--color-primary);
-    box-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
+    box-shadow: 0 0 10px rgba(30, 58, 138, 0.5);
 }
 
 .restaurant-details .display-5 {
@@ -880,7 +880,7 @@ h6,
     position: relative;
     padding: 8rem 0 4rem;
     background: var(--color-primary);
-    /* Pure Sky Blue */
+    /* Navy Blue */
     color: var(--color-white);
     text-align: center;
     overflow: hidden;
@@ -893,8 +893,8 @@ h6,
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(135, 206, 235, 0.95) 0%, rgba(135, 206, 235, 0.85) 100%);
-    /* Light Sky Blue overlay */
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.95) 0%, rgba(30, 58, 138, 0.85) 100%);
+    /* Navy Blue overlay */
     z-index: 1;
 }
 
@@ -931,13 +931,13 @@ h6,
     color: var(--color-white);
     font-size: 2rem;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(135, 206, 235, 0.4);
+    box-shadow: 0 4px 15px rgba(30, 58, 138, 0.4);
 }
 
 .contact-info-card:hover .contact-icon-wrapper {
     background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(135, 206, 235, 0.6);
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.6);
 }
 
 .contact-label {
@@ -975,11 +975,11 @@ h6,
     position: relative;
     padding: 8rem 0 4rem;
     background: var(--color-primary);
-    /* Pure Sky Blue */
+    /* Navy Blue */
     color: var(--color-white);
     text-align: center;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(135, 206, 235, 0.5);
+    box-shadow: 0 4px 20px rgba(30, 58, 138, 0.5);
 }
 
 .rooms-hero::before {
@@ -989,8 +989,8 @@ h6,
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(135, 206, 235, 0.95) 0%, rgba(135, 206, 235, 0.85) 100%);
-    /* Light Sky Blue overlay */
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.95) 0%, rgba(30, 58, 138, 0.85) 100%);
+    /* Navy Blue overlay */
     z-index: 1;
 }
 
@@ -1004,11 +1004,11 @@ h6,
     position: relative;
     padding: 8rem 0 4rem;
     background: var(--color-primary);
-    /* Pure Sky Blue */
+    /* Navy Blue */
     color: var(--color-white);
     text-align: center;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(135, 206, 235, 0.5);
+    box-shadow: 0 4px 20px rgba(30, 58, 138, 0.5);
 }
 
 .mice-hero::before,
@@ -1019,8 +1019,8 @@ h6,
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(135, 206, 235, 0.95) 0%, rgba(135, 206, 235, 0.85) 100%);
-    /* Light Sky Blue overlay */
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.95) 0%, rgba(30, 58, 138, 0.85) 100%);
+    /* Navy Blue overlay */
     z-index: 1;
 }
 
@@ -1123,8 +1123,8 @@ h6,
     width: 100%;
     height: 100%;
     background-image:
-        radial-gradient(circle at 20% 50%, rgba(135, 206, 235, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(143, 188, 143, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 20% 50%, rgba(30, 58, 138, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.05) 0%, transparent 50%);
     pointer-events: none;
 }
 
@@ -1168,7 +1168,7 @@ h6,
 
 .feature-icon-box:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 50px rgba(135, 206, 235, 0.25);
+    box-shadow: 0 20px 50px rgba(30, 58, 138, 0.25);
     border-color: var(--color-primary);
 }
 
@@ -1211,7 +1211,7 @@ h6,
     left: -10%;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(135, 206, 235, 0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(30, 58, 138, 0.08) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
