@@ -13,17 +13,17 @@
     /* Hero Slider - Full Width Modern Design */
     .recreation-hero-section {
         position: relative;
-        height: 85vh;
-        min-height: 600px;
-        max-height: 800px;
+        height: 60vh;
+        min-height: 450px;
+        max-height: 600px;
         overflow: hidden;
-        background: #000;
+        background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
     }
 
     .recreation-hero-carousel .carousel-item {
-        height: 85vh;
-        min-height: 600px;
-        max-height: 800px;
+        height: 60vh;
+        min-height: 450px;
+        max-height: 600px;
     }
 
     .recreation-hero-carousel .carousel-item img {
@@ -114,7 +114,7 @@
         border-radius: 24px;
         padding: 3rem;
         box-shadow: 0 10px 40px rgba(30, 58, 138, 0.08);
-        margin-top: -100px;
+        margin-top: -80px;
         position: relative;
         z-index: 20;
     }
@@ -205,6 +205,16 @@
             font-size: 2.5rem;
         }
 
+        .recreation-hero-section {
+            height: 50vh;
+            min-height: 400px;
+        }
+
+        .recreation-hero-carousel .carousel-item {
+            height: 50vh;
+            min-height: 400px;
+        }
+
         .modern-gallery {
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1rem;
@@ -212,7 +222,7 @@
 
         .description-card {
             padding: 2rem;
-            margin-top: -60px;
+            margin-top: -50px;
         }
 
         .recreation-hero-carousel .carousel-control-prev,
