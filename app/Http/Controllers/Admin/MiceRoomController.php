@@ -76,7 +76,8 @@ class MiceRoomController extends Controller
                 }
             }
         }
-        $miceRoom->specifications = json_encode($specifications);
+        // FIX: Don't json_encode because model cast will do it automatically
+        $miceRoom->specifications = $specifications;
         $miceRoom->save();
 
         // Logic Images Gallery
@@ -151,7 +152,7 @@ class MiceRoomController extends Controller
                     $newSpecification = [
                         'key' => $specificationData['key'],
                         'value' => $specificationData['value'] ?? '',
-                        'image' => $specificationData['image_path'] ?? null, 
+                        'image' => $specificationData['image_path'] ?? null,
                     ];
 
                     if ($request->hasFile("specifications.{$index}.image")) {
@@ -171,7 +172,8 @@ class MiceRoomController extends Controller
             }
         }
 
-        $miceRoom->specifications = json_encode($specifications);
+        // FIX: Don't json_encode because model cast will do it automatically
+        $miceRoom->specifications = $specifications;
         $miceRoom->save();
 
         // 4. Upload Foto Baru (Gallery)
