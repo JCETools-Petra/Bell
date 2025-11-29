@@ -35,15 +35,15 @@ body {
 /* =================== BREADCRUMB =================== */
 .breadcrumb-section {
     background: linear-gradient(135deg, var(--resort-light) 0%, #ffffff 100%);
-    padding: 24px 0;
-    border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(135, 206, 235, 0.15);
 }
 
 .breadcrumb-nav {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 0.95rem;
+    gap: 10px;
+    font-size: 0.9rem;
     color: #666;
 }
 
@@ -64,7 +64,7 @@ body {
 
 /* =================== HERO SECTION =================== */
 .mice-hero-section {
-    padding: 60px 0;
+    padding: 40px 0 20px 0;
     background: #ffffff;
 }
 
@@ -88,10 +88,10 @@ body {
 
 .main-image-container {
     width: 100%;
-    height: 600px;
-    border-radius: 20px;
+    height: 500px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(30, 58, 95, 0.15);
+    box-shadow: 0 12px 40px rgba(30, 58, 95, 0.12);
     position: relative;
     background: #f8f9fa;
 }
@@ -183,86 +183,99 @@ body {
 /* =================== INQUIRY CARD SIDEBAR =================== */
 .inquiry-card {
     position: sticky;
-    top: 120px;
+    top: 100px;
     width: 420px;
     background: #ffffff;
-    border-radius: 20px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(30, 58, 95, 0.15);
+    box-shadow: 0 12px 40px rgba(30, 58, 95, 0.12);
+    border: 1px solid rgba(135, 206, 235, 0.1);
 }
 
 .inquiry-card-header {
     background: linear-gradient(135deg, var(--resort-dark) 0%, var(--resort-secondary) 100%);
-    padding: 32px;
+    padding: 28px 24px;
     color: #ffffff;
     text-align: center;
+    position: relative;
+}
+
+.inquiry-card-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--resort-gold), var(--resort-primary), var(--resort-gold));
 }
 
 .inquiry-card-header h3 {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
     margin: 0;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.3px;
 }
 
 .inquiry-card-header p {
-    margin: 12px 0 0 0;
-    font-size: 1rem;
+    margin: 8px 0 0 0;
+    font-size: 0.95rem;
     opacity: 0.9;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 .inquiry-card-body {
-    padding: 32px;
+    padding: 24px;
 }
 
 .facilities-title {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--resort-dark);
-    margin: 0 0 20px 0;
-    letter-spacing: -0.3px;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.2px;
 }
 
 .facilities-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 28px 0;
+    margin: 0 0 24px 0;
 }
 
 .facility-item {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    background: linear-gradient(135deg, rgba(135, 206, 235, 0.04), rgba(70, 130, 180, 0.04));
-    border-radius: 12px;
+    gap: 12px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, rgba(135, 206, 235, 0.05), rgba(70, 130, 180, 0.05));
+    border-radius: 10px;
     border-left: 3px solid var(--resort-primary);
     transition: all 0.3s ease;
 }
 
 .facility-item:hover {
-    background: linear-gradient(135deg, rgba(135, 206, 235, 0.1), rgba(70, 130, 180, 0.1));
+    background: linear-gradient(135deg, rgba(135, 206, 235, 0.12), rgba(70, 130, 180, 0.12));
     transform: translateX(4px);
+    border-left-color: var(--resort-gold);
 }
 
 .facility-icon {
     flex-shrink: 0;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     background: linear-gradient(135deg, var(--resort-primary), var(--resort-secondary));
-    border-radius: 10px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .facility-icon svg {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     stroke: #ffffff;
-    stroke-width: 3;
+    stroke-width: 2.5;
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -270,7 +283,7 @@ body {
 
 .facility-text {
     flex: 1;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: #444;
     font-weight: 500;
 }
@@ -315,8 +328,8 @@ body {
 
 /* =================== MICE INFO SECTION =================== */
 .mice-info-section {
-    padding: 60px 0;
-    background: #ffffff;
+    padding: 40px 0;
+    background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
 }
 
 .mice-container {
@@ -327,16 +340,16 @@ body {
 
 .mice-header {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 40px;
 }
 
 .mice-title {
-    font-size: 4rem;
+    font-size: 3rem;
     font-weight: 800;
     color: var(--resort-dark);
-    margin: 0 0 20px 0;
-    letter-spacing: -1.5px;
-    line-height: 1.1;
+    margin: 0 0 16px 0;
+    letter-spacing: -1px;
+    line-height: 1.2;
 }
 
 .title-divider {
@@ -357,18 +370,39 @@ body {
 /* Specifications Grid */
 .specs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 24px;
-    margin: 40px 0;
-    padding: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin: 0 0 32px 0;
+    padding: 32px;
     background: linear-gradient(135deg, var(--resort-light) 0%, #ffffff 100%);
-    border-radius: 20px;
-    border: 2px solid rgba(135, 206, 235, 0.3);
+    border-radius: 16px;
+    border: 2px solid rgba(135, 206, 235, 0.2);
+    box-shadow: 0 4px 20px rgba(30, 58, 95, 0.06);
 }
 
 .spec-item {
     text-align: center;
-    padding: 20px;
+    padding: 16px;
+    position: relative;
+}
+
+.spec-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--resort-primary), var(--resort-secondary));
+    border-radius: 2px;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.spec-item:hover::after {
+    opacity: 1;
+    width: 60px;
 }
 
 .spec-label {
@@ -381,40 +415,52 @@ body {
 }
 
 .spec-value {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--resort-dark);
+    transition: color 0.3s ease;
+}
+
+.spec-item:hover .spec-value {
+    background: linear-gradient(135deg, var(--resort-secondary), var(--resort-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* Description */
 .mice-description {
-    font-size: 1.15rem;
-    line-height: 1.9;
+    font-size: 1.05rem;
+    line-height: 1.8;
     color: #555;
-    text-align: justify;
-    margin: 40px 0;
+    text-align: left;
+    margin: 0;
+    padding: 28px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(30, 58, 95, 0.06);
 }
 
 /* =================== LAYOUT CAPACITY SECTION =================== */
 .capacity-section {
-    padding: 80px 0;
-    background: linear-gradient(135deg, var(--resort-light) 0%, #ffffff 100%);
+    padding: 60px 0;
+    background: #ffffff;
 }
 
 .section-title {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 800;
     color: var(--resort-dark);
     text-align: center;
-    margin: 0 0 20px 0;
-    letter-spacing: -1px;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.8px;
 }
 
 .section-divider {
-    width: 100px;
-    height: 4px;
+    width: 80px;
+    height: 3px;
     background: linear-gradient(90deg, transparent, var(--resort-gold), transparent);
-    margin: 0 auto 60px auto;
+    margin: 0 auto 40px auto;
     border-radius: 2px;
 }
 
@@ -427,19 +473,38 @@ body {
 }
 
 .capacity-card {
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 36px 24px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 16px;
+    padding: 28px 20px;
     text-align: center;
-    box-shadow: 0 10px 40px rgba(30, 58, 95, 0.08);
+    box-shadow: 0 4px 20px rgba(30, 58, 95, 0.06);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid rgba(135, 206, 235, 0.1);
+    border: 2px solid rgba(135, 206, 235, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.capacity-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--resort-primary), var(--resort-secondary));
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .capacity-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 60px rgba(30, 58, 95, 0.15);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(30, 58, 95, 0.12);
     border-color: var(--resort-primary);
+    background: #ffffff;
+}
+
+.capacity-card:hover::before {
+    opacity: 1;
 }
 
 .capacity-icon {
@@ -461,9 +526,16 @@ body {
 }
 
 .capacity-value {
-    font-size: 2rem;
+    font-size: 1.85rem;
     font-weight: 800;
     background: linear-gradient(135deg, var(--resort-gold), #B8860B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.capacity-card:hover .capacity-value {
+    background: linear-gradient(135deg, var(--resort-secondary), var(--resort-primary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -521,7 +593,7 @@ body {
 @media (max-width: 991.98px) {
     .hero-grid {
         grid-template-columns: 1fr;
-        gap: 32px;
+        gap: 24px;
     }
 
     .inquiry-card {
@@ -532,60 +604,15 @@ body {
     }
 
     .main-image-container {
-        height: 450px;
+        height: 420px;
     }
 
-    .mice-title {
-        font-size: 3rem;
+    .mice-hero-section {
+        padding: 32px 0 16px 0;
     }
 
-    .section-title {
-        font-size: 2.5rem;
-    }
-
-    .capacity-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-    }
-
-    .specs-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        padding: 28px;
-    }
-}
-
-@media (max-width: 767.98px) {
-    .hero-container,
-    .mice-container {
-        padding: 0 16px;
-    }
-
-    .mice-hero-section,
     .mice-info-section {
-        padding: 40px 0;
-    }
-
-    .capacity-section {
-        padding: 60px 0;
-    }
-
-    .main-image-container {
-        height: 380px;
-        border-radius: 16px;
-    }
-
-    .gallery-control {
-        width: 44px;
-        height: 44px;
-    }
-
-    .gallery-control.prev {
-        left: 16px;
-    }
-
-    .gallery-control.next {
-        right: 16px;
+        padding: 32px 0;
     }
 
     .mice-title {
@@ -597,16 +624,113 @@ body {
     }
 
     .capacity-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+    }
+
+    .specs-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding: 24px;
+    }
+
+    .capacity-section {
+        padding: 48px 0;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .hero-container,
+    .mice-container {
+        padding: 0 16px;
+    }
+
+    .mice-hero-section {
+        padding: 24px 0 12px 0;
+    }
+
+    .mice-info-section {
+        padding: 24px 0;
+    }
+
+    .capacity-section {
+        padding: 40px 0;
+    }
+
+    .main-image-container {
+        height: 350px;
+        border-radius: 12px;
+    }
+
+    .gallery-control {
+        width: 40px;
+        height: 40px;
+    }
+
+    .gallery-control.prev {
+        left: 12px;
+    }
+
+    .gallery-control.next {
+        right: 12px;
+    }
+
+    .gallery-control svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .mice-title {
+        font-size: 2rem;
+        margin: 0 0 12px 0;
+    }
+
+    .mice-header {
+        margin-bottom: 28px;
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+    }
+
+    .capacity-grid {
         grid-template-columns: 1fr;
     }
 
     .specs-grid {
         grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 12px;
+        margin: 0 0 24px 0;
     }
 
-    .inquiry-card-header,
+    .mice-description {
+        padding: 20px;
+        font-size: 1rem;
+    }
+
+    .inquiry-card-header {
+        padding: 20px 16px;
+    }
+
     .inquiry-card-body {
-        padding: 24px;
+        padding: 20px 16px;
+    }
+
+    .inquiry-card-header h3 {
+        font-size: 1.3rem;
+    }
+
+    .inquiry-card-header p {
+        font-size: 0.9rem;
+    }
+
+    .capacity-card {
+        padding: 24px 16px;
+    }
+
+    .section-divider {
+        margin: 0 auto 32px auto;
     }
 }
 
