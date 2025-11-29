@@ -13,6 +13,8 @@
     /* Hero Slider - Full Width Modern Design */
     .recreation-hero-section {
         position: relative;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
         height: 60vh;
         min-height: 450px;
         max-height: 600px;
@@ -235,10 +237,8 @@
 @endpush
 
 @section('content')
-<div class="recreation-detail-page">
-
-    {{-- Hero Slider Section --}}
-    <section class="recreation-hero-section">
+{{-- Hero Slider Section - FULL WIDTH --}}
+<section class="recreation-hero-section">
         @if($recreationArea->images->isNotEmpty())
             <div id="recreationHeroCarousel" class="carousel slide recreation-hero-carousel h-100" data-bs-ride="carousel" data-bs-interval="5000">
                 <div class="carousel-inner h-100">
@@ -294,6 +294,7 @@
         @endif
     </section>
 
+<div class="recreation-detail-page">
     {{-- Description Section --}}
     <section class="py-5">
         <div class="container">
