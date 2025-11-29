@@ -9,14 +9,35 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
+
+                    {{-- Display Validation Errors --}}
+                    @if ($errors->any())
+                        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <strong class="font-bold">Whoops!</strong>
+                            <span class="block sm:inline">There were some problems with your input.</span>
+                            <ul class="mt-3 list-disc list-inside text-sm">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <form action="{{ route('admin.mice.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        
-                        {{-- Nama, Dimensi, Ukuran --}}
+
+                        {{-- Nama, Slug, Dimensi, Ukuran --}}
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-medium text-gray-700">MICE Room Name</label>
                             <input type="text" name="name" id="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('name') }}" required>
                         </div>
+
+                        <div class="mb-4">
+                            <label for="slug" class="block text-sm font-medium text-gray-700">Slug (URL-friendly name)</label>
+                            <input type="text" name="slug" id="slug" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('slug') }}" required>
+                            <p class="mt-1 text-sm text-gray-500">This will be used in the URL. Example: grand-ballroom</p>
+                        </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                             <div>
                                 <label for="dimension" class="block text-sm font-medium text-gray-700">Dimension (e.g., 15 x 16)</label>
@@ -82,6 +103,18 @@
     @push('scripts')
     <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Auto-generate slug from name
+        const nameInput = document.getElementById('name');
+        const slugInput = document.getElementById('slug');
+
+        nameInput.addEventListener('input', function() {
+            const slug = this.value
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            slugInput.value = slug;
+        });
+
         const container = document.getElementById('specifications-container');
         let specificationIndex = 0;
 
