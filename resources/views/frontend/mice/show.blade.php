@@ -761,7 +761,7 @@ body {
       </div>
 
       {{-- SPECIFICATIONS GRID (Dimension, Size, Capacity Overall) --}}
-      @if($mice->dimension || $mice->size_sqm || $mice->capacity)
+      @if($mice->dimension || $mice->size_sqm || $mice->capacity || $mice->capacity_theatre || $mice->capacity_classroom || $mice->capacity_ushape || $mice->capacity_round || $mice->capacity_board)
         <div class="specs-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
           @if($mice->dimension)
             <div class="spec-item">
@@ -779,6 +779,36 @@ body {
             <div class="spec-item">
               <div class="spec-label">Total Capacity</div>
               <div class="spec-value">{{ $mice->capacity }} Pax</div>
+            </div>
+          @endif
+          @if($mice->capacity_theatre)
+            <div class="spec-item">
+              <div class="spec-label">Theatre Setup</div>
+              <div class="spec-value">{{ $mice->capacity_theatre }} Pax</div>
+            </div>
+          @endif
+          @if($mice->capacity_classroom)
+            <div class="spec-item">
+              <div class="spec-label">Classroom Setup</div>
+              <div class="spec-value">{{ $mice->capacity_classroom }} Pax</div>
+            </div>
+          @endif
+          @if($mice->capacity_ushape)
+            <div class="spec-item">
+              <div class="spec-label">U-Shape Setup</div>
+              <div class="spec-value">{{ $mice->capacity_ushape }} Pax</div>
+            </div>
+          @endif
+          @if($mice->capacity_round)
+            <div class="spec-item">
+              <div class="spec-label">Round Table Setup</div>
+              <div class="spec-value">{{ $mice->capacity_round }} Pax</div>
+            </div>
+          @endif
+          @if($mice->capacity_board)
+            <div class="spec-item">
+              <div class="spec-label">Boardroom Setup</div>
+              <div class="spec-value">{{ $mice->capacity_board }} Pax</div>
             </div>
           @endif
         </div>
