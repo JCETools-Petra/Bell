@@ -14,12 +14,14 @@
     .recreation-hero-section {
         position: relative;
         width: 100vw;
-        margin-left: calc(-50vw + 50%);
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
         height: 60vh;
         min-height: 450px;
         max-height: 600px;
         overflow: hidden;
         background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
+        z-index: 1;
     }
 
     .recreation-hero-carousel .carousel-item {
