@@ -178,7 +178,7 @@
                     <p class="section-subtitle text-muted mx-auto" style="max-width: 600px; font-size: 1.1rem;">Experience unparalleled comfort in our meticulously designed rooms, where every detail speaks of luxury and sophistication.</p>
                 </div>
 
-                <div class="row g-4">
+                <div class="row g-4 {{ $featuredRooms->count() < 3 ? 'justify-content-center' : '' }}">
                     @foreach($featuredRooms as $room)
                         <div class="col-md-6 col-lg-4">
                             <div class="modern-room-card h-100 position-relative overflow-hidden rounded-4 shadow-lg" style="transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
@@ -268,7 +268,7 @@
                     <p class="text-white mx-auto opacity-90" style="max-width: 700px; font-size: 1.1rem;">Transform your vision into reality with our versatile event spaces, perfectly equipped for conferences, weddings, and corporate gatherings.</p>
                 </div>
 
-                <div class="row g-4">
+                <div class="row g-4 {{ $featuredMice->count() < 3 ? 'justify-content-center' : '' }}">
                     @foreach($featuredMice as $mice)
                         <div class="col-md-6 col-lg-4">
                             <div class="modern-event-card position-relative overflow-hidden rounded-4" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
@@ -301,7 +301,7 @@
                                                 </div>
                                                 <div>
                                                     <div class="small text-muted">Capacity</div>
-                                                    <div class="fw-bold text-admin-primary">{{ $mice->capacity_theatre ?? $mice->capacity_classroom }}</div>
+                                                    <div class="fw-bold text-admin-primary">{{ $mice->capacity ?? $mice->capacity_theatre ?? $mice->capacity_classroom ?? 'N/A' }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -358,7 +358,7 @@
                     <p class="text-muted mx-auto" style="max-width: 700px; font-size: 1.1rem;">Embark on a gastronomic journey where each dish is a masterpiece, crafted with passion and the finest ingredients.</p>
                 </div>
 
-                <div class="row g-4 mb-4">
+                <div class="row g-4 mb-4 {{ $featuredRestaurantImages->count() < 3 ? 'justify-content-center' : '' }}">
                     @foreach($featuredRestaurantImages->take(6) as $index => $image)
                         @if($image->restaurant)
                             <div class="col-md-6 col-lg-4">
@@ -431,7 +431,7 @@
                     <p class="text-muted mx-auto" style="max-width: 700px; font-size: 1.1rem;">Unwind and rejuvenate in our thoughtfully designed recreation spaces, perfect for relaxation and creating memorable moments.</p>
                 </div>
 
-                <div class="row g-4">
+                <div class="row g-4 {{ $featuredRecreationAreas->count() < 3 ? 'justify-content-center' : '' }}">
                     @foreach($featuredRecreationAreas as $recreation)
                         <div class="col-md-6 col-lg-4">
                             <div class="modern-recreation-card position-relative overflow-hidden rounded-4 shadow-lg bg-white" style="transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
