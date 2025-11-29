@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+
+class AuthServiceProvider extends ServiceProvider
+{
+    /**
+     * The model to policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        // Daftarkan policy Anda di sini jika ada
+    ];
+
+    /**
+     * Register any authentication / authorization services.
+     */
+    public function boot(): void
+    {
+        /**
+         * Mendefinisikan Gate untuk manajemen komisi.
+         * Mengembalikan true jika peran pengguna adalah 'admin', 'accounting', atau 'front_office'.
+         */
+        Gate::define('manage-commissions', function ($user) {
+            return in_array($user->role, ['admin', 'accounting', 'front_office']);
+        });
+
+        /**
+         * Gate untuk manajemen bookings.
+         * Mengembalikan true jika peran pengguna adalah 'admin' atau 'front_office'.
+         */
+        Gate::define('manage-bookings', function ($user) {
+            return in_array($user->role, ['admin', 'front_office']);
+        });
+
+        /**
+         * Gate untuk admin penuh (hanya admin).
+         */
+        Gate::define('admin', function ($user) {
+            return $user->role === 'admin';
+        });
+
+        /**
+         * Gate untuk Front Office (akses terbatas ke bookings & commissions saja).
+         */
+        Gate::define('front-office', function ($user) {
+            return $user->role === 'front_office';
+        });
+    }
+}
