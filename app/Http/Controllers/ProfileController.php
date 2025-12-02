@@ -31,14 +31,14 @@ class ProfileController extends Controller
         $validatedData = $request->validated();
 
         // TAMBAHKAN VALIDASI KHUSUS UNTUK NOMOR TELEPON DI SINI
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'], // Aturan untuk nomor telepon
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($request->user()->id)],
         ]);
 
-        // Isi model user dengan data yang sudah divalidasi
-        $request->user()->fill($request->all());
+        // Isi model user dengan data yang sudah divalidasi ONLY
+        $request->user()->fill($validatedData);
 
         // Jika user mengubah email, reset status verifikasi email mereka
         if ($request->user()->isDirty('email')) {
