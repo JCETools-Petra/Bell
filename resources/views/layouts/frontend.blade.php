@@ -79,6 +79,10 @@
                             Dining
                             <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-accent transition-all duration-300 group-hover:w-full {{ request()->routeIs('restaurants.*') ? 'w-full' : '' }}"></span>
                         </a>
+                        <a href="{{ route('recreation-areas.index') }}" class="text-sm font-medium transition-colors relative group {{ request()->routeIs('recreation-areas.*') ? 'text-white' : 'text-gray-200 hover:text-white' }}">
+                            Recreation
+                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-accent transition-all duration-300 group-hover:w-full {{ request()->routeIs('recreation-areas.*') ? 'w-full' : '' }}"></span>
+                        </a>
                         <a href="{{ route('contact.index') }}" class="text-sm font-medium transition-colors relative group {{ request()->routeIs('contact.index') ? 'text-white' : 'text-gray-200 hover:text-white' }}">
                             Contact
                             <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-accent transition-all duration-300 group-hover:w-full {{ request()->routeIs('contact.index') ? 'w-full' : '' }}"></span>
@@ -123,6 +127,7 @@
                 <a href="{{ route('rooms.index') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-200 hover:text-white hover:bg-white/10">Accommodation</a>
                 <a href="{{ route('mice.index') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-200 hover:text-white hover:bg-white/10">MICE</a>
                 <a href="{{ route('restaurants.index') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-200 hover:text-white hover:bg-white/10">Dining</a>
+                <a href="{{ route('recreation-areas.index') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-200 hover:text-white hover:bg-white/10">Recreation</a>
                 <a href="{{ route('contact.index') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-200 hover:text-white hover:bg-white/10">Contact</a>
                 @auth
                     <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-brand-accent hover:bg-white/10">My Dashboard</a>
