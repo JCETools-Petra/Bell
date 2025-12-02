@@ -72,7 +72,7 @@
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     @foreach($recreationArea->images as $image)
                                         <div class="relative group rounded-xl overflow-hidden shadow-sm border border-gray-100">
-                                            <img src="{{ asset('storage/' . $image->image_path) }}" class="h-32 w-full object-cover">
+                                            <img src="{{ asset('storage/' . $image->path) }}" class="h-32 w-full object-cover">
                                             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
                                                 <p class="text-white text-xs truncate">{{ $image->caption ?? 'No caption' }}</p>
                                             </div>

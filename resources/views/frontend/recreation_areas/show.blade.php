@@ -8,7 +8,7 @@
     <div class="bg-gray-900 pt-24 pb-12 relative overflow-hidden">
         <div class="absolute inset-0 z-0 opacity-30">
             @if($recreationArea->images->isNotEmpty())
-                <img src="{{ asset('storage/' . $recreationArea->images->first()->image_path) }}" class="w-full h-full object-cover blur-sm">
+                <img src="{{ asset('storage/' . $recreationArea->images->first()->path) }}" class="w-full h-full object-cover blur-sm">
             @endif
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent z-0"></div>
@@ -39,14 +39,14 @@
                     <div class="bg-white rounded-2xl shadow-sm p-2 border border-gray-100 overflow-hidden">
                         @if($recreationArea->images->isNotEmpty())
                             <div class="relative h-[400px] md:h-[500px] rounded-xl overflow-hidden mb-2 group">
-                                <img id="mainImage" src="{{ asset('storage/' . $recreationArea->images->first()->image_path) }}"
+                                <img id="mainImage" src="{{ asset('storage/' . $recreationArea->images->first()->path) }}"
                                      alt="{{ $recreationArea->name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                             </div>
                             <div class="grid grid-cols-4 gap-2">
                                 @foreach($recreationArea->images as $image)
-                                    <button onclick="changeImage('{{ asset('storage/' . $image->image_path) }}')"
+                                    <button onclick="changeImage('{{ asset('storage/' . $image->path) }}')"
                                             class="relative h-20 md:h-24 rounded-lg overflow-hidden cursor-pointer opacity-70 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-brand-secondary">
-                                        <img src="{{ asset('storage/' . $image->image_path) }}" class="w-full h-full object-cover">
+                                        <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover">
                                     </button>
                                 @endforeach
                             </div>

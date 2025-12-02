@@ -37,7 +37,7 @@
 
                             {{-- Image Section --}}
                             <div class="relative w-full lg:w-1/2 h-64 lg:h-full overflow-hidden">
-                                <img src="{{ $area->images->first() ? asset('storage/' . $area->images->first()->image_path) : 'https://placehold.co/800x600?text=Recreation+Area' }}"
+                                <img src="{{ $area->images->first() ? asset('storage/' . $area->images->first()->path) : 'https://placehold.co/800x600?text=Recreation+Area' }}"
                                      alt="{{ $area->name }}"
                                      class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
                                 <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
