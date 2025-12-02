@@ -78,10 +78,12 @@ class MidtransCallbackController extends Controller
     
     public function callback(Request $request)
     {
-        // 1. Set Server Key & Log
+        // 1. Set Server Key & Log (only non-sensitive data)
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
         \Midtrans\Config::$isProduction = config('midtrans.is_production');
-        Log::info('--- Midtrans Callback Received ---', $request->all());
+        Log::info('--- Midtrans Callback Received ---', $request->only([
+            'order_id', 'transaction_status', 'transaction_id', 'status_code', 'gross_amount'
+        ]));
 
         // 2. Validate Signature Key
         $hashed = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . config('midtrans.server_key'));

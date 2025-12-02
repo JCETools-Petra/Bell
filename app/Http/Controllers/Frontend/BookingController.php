@@ -68,7 +68,7 @@ class BookingController extends Controller
             'status' => 'pending',
             'access_token' => Str::random(32),
             // Simpan affiliate_id jika yang booking adalah afiliasi
-            'affiliate_id' => $isAffiliate ? Auth::user()->affiliate->id : null,
+            'affiliate_id' => ($isAffiliate && Auth::user()->affiliate) ? Auth::user()->affiliate->id : null,
         ]);
 
         // Arahkan ke pembayaran (logika lama tetap sama)
