@@ -110,7 +110,11 @@
                         <i class="fas fa-utensils w-5 text-center mr-3 {{ request()->routeIs('admin.restaurants.*') ? 'text-brand-secondary' : 'group-hover:text-brand-secondary transition-colors' }}"></i>
                         Restaurants
                     </a>
-                    
+                    <a href="{{ route('admin.recreation_areas.index') }}" class="group flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 {{ request()->routeIs('admin.recreation_areas.*') ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'text-gray-400 hover:bg-white/5 hover:text-white' }}">
+                        <i class="fas fa-swimming-pool w-5 text-center mr-3 {{ request()->routeIs('admin.recreation_areas.*') ? 'text-brand-secondary' : 'group-hover:text-brand-secondary transition-colors' }}"></i>
+                        Recreation Areas
+                    </a>
+
                     <div class="pt-4 mt-4 border-t border-white/10">
                         <a href="{{ route('admin.settings.index') }}" class="group flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 {{ request()->routeIs('admin.settings.*') ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'text-gray-400 hover:bg-white/5 hover:text-white' }}">
                             <i class="fas fa-cog w-5 text-center mr-3 {{ request()->routeIs('admin.settings.*') ? 'text-brand-secondary' : 'group-hover:text-brand-secondary transition-colors' }}"></i>

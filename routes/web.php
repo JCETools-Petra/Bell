@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\RoomController as AdminRoomController;
 use App\Http\Controllers\Admin\MiceRoomController as AdminMiceRoomController;
 use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
+use App\Http\Controllers\Admin\RecreationAreaController as AdminRecreationAreaController;
 use App\Http\Controllers\Admin\ImageController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\MiceInquiryController as AdminMiceInquiryController;
@@ -131,6 +132,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::resource('rooms', AdminRoomController::class);
         Route::resource('mice', AdminMiceRoomController::class);
         Route::resource('restaurants', AdminRestaurantController::class);
+        Route::resource('recreation_areas', AdminRecreationAreaController::class);
+        Route::delete('recreation_areas/{recreation_area}/images/{image}', [AdminRecreationAreaController::class, 'destroyImage'])->name('recreation_areas.images.destroy');
         Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'edit', 'update']);
         Route::resource('affiliates', AdminAffiliateController::class)->only(['index', 'update']);
         Route::resource('banners', AdminBannerController::class);
