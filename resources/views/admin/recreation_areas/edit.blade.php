@@ -4,7 +4,7 @@
             <h2 class="font-heading font-bold text-2xl text-brand-dark leading-tight">
                 {{ __('Edit Recreation Area: ') . $recreationArea->name }}
             </h2>
-            <a href="{{ route('admin.recreation_areas.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all">
+            <a href="{{ route('admin.recreation-areas.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all">
                 <i class="fas fa-arrow-left mr-2"></i> Back
             </a>
         </div>
@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl border border-gray-100">
                 <div class="p-8 text-gray-900">
-                    <form action="{{ route('admin.recreation_areas.update', $recreationArea) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                    <form action="{{ route('admin.recreation-areas.update', $recreationArea) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                         @csrf
                         @method('PUT')
                         
@@ -76,7 +76,7 @@
                                             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
                                                 <p class="text-white text-xs truncate">{{ $image->caption ?? 'No caption' }}</p>
                                             </div>
-                                            <form action="{{ route('admin.recreation_areas.images.destroy', [$recreationArea, $image]) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this image?')">
+                                            <form action="{{ route('admin.recreation-areas.images.destroy', [$recreationArea, $image]) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this image?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:bg-red-600">
@@ -99,7 +99,7 @@
                         </div>
 
                         <div class="flex justify-end gap-4 pt-6 border-t border-gray-100">
-                            <a href="{{ route('admin.recreation_areas.index') }}" class="px-6 py-2.5 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all">
+                            <a href="{{ route('admin.recreation-areas.index') }}" class="px-6 py-2.5 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all">
                                 Cancel
                             </a>
                             <button type="submit" class="px-6 py-2.5 bg-brand-primary text-white font-bold rounded-xl shadow-lg shadow-brand-primary/30 hover:bg-brand-dark transition-all transform hover:-translate-y-0.5">

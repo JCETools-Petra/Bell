@@ -70,8 +70,8 @@
                     </a>
 
                     @if(Auth::user()->role == 'admin')
-                    <a href="{{ route('admin.affiliate_page.index') }}" class="group flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 {{ request()->routeIs('admin.affiliate_page.*') ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'text-gray-400 hover:bg-white/5 hover:text-white' }}">
-                        <i class="fas fa-file-alt w-5 text-center mr-3 {{ request()->routeIs('admin.affiliate_page.*') ? 'text-brand-secondary' : 'group-hover:text-brand-secondary transition-colors' }}"></i>
+                    <a href="{{ route('admin.affiliate-page.index') }}" class="group flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 {{ request()->routeIs('admin.affiliate-page.*') ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'text-gray-400 hover:bg-white/5 hover:text-white' }}">
+                        <i class="fas fa-file-alt w-5 text-center mr-3 {{ request()->routeIs('admin.affiliate-page.*') ? 'text-brand-secondary' : 'group-hover:text-brand-secondary transition-colors' }}"></i>
                         Affiliate Page
                     </a>
                     @endif
@@ -110,8 +110,8 @@
                         <i class="fas fa-utensils w-5 text-center mr-3 {{ request()->routeIs('admin.restaurants.*') ? 'text-brand-secondary' : 'group-hover:text-brand-secondary transition-colors' }}"></i>
                         Restaurants
                     </a>
-                    <a href="{{ route('admin.recreation_areas.index') }}" class="group flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 {{ request()->routeIs('admin.recreation_areas.*') ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'text-gray-400 hover:bg-white/5 hover:text-white' }}">
-                        <i class="fas fa-swimming-pool w-5 text-center mr-3 {{ request()->routeIs('admin.recreation_areas.*') ? 'text-brand-secondary' : 'group-hover:text-brand-secondary transition-colors' }}"></i>
+                    <a href="{{ route('admin.recreation-areas.index') }}" class="group flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 {{ request()->routeIs('admin.recreation-areas.*') ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'text-gray-400 hover:bg-white/5 hover:text-white' }}">
+                        <i class="fas fa-swimming-pool w-5 text-center mr-3 {{ request()->routeIs('admin.recreation-areas.*') ? 'text-brand-secondary' : 'group-hover:text-brand-secondary transition-colors' }}"></i>
                         Recreation Areas
                     </a>
 

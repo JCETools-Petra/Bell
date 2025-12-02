@@ -74,7 +74,6 @@ class SettingController extends Controller
             'layout_icon_round'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'layout_icon_board'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
-            // --- PERBAIKAN: VALIDASI UNTUK NOTIFIKASI PAY AT HOTEL DITAMBAHKAN DI SINI ---
             'fonnte_api_key' => 'nullable|string', // Jika Anda menambahkan field ini
             'whatsapp_admin_receiver' => 'nullable|string',
             'whatsapp_supervisor_receivers' => 'nullable|string',

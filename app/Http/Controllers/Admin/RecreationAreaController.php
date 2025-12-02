@@ -15,8 +15,10 @@ class RecreationAreaController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', RecreationArea::class);
+
         $recreationAreas = RecreationArea::with('images')->orderBy('order')->get();
-        return view('admin.recreation_areas.index', compact('recreationAreas'));
+        return view('admin.recreation-areas.index', compact('recreationAreas'));
     }
 
     /**
@@ -24,7 +26,9 @@ class RecreationAreaController extends Controller
      */
     public function create()
     {
-        return view('admin.recreation_areas.create');
+        $this->authorize('create', RecreationArea::class);
+
+        return view('admin.recreation-areas.create');
     }
 
     /**
@@ -32,6 +36,8 @@ class RecreationAreaController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', RecreationArea::class);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -64,7 +70,7 @@ class RecreationAreaController extends Controller
             }
         }
 
-        return redirect()->route('admin.recreation_areas.index')->with('success', 'Recreation Area berhasil ditambahkan!');
+        return redirect()->route('admin.recreation-areas.index')->with('success', 'Recreation Area berhasil ditambahkan!');
     }
 
     /**
@@ -72,7 +78,9 @@ class RecreationAreaController extends Controller
      */
     public function edit(RecreationArea $recreationArea)
     {
-        return view('admin.recreation_areas.edit', compact('recreationArea'));
+        $this->authorize('update', $recreationArea);
+
+        return view('admin.recreation-areas.edit', compact('recreationArea'));
     }
 
     /**
@@ -80,6 +88,8 @@ class RecreationAreaController extends Controller
      */
     public function update(Request $request, RecreationArea $recreationArea)
     {
+        $this->authorize('update', $recreationArea);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -113,7 +123,7 @@ class RecreationAreaController extends Controller
             }
         }
 
-        return redirect()->route('admin.recreation_areas.index')->with('success', 'Recreation Area berhasil diupdate!');
+        return redirect()->route('admin.recreation-areas.index')->with('success', 'Recreation Area berhasil diupdate!');
     }
 
     /**
@@ -121,6 +131,8 @@ class RecreationAreaController extends Controller
      */
     public function destroy(RecreationArea $recreationArea)
     {
+        $this->authorize('delete', $recreationArea);
+
         // Hapus file gambar dari storage
         foreach ($recreationArea->images as $image) {
             Storage::disk('public')->delete($image->path);
@@ -129,7 +141,7 @@ class RecreationAreaController extends Controller
 
         $recreationArea->delete();
 
-        return redirect()->route('admin.recreation_areas.index')->with('success', 'Recreation Area berhasil dihapus!');
+        return redirect()->route('admin.recreation-areas.index')->with('success', 'Recreation Area berhasil dihapus!');
     }
 
     /**
@@ -137,6 +149,8 @@ class RecreationAreaController extends Controller
      */
     public function destroyImage(RecreationArea $recreationArea, RecreationAreaImage $image)
     {
+        $this->authorize('update', $recreationArea);
+
         // Pastikan image belongs to recreation area ini
         if ($image->recreation_area_id !== $recreationArea->id) {
             abort(404);

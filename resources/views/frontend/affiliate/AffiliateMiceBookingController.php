@@ -14,7 +14,7 @@ class AffiliateMiceBookingController extends Controller
     public function index()
     {
         $miceKits = MiceKit::all();
-        return view('frontend.affiliate.special_mice.index', compact('miceKits'));
+        return view('frontend.affiliate.special-mice.index', compact('miceKits'));
     }
 
     public function show($id)
@@ -28,7 +28,7 @@ class AffiliateMiceBookingController extends Controller
         // Di sini saya gunakan asumsi standar relasi Laravel:
         $affiliate = $user->affiliate; 
 
-        return view('frontend.affiliate.special_mice.show', compact('miceKit', 'affiliate'));
+        return view('frontend.affiliate.special-mice.show', compact('miceKit', 'affiliate'));
     }
 
     public function store(Request $request)

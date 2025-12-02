@@ -43,7 +43,7 @@
                     <i class="fas fa-bed"></i> Booking Kamar
                 </a>
 
-                <a href="{{ route('affiliate.special_mice.show', 6) }}" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white hover:text-brand-dark text-white font-bold py-3 px-6 rounded-xl transition-all border border-white/10 backdrop-blur-sm">
+                <a href="{{ route('affiliate.special-mice.show', 6) }}" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white hover:text-brand-dark text-white font-bold py-3 px-6 rounded-xl transition-all border border-white/10 backdrop-blur-sm">
                     <i class="fas fa-handshake"></i> Booking MICE
                 </a>
                 

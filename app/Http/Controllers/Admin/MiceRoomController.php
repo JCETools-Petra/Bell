@@ -15,6 +15,8 @@ class MiceRoomController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', MiceRoom::class);
+
         $miceRooms = MiceRoom::latest()->paginate(10);
         return view('admin.mice.index', compact('miceRooms'));
     }
@@ -24,6 +26,8 @@ class MiceRoomController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', MiceRoom::class);
+
         return view('admin.mice.create');
     }
 
@@ -32,6 +36,8 @@ class MiceRoomController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', MiceRoom::class);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:mice_rooms',
@@ -78,6 +84,8 @@ class MiceRoomController extends Controller
 
     public function update(Request $request, MiceRoom $mouse) // Ubah $miceRoom jadi $mouse
     {
+        $this->authorize('update', $mouse);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:mice_rooms,slug,' . $mouse->id, // Gunakan $mouse->id
@@ -138,6 +146,8 @@ class MiceRoomController extends Controller
      */
     public function edit(MiceRoom $mouse)
     {
+        $this->authorize('update', $mouse);
+
         return view('admin.mice.edit', ['miceRoom' => $mouse]);
     }
 
@@ -147,15 +157,17 @@ class MiceRoomController extends Controller
      */
     public function destroy(MiceRoom $mouse)
     {
+        $this->authorize('delete', $mouse);
+
         // Hapus semua file gambar yang berelasi dari storage
         foreach ($mouse->images as $image) {
             Storage::disk('public')->delete($image->path);
             $image->delete(); // Hapus record gambar dari tabel images
         }
-        
+
         // Hapus record mice room
         $mouse->delete();
-        
+
         return redirect()->route('admin.mice.index')->with('success', 'MICE Room deleted successfully.');
     }
 }

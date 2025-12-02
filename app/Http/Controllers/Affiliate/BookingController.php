@@ -121,7 +121,6 @@ class BookingController extends Controller
             'guest_name' => $validated['guest_name'],
             'guest_phone' => $validated['guest_phone'],
             
-            // --- PERBAIKAN DI SINI ---
             // Menggunakan ?? '' untuk memastikan nilai tidak null jika validasi mengizinkan null
             'guest_email' => $validated['guest_email'] ?? '', 
             

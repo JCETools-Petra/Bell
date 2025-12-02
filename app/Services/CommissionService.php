@@ -2,76 +2,78 @@
 
 namespace App\Services;
 
+use App\Models\Affiliate;
 use App\Models\Booking;
 use App\Models\Commission;
-use App\Models\Affiliate;
-use Illuminate\Support\Facades\Log;
 
 class CommissionService
 {
     /**
-     * Create a commission for a booking if it has an affiliate.
-     *
-     * @param Booking $booking
-     * @return Commission|null
+     * Calculate commission amount based on booking amount and affiliate commission rate
      */
-    public function createForBooking(Booking $booking): ?Commission
+    public function calculateCommissionAmount(float $bookingAmount, float $commissionRate): float
     {
-        if (!$booking->affiliate_id) {
-            return null;
-        }
+        return $bookingAmount * ($commissionRate / 100);
+    }
 
-        // Check if commission already exists
-        $existingCommission = Commission::where('booking_id', $booking->id)->first();
-        if ($existingCommission) {
-            return $existingCommission;
-        }
-
-        $affiliate = $booking->affiliate;
-        if (!$affiliate || $affiliate->commission_rate <= 0) {
-            return null;
-        }
-
-        // Calculate commission amount
-        // Logic: (Room Price * Num Rooms) * Rate
-        // Note: Booking total_price usually includes duration, but let's stick to the existing logic 
-        // found in Admin/BookingController which was: ($room->price * $booking->num_rooms) * rate
-        // However, MidtransCallbackController used: $booking->total_price * rate.
-        // The most accurate base is usually the total transaction value (total_price).
-        // Let's use total_price as it's the actual amount paid.
-        
-        $commissionAmount = $booking->total_price * ($affiliate->commission_rate / 100);
+    /**
+     * Create a commission record for a booking
+     */
+    public function createCommission(Affiliate $affiliate, Booking $booking, ?string $notes = null): Commission
+    {
+        $commissionAmount = $this->calculateCommissionAmount(
+            $booking->total_price,
+            $affiliate->commission_rate
+        );
 
         return Commission::create([
             'affiliate_id' => $affiliate->id,
             'booking_id' => $booking->id,
-            'commission_amount' => $commissionAmount, // Correct column name
+            'commission_amount' => $commissionAmount,
             'rate' => $affiliate->commission_rate,
             'status' => 'unpaid',
-            'notes' => 'Commission from Booking ID #' . $booking->id,
+            'notes' => $notes,
         ]);
     }
 
     /**
-     * Create a commission for a MICE inquiry.
-     *
-     * @param Affiliate $affiliate
-     * @param float $totalPayment
-     * @param float $rate
-     * @param string $notes
-     * @return Commission
+     * Get unpaid commission amount for an affiliate
      */
-    public function createForMice(Affiliate $affiliate, float $totalPayment, float $rate, string $notes): Commission
+    public function getUnpaidAmount(Affiliate $affiliate): float
     {
-        $commissionAmount = ($totalPayment * $rate) / 100;
+        return $affiliate->commissions()
+            ->where('status', 'unpaid')
+            ->sum('commission_amount');
+    }
 
-        return Commission::create([
-            'affiliate_id' => $affiliate->id,
-            'booking_id' => null,
-            'commission_amount' => $commissionAmount, // Correct column name
-            'rate' => $rate,
-            'status' => 'unpaid',
-            'notes' => $notes,
-        ]);
+    /**
+     * Mark all unpaid commissions as paid for an affiliate
+     */
+    public function markAsPaid(Affiliate $affiliate, ?int $month = null): int
+    {
+        $query = Commission::where('affiliate_id', $affiliate->id)
+            ->where('status', 'unpaid');
+
+        if ($month) {
+            $query->whereMonth('created_at', $month);
+        }
+
+        return $query->update(['status' => 'paid']);
+    }
+
+    /**
+     * Get commissions for an affiliate filtered by status and month
+     */
+    public function getCommissions(Affiliate $affiliate, string $status = 'unpaid', ?int $month = null)
+    {
+        $query = Commission::where('affiliate_id', $affiliate->id)
+            ->where('status', $status)
+            ->with('booking');
+
+        if ($month) {
+            $query->whereMonth('created_at', $month);
+        }
+
+        return $query->get();
     }
 }

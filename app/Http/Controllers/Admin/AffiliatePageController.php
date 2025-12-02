@@ -16,7 +16,7 @@ class AffiliatePageController extends Controller
     {
         // Ambil konten saat ini dari database
         $content = settings('affiliate_page_content', ''); // Defaultnya string kosong
-        return view('admin.affiliate_page.index', compact('content'));
+        return view('admin.affiliate-page.index', compact('content'));
     }
 
     /**
@@ -38,6 +38,6 @@ class AffiliatePageController extends Controller
         // Hapus cache agar perubahan langsung terlihat di frontend
         Cache::forget('site_settings');
 
-        return redirect()->route('admin.affiliate_page.index')->with('success', 'Konten halaman affiliate berhasil diperbarui.');
+        return redirect()->route('admin.affiliate-page.index')->with('success', 'Konten halaman affiliate berhasil diperbarui.');
     }
 }

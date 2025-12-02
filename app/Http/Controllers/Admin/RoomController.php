@@ -12,21 +12,26 @@ class RoomController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Room::class);
+
         $rooms = Room::latest()->paginate(10);
         return view('admin.rooms.index', compact('rooms'));
     }
 
     public function create()
     {
+        $this->authorize('create', Room::class);
+
         return view('admin.rooms.create');
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create', Room::class);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'discount_percentage' => 'nullable|numeric|min:0|max:100', // TAMBAHKAN INI
             'description' => 'required|string',
             'facilities' => 'required|string',
             'is_available' => 'boolean',
@@ -51,15 +56,18 @@ class RoomController extends Controller
 
     public function edit(Room $room)
     {
+        $this->authorize('update', $room);
+
         return view('admin.rooms.edit', compact('room'));
     }
 
     public function update(Request $request, Room $room)
     {
+        $this->authorize('update', $room);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'discount_percentage' => 'nullable|numeric|min:0|max:100', // TAMBAHKAN INI
             'description' => 'required|string',
             'facilities' => 'required|string',
             'is_available' => 'boolean',
@@ -84,11 +92,13 @@ class RoomController extends Controller
 
     public function destroy(Room $room)
     {
+        $this->authorize('delete', $room);
+
         // Hapus semua gambar terkait dari storage
         foreach ($room->images as $image) {
             Storage::disk('public')->delete($image->path);
         }
-        
+
         // Hapus record room (dan relasi gambar akan otomatis terhapus jika di-setup di DB)
         $room->delete();
         return redirect()->route('admin.rooms.index')->with('success', 'Room deleted successfully.');

@@ -7,10 +7,17 @@ use Illuminate\Http\Request;
 use App\Models\Affiliate;
 use App\Models\Booking;
 use App\Models\Commission;
+use App\Services\CommissionService;
 use Illuminate\Support\Facades\Gate;
 
 class CommissionController extends Controller
 {
+    protected $commissionService;
+
+    public function __construct(CommissionService $commissionService)
+    {
+        $this->commissionService = $commissionService;
+    }
     public function create()
     {
         $affiliates = Affiliate::where('status', 'active')->with('user')->get();
@@ -26,27 +33,32 @@ class CommissionController extends Controller
         ]);
 
         $affiliate = Affiliate::find($validated['affiliate_id']);
-        $commissionAmount = $validated['booking_amount'] * ($affiliate->commission_rate / 100);
+
+        // Create a placeholder booking for manual commission tracking
+        $firstRoom = \App\Models\Room::first();
+        if (!$firstRoom) {
+            return back()->withErrors(['error' => 'No rooms available in the system. Please add a room first.']);
+        }
 
         $booking = Booking::create([
-            'room_id' => 1, 
-            'guest_name' => 'Manual Booking via WA (' . $validated['booking_reference'] . ')',
-            'guest_email' => 'manual@booking.com',
-            'guest_phone' => '0000',
+            'room_id' => $firstRoom->id,
+            'guest_name' => 'Manual Commission - ' . $validated['booking_reference'],
+            'guest_email' => 'manual-commission@sorahotel.com',
+            'guest_phone' => '0000000000',
             'num_rooms' => 1,
-            'checkin_date' => now(),
-            'checkout_date' => now(),
+            'check_in_date' => now(),
+            'check_out_date' => now()->addDay(),
+            'total_price' => $validated['booking_amount'],
+            'status' => 'completed',
+            'payment_status' => 'paid',
         ]);
-        
-        Commission::create([
-            'affiliate_id' => $affiliate->id,
-            'booking_id' => $booking->id,
-            // --- PERBAIKAN 1 ---
-            'commission_amount' => $commissionAmount, // Diubah dari 'amount'
-            'rate' => $affiliate->commission_rate,
-            'status' => 'unpaid',
-            'notes' => 'Manual commission for booking: ' . $validated['booking_reference'],
-        ]);
+
+        // Use service to create commission
+        $this->commissionService->createCommission(
+            $affiliate,
+            $booking,
+            'Manual commission for booking: ' . $validated['booking_reference']
+        );
 
         return redirect()->route('admin.affiliates.index')->with('success', 'Manual commission added successfully.');
     }
@@ -58,8 +70,7 @@ class CommissionController extends Controller
         $affiliates = Affiliate::with('user')
             ->withSum(['commissions as unpaid_amount' => function ($query) {
                 $query->where('status', 'unpaid');
-            // --- PERBAIKAN 2 ---
-            }], 'commission_amount') // Diubah dari 'amount'
+            }], 'commission_amount')
             ->paginate(15);
             
         return view('admin.commissions.index', compact('affiliates'));
@@ -82,12 +93,12 @@ class CommissionController extends Controller
     {
         if (! Gate::allows('manage-commissions')) abort(403);
 
-        $commissions = Commission::where('affiliate_id', $affiliate->id)
-            ->where('status', 'unpaid')
-            ->whereMonth('created_at', now()->month)
-            ->with('booking')
-            ->get();
-            
+        $commissions = $this->commissionService->getCommissions(
+            $affiliate,
+            'unpaid',
+            now()->month
+        );
+
         return response()->json($commissions);
     }
 
@@ -95,12 +106,7 @@ class CommissionController extends Controller
     {
         if (! Gate::allows('manage-commissions')) abort(403);
 
-        Commission::where('affiliate_id', $affiliate->id)
-            ->where('status', 'unpaid')
-            // Sebaiknya hapus filter per bulan ini agar bisa membayar semua komisi,
-            // atau biarkan jika memang sengaja hanya untuk bulan ini.
-            // ->whereMonth('created_at', now()->month) 
-            ->update(['status' => 'paid']);
+        $this->commissionService->markAsPaid($affiliate);
 
         return back()->with('success', 'All unpaid commissions for this affiliate have been marked as paid.');
     }

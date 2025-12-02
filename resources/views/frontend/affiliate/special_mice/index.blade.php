@@ -53,7 +53,7 @@
                                 <p class="card-text text-muted small flex-grow-1">{{ Str::limit($kit->description, 100) }}</p>
 
                                 <div class="mt-auto pt-3">
-                                    <a href="{{ route('affiliate.special_mice.show', $kit->id) }}" class="btn btn-primary w-100">
+                                    <a href="{{ route('affiliate.special-mice.show', $kit->id) }}" class="btn btn-primary w-100">
                                         Lihat Detail & Book
                                     </a>
                                 </div>
@@ -110,7 +110,7 @@
                             </div>
                             
                             {{-- Tombol Ke Detail --}}
-                            <a href="{{ route('affiliate.special_mice.show', $kit->id) }}" class="btn btn-primary px-4 rounded-pill">
+                            <a href="{{ route('affiliate.special-mice.show', $kit->id) }}" class="btn btn-primary px-4 rounded-pill">
                                 Pilih Paket
                             </a>
                         </div>

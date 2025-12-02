@@ -16,6 +16,8 @@ class RestaurantController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Restaurant::class);
+
         $restaurants = Restaurant::with('images')->get();
         return view('admin.restaurants.index', compact('restaurants'));
     }
@@ -25,6 +27,8 @@ class RestaurantController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Restaurant::class);
+
         return view('admin.restaurants.create');
     }
 
@@ -33,6 +37,8 @@ class RestaurantController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Restaurant::class);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -69,6 +75,8 @@ class RestaurantController extends Controller
      */
     public function edit(Restaurant $restaurant)
     {
+        $this->authorize('update', $restaurant);
+
         return view('admin.restaurants.edit', compact('restaurant'));
     }
 
@@ -77,6 +85,8 @@ class RestaurantController extends Controller
      */
     public function update(Request $request, Restaurant $restaurant)
     {
+        $this->authorize('update', $restaurant);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -110,6 +120,8 @@ class RestaurantController extends Controller
      */
     public function destroy(Restaurant $restaurant)
     {
+        $this->authorize('delete', $restaurant);
+
         // Hapus file gambar dari storage
         foreach ($restaurant->images as $image) {
             Storage::disk('public')->delete($image->path);
@@ -117,13 +129,15 @@ class RestaurantController extends Controller
         }
 
         $restaurant->delete();
-        
+
         return redirect()->route('admin.restaurants.index')->with('success', 'Restaurant deleted successfully!');
     }
-    
+
     // Tambahkan metode ini di luar resource
     public function destroyImage(RestaurantImage $image)
     {
+        $this->authorize('update', $image->restaurant);
+
         Storage::disk('public')->delete($image->path);
         $image->delete();
 

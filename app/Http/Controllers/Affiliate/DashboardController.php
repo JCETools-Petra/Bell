@@ -19,7 +19,6 @@ class DashboardController extends Controller
         $totalClicks = AffiliateVisit::where('affiliate_id', $affiliate->id)->count();
         $totalBookings = Commission::where('affiliate_id', $affiliate->id)->count();
         
-        // PERBAIKAN: Mengganti 'amount' menjadi 'commission_amount'
         $totalCommissions = Commission::where('affiliate_id', $affiliate->id)->where('status', 'unpaid')->sum('commission_amount');
 
         // Mengambil riwayat komisi

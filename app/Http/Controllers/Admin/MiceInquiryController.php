@@ -79,7 +79,6 @@ class MiceInquiryController extends Controller
             'rate' => $commission_rate,
             
             // --- PERUBAHAN DI SINI ---
-            'status' => 'unpaid', // Diubah dari 'paid' menjadi 'unpaid'
             // -------------------------
 
             'notes' => $notes,

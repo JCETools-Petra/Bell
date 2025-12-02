@@ -47,7 +47,6 @@ class HomeController extends Controller
             ->get();
 
         // ==========================================
-        // 6. PERBAIKAN RUNNING TEXT (AMBIL DARI SETTINGS)
         // ==========================================
         
         // Menggunakan Model 'Setting' (tabel settings) sesuai Admin Panel Anda

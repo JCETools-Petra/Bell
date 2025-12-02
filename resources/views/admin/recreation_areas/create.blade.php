@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <form action="{{ route('admin.recreation_areas.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.recreation-areas.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
                         <div class="mb-4">
@@ -65,7 +65,7 @@
 
                         <div class="flex gap-4">
                             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-admin-secondary">Save Recreation Area</button>
-                            <a href="{{ route('admin.recreation_areas.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Cancel</a>
+                            <a href="{{ route('admin.recreation-areas.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Cancel</a>
                         </div>
                     </form>
                 </div>

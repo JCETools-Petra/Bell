@@ -9,7 +9,6 @@ class PageController extends Controller
     public function terms()
     {
         // Tidak perlu mengambil data manual, karena $settings sudah global (ViewServiceProvider)
-        // PERBAIKAN: Arahkan ke frontend.pages.terms
         return view('frontend.pages.terms');
     }
 

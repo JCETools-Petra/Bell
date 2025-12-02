@@ -99,7 +99,7 @@
                                 </div>
                             @endif
 
-                            <form action="{{ route('affiliate.special_mice.store') }}" method="POST" id="bookingForm" class="space-y-6">
+                            <form action="{{ route('affiliate.special-mice.store') }}" method="POST" id="bookingForm" class="space-y-6">
                                 @csrf
                                 <input type="hidden" name="mice_kit_id" value="{{ $miceKit->id }}">
                                 <input type="hidden" id="commissionRate" value="{{ $commissionRate }}">

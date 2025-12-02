@@ -13,7 +13,11 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // Daftarkan policy Anda di sini jika ada
+        \App\Models\RecreationArea::class => \App\Policies\RecreationAreaPolicy::class,
+        \App\Models\Room::class => \App\Policies\RoomPolicy::class,
+        \App\Models\MiceRoom::class => \App\Policies\MiceRoomPolicy::class,
+        \App\Models\Restaurant::class => \App\Policies\RestaurantPolicy::class,
+        \App\Models\User::class => \App\Policies\UserPolicy::class,
     ];
 
     /**

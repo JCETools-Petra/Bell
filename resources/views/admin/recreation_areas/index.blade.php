@@ -4,7 +4,7 @@
             <h2 class="font-heading font-bold text-2xl text-brand-dark leading-tight">
                 {{ __('Manage Recreation Areas') }}
             </h2>
-            <a href="{{ route('admin.recreation_areas.create') }}" class="px-6 py-2.5 bg-brand-primary text-white font-bold rounded-xl shadow-lg shadow-brand-primary/30 hover:bg-brand-dark transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+            <a href="{{ route('admin.recreation-areas.create') }}" class="px-6 py-2.5 bg-brand-primary text-white font-bold rounded-xl shadow-lg shadow-brand-primary/30 hover:bg-brand-dark transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
                 <i class="fas fa-plus"></i> Add New Recreation Area
             </a>
         </div>
@@ -45,10 +45,10 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div class="flex items-center justify-end gap-2">
-                                                <a href="{{ route('admin.recreation_areas.edit', $area) }}" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all" title="Edit">
+                                                <a href="{{ route('admin.recreation-areas.edit', $area) }}" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <form action="{{ route('admin.recreation_areas.destroy', $area) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure?')">
+                                                <form action="{{ route('admin.recreation-areas.destroy', $area) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all" title="Delete">

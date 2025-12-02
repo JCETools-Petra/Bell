@@ -68,15 +68,21 @@ Route::get('/recreation-areas', [RecreationAreaController::class, 'index'])->nam
 Route::get('/recreation-areas/{slug}', [RecreationAreaController::class, 'show'])->name('recreation-areas.show');
 Route::get('/contact-us', [ContactController::class, 'index'])->name('contact.index');
 
-// Booking & Inquiries
-Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
-Route::post('/mice-inquiries', [MiceInquiryController::class, 'store'])->name('mice.inquiries.store');
+// Booking & Inquiries (with rate limiting)
+Route::post('/bookings', [BookingController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('bookings.store');
+Route::post('/mice-inquiries', [MiceInquiryController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('mice.inquiries.store');
 Route::get('/booking/success/{booking:access_token}', [BookingController::class, 'success'])->name('booking.success');
 Route::get('/booking/payment/{booking:access_token}', [BookingController::class, 'payment'])->name('booking.payment');
 
-// Affiliate Registration
+// Affiliate Registration (with rate limiting)
 Route::get('/affiliate/register', [AffiliateController::class, 'create'])->name('affiliate.register.create');
-Route::post('/affiliate/register', [AffiliateController::class, 'store'])->name('affiliate.register.store');
+Route::post('/affiliate/register', [AffiliateController::class, 'store'])
+    ->middleware('throttle:5,60')
+    ->name('affiliate.register.store');
 
 // Static Pages
 Route::get('/terms-and-conditions', [PageController::class, 'terms'])->name('pages.terms');
@@ -100,9 +106,9 @@ Route::middleware(['auth', 'verified', 'affiliate.active'])->prefix('affiliate')
     Route::get('/mice-kit/stream/{id}', [AffiliateMiceKitController::class, 'stream'])->name('mice-kit.stream');
 
     // Special MICE Booking Routes
-    Route::get('/special-mice', [AffiliateMiceBookingController::class, 'index'])->name('special_mice.index');
-    Route::get('/special-mice/{id}', [AffiliateMiceBookingController::class, 'show'])->name('special_mice.show');
-    Route::post('/special-mice', [AffiliateMiceBookingController::class, 'store'])->name('special_mice.store');
+    Route::get('/special-mice', [AffiliateMiceBookingController::class, 'index'])->name('special-mice.index');
+    Route::get('/special-mice/{id}', [AffiliateMiceBookingController::class, 'show'])->name('special-mice.show');
+    Route::post('/special-mice', [AffiliateMiceBookingController::class, 'store'])->name('special-mice.store');
 });
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
@@ -132,8 +138,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::resource('rooms', AdminRoomController::class);
         Route::resource('mice', AdminMiceRoomController::class);
         Route::resource('restaurants', AdminRestaurantController::class);
-        Route::resource('recreation_areas', AdminRecreationAreaController::class);
-        Route::delete('recreation_areas/{recreation_area}/images/{image}', [AdminRecreationAreaController::class, 'destroyImage'])->name('recreation_areas.images.destroy');
+        Route::resource('recreation-areas', AdminRecreationAreaController::class)->parameters(['recreation-areas' => 'recreation_area']);
+        Route::delete('recreation-areas/{recreation_area}/images/{image}', [AdminRecreationAreaController::class, 'destroyImage'])->name('recreation-areas.images.destroy');
         Route::resource('users', UserController::class)->only(['index', 'create', 'store', 'edit', 'update']);
         Route::resource('affiliates', AdminAffiliateController::class)->only(['index', 'update']);
         Route::resource('banners', AdminBannerController::class);
@@ -146,8 +152,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
         Route::get('/maintenance-settings', [MaintenanceController::class, 'index'])->name('maintenance.index');
         Route::post('/maintenance-settings', [MaintenanceController::class, 'update'])->name('maintenance.update');
-        Route::get('/affiliate-page-settings', [AffiliatePageController::class, 'index'])->name('affiliate_page.index');
-        Route::put('/affiliate-page-settings', [AffiliatePageController::class, 'update'])->name('affiliate_page.update');
+        Route::get('/affiliate-page-settings', [AffiliatePageController::class, 'index'])->name('affiliate-page.index');
+        Route::put('/affiliate-page-settings', [AffiliatePageController::class, 'update'])->name('affiliate-page.update');
         Route::resource('mice-kits', AdminMiceKitController::class);
         Route::resource('hero-sliders', AdminHeroSliderController::class);
         Route::resource('mice-inquiries', AdminMiceInquiryController::class)->only(['index', 'destroy']);
