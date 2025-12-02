@@ -7,7 +7,6 @@ use App\Models\RecreationArea;
 use App\Models\RecreationAreaImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class RecreationAreaController extends Controller
 {
@@ -44,19 +43,9 @@ class RecreationAreaController extends Controller
             'captions.*' => 'nullable|string|max:255',
         ]);
 
-        // Generate unique slug
-        $slug = Str::slug($validated['name']);
-        $originalSlug = $slug;
-        $counter = 1;
-
-        while (RecreationArea::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter;
-            $counter++;
-        }
-
+        // Model akan auto-generate unique slug via boot() method
         $recreationArea = RecreationArea::create([
             'name' => $validated['name'],
-            'slug' => $slug,
             'description' => $validated['description'] ?? null,
             'is_active' => $request->has('is_active') ? true : false,
             'order' => $validated['order'] ?? 0,
@@ -102,22 +91,9 @@ class RecreationAreaController extends Controller
             'captions.*' => 'nullable|string|max:255',
         ]);
 
-        // Generate unique slug only if name changed
-        $slug = $recreationArea->slug;
-        if ($validated['name'] !== $recreationArea->name) {
-            $slug = Str::slug($validated['name']);
-            $originalSlug = $slug;
-            $counter = 1;
-
-            while (RecreationArea::where('slug', $slug)->where('id', '!=', $recreationArea->id)->exists()) {
-                $slug = $originalSlug . '-' . $counter;
-                $counter++;
-            }
-        }
-
+        // Model akan auto-generate unique slug via boot() method jika name berubah
         $recreationArea->update([
             'name' => $validated['name'],
-            'slug' => $slug,
             'description' => $validated['description'] ?? null,
             'is_active' => $request->has('is_active') ? true : false,
             'order' => $validated['order'] ?? 0,
